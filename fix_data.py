@@ -87,7 +87,7 @@ def fix_data():
                 # Import di luar loop idealnya, tapi biar ringkas di sini ok
                 from werkzeug.security import generate_password_hash
                 new_hash = generate_password_hash(new_nim, method='pbkdf2:sha256')
-                cursor.execute("UPDATE tbUser SET password=? WHERE username=?", (new_hash, new_nim))
+                cursor.execute("UPDATE tbUser SET password_hash=? WHERE username=?", (new_hash, new_nim))
                 
                 print(f"[NIM & AKUN] Fixed {old_nim} -> {new_nim} (Password reset ke NIM baru)")
                 count_nim += 1

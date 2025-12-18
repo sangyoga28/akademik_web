@@ -34,7 +34,7 @@ def reset_all_passwords():
         if user:
             # Update password existing
             try:
-                cursor.execute("UPDATE tbUser SET password=? WHERE username=?", (new_hash, nim))
+                cursor.execute("UPDATE tbUser SET password_hash=? WHERE username=?", (new_hash, nim))
                 print(f"[RESET] Password {nama} ({nim}) -> Reset ke NIM.")
                 count += 1
             except Exception as e:
@@ -42,7 +42,7 @@ def reset_all_passwords():
         else:
             # Create user baru jika belum ada (misal korban cleanup berlebihan)
             try:
-                cursor.execute("INSERT INTO tbUser (username, password, role) VALUES (?, ?, 'Mahasiswa')", 
+                cursor.execute("INSERT INTO tbUser (username, password_hash, role) VALUES (?, ?, 'Mahasiswa')", 
                                (nim, new_hash))
                 print(f"[CREATE] User {nama} ({nim}) dibuatkan akun baru.")
                 count += 1
