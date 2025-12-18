@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+
+{% block title %}Ubah Data Mahasiswa{% endblock %}
+
+{% block content %}
+    <h1 class="mb-4">Ubah Data Mahasiswa: {{ mhs['nim'] }}</h1>
+    <a href="{{ url_for('daftar_mahasiswa') }}" class="btn btn-sm btn-outline-secondary mb-3"><i class="bi bi-arrow-left"></i> Kembali ke Daftar</a>
+
+    <div class="card shadow">
+        <div class="card-header bg-warning text-white">
+            <h5 class="card-title mb-0">Form Ubah Data</h5>
+        </div>
+        <div class="card-body">
+            <form method="POST" action="{{ url_for('edit_mahasiswa', nim=mhs['nim']) }}">
+                
+                <div class="mb-3">
+                    <label for="nim" class="form-label">NIM</label>
+                    <input type="text" class="form-control" value="{{ mhs['nim'] }}" readonly aria-describedby="nimInfo">
+                    <div id="nimInfo" class="form-text">NIM tidak dapat diubah (Primary Key).</div>
+                </div>
+                
+                <div class="mb-3">
+                    <label for="nama" class="form-label">Nama <span class="text-danger">*</span></label>
+                    <input type="text" class="form-control" id="nama" name="nama" value="{{ mhs['nama'] }}" required>
+                </div>
+
+                <div class="mb-3">
+                    <label for="prodi" class="form-label">Program Studi</label>
+                    <select class="form-select" id="prodi" name="prodi">
+                        <option value="">Pilih Program Studi</option>
+                        <option value="Teknik Informatika" {% if mhs['prodi'] == 'Teknik Informatika' %}selected{% endif %}>Teknik Informatika</option>
+                        <option value="Teknik Elektro" {% if mhs['prodi'] == 'Teknik Elektro' %}selected{% endif %}>Teknik Elektro</option>
+                        <option value="Sistem Informasi" {% if mhs['prodi'] == 'Sistem Informasi' %}selected{% endif %}>Sistem Informasi</option>
+                        <option value="Akutansi" {% if mhs['prodi'] == 'Akutansi' %}selected{% endif %}>Akuntansi</option>
+                        <option value="Manajemen" {% if mhs['prodi'] == 'Manajemen' %}selected{% endif %}>Manajemen</option>
+                    </select>
+                </div>
+                
+                <div class="mb-3">
+                    <label for="alamat" class="form-label">Alamat</label>
+                    <textarea class="form-control" id="alamat" name="alamat" rows="3">{{ mhs['alamat'] }}</textarea>
+                </div>
+                
+                <hr>
+                
+                <button type="submit" class="btn btn-warning me-2"><i class="bi bi-arrow-clockwise"></i> Update Data</button>
+                <a href="{{ url_for('daftar_mahasiswa') }}" class="btn btn-secondary"><i class="bi bi-x-circle"></i> Batal</a>
+            </form>
+        </div>
+    </div>
+{% endblock %}

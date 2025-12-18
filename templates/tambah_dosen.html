@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+
+{% block title %}Tambah Data Dosen{% endblock %}
+
+{% block content %}
+    <h1 class="mb-4">Tambah Data Dosen</h1>
+    <a href="{{ url_for('daftar_dosen') }}" class="btn btn-sm btn-outline-secondary mb-3"><i class="bi bi-arrow-left"></i> Kembali ke Daftar</a>
+
+    <div class="card shadow">
+        <div class="card-header bg-success text-white">
+            <h5 class="card-title mb-0">Form Input Data Dosen Baru</h5>
+        </div>
+        <div class="card-body">
+            <form method="POST" action="{{ url_for('tambah_dosen') }}">
+                
+                <div class="mb-3">
+                    <label for="nip" class="form-label">NIP <span class="text-danger">*</span></label>
+                    <input type="text" class="form-control" id="nip" name="nip" required placeholder="Masukkan Nomor Induk Pegawai">
+                </div>
+                
+                <div class="mb-3">
+                    <label for="nama" class="form-label">Nama <span class="text-danger">*</span></label>
+                    <input type="text" class="form-control" id="nama" name="nama" required placeholder="Masukkan Nama Lengkap Dosen">
+                </div>
+
+                <div class="mb-3">
+                    <label for="matkul_ajar" class="form-label">Mata Kuliah Ajar</label>
+                    <input type="text" class="form-control" id="matkul_ajar" name="matkul_ajar" placeholder="Contoh: Pemrograman Web">
+                </div>
+                
+                <div class="mb-3">
+                    <label for="telepon" class="form-label">Nomor Telepon</label>
+                    <input type="text" class="form-control" id="telepon" name="telepon" placeholder="Nomor Telepon">
+                </div>
+                
+                <hr>
+                
+                <button type="submit" class="btn btn-success me-2"><i class="bi bi-save"></i> Simpan Data</button>
+                <a href="{{ url_for('daftar_dosen') }}" class="btn btn-secondary"><i class="bi bi-x-circle"></i> Batal</a>
+            </form>
+        </div>
+    </div>
+{% endblock %}

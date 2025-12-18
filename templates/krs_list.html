@@ -1,0 +1,191 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h2>Kelola KRS Mahasiswa</h2>
+
+<!-- Search & Print Form -->
+<form action="{{ url_for('daftar_krs_mahasiswa') }}" method="get"
+    class="row g-3 mb-4 align-items-center bg-white p-3 rounded shadow-sm">
+    <div class="col-md-5 col-lg-4 position-relative">
+        <input type="text" name="q" class="form-control search-input pe-5" placeholder="Cari Nama / NIM..."
+            value="{{ q }}" oninput="toggleClear(this)">
+        <i class="bi bi-x-circle-fill position-absolute top-50 end-0 translate-middle-y me-3 text-secondary clear-icon"
+            style="cursor: pointer; display: none;" onclick="clearSearch(this)"></i>
+    </div>
+    <div class="col-auto">
+        <button type="submit" class="btn btn-primary"><i class="bi bi-search"></i> Cari</button>
+    </div>
+</form>
+
+<form action="{{ url_for('preview_report') }}" method="post" target="_blank">
+    <input type="hidden" name="type" value="krs">
+    <div class="mb-3 d-flex justify-content-end">
+        <button type="submit" class="btn btn-success">
+            <i class="bi bi-printer"></i> Preview & Cetak Laporan
+        </button>
+    </div>
+
+    <div class="table-responsive">
+        <table class="table table-striped table-hover">
+            <thead class="table-dark">
+                <tr>
+                    <th scope="col" style="width: 50px;"><input type="checkbox" id="selectAll"></th>
+                    <th scope="col">NIM</th>
+                    <th scope="col">Nama Mahasiswa</th>
+                    <th scope="col">Prodi</th>
+                    <th scope="col">Aksi</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for mhs in data %}
+                <tr>
+                    <td><input type="checkbox" name="selected_ids" value="{{ mhs['nim'] }}" class="select-item"></td>
+                    <td>{{ mhs['nim'] }}</td>
+                    <td>{{ mhs['nama'] }}</td>
+                    <td>{{ mhs['prodi'] }}</td>
+                    <td>
+                        <a href="{{ url_for('manage_krs', nim=mhs['nim']) }}" class="btn btn-sm btn-info text-white">
+                            <i class="bi bi-pencil-square"></i> Kelola KRS
+                        </a>
+                    </td>
+                </tr>
+                {% else %}
+                <tr>
+                    <td colspan="5" class="text-center">Tidak ada data mahasiswa.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</form>
+
+<!-- Pagination -->
+{% if total_pages > 1 %}
+<nav aria-label="Page navigation example">
+    <ul class="pagination justify-content-center">
+        <li class="page-item {% if page == 1 %}disabled{% endif %}">
+            <a class="page-link" href="{{ url_for('daftar_krs_mahasiswa', page=page-1, q=q) }}">Sebelumnya</a>
+        </li>
+        {% for p in range(1, total_pages + 1) %}
+        <li class="page-item {% if p == page %}active{% endif %}">
+            <a class="page-link" href="{{ url_for('daftar_krs_mahasiswa', page=p, q=q) }}">{{ p }}</a>
+        </li>
+        {% endfor %}
+        <li class="page-item {% if page == total_pages %}disabled{% endif %}">
+            <a class="page-link" href="{{ url_for('daftar_krs_mahasiswa', page=page+1, q=q) }}">Selanjutnya</a>
+        </li>
+    </ul>
+</nav>
+{% endif %}
+
+</form>
+
+<!-- Floating Counter & Clear Button -->
+<div id="selection-controls" class="position-fixed bottom-0 end-0 p-3 mb-5 me-5 bg-white shadow rounded border"
+    style="display: none; z-index: 1000;">
+    <span id="selection-count" class="fw-bold me-2">0 data dipilih</span>
+    <button type="button" class="btn btn-sm btn-outline-danger" onclick="clearSelection()">Reset</button>
+</div>
+
+<script>
+    const reportType = 'krs';
+    const storageKey = 'selected_ids_' + reportType;
+    const form = document.querySelector('form[action="{{ url_for("preview_report") }}"]');
+
+    function getSelection() {
+        const stored = sessionStorage.getItem(storageKey);
+        return stored ? JSON.parse(stored) : [];
+    }
+
+    function saveSelection(ids) {
+        sessionStorage.setItem(storageKey, JSON.stringify(ids));
+        updateUI();
+    }
+
+    function updateUI() {
+        const ids = getSelection();
+        const checkboxes = document.querySelectorAll('.select-item');
+        const countSpan = document.getElementById('selection-count');
+        const controlDiv = document.getElementById('selection-controls');
+
+        checkboxes.forEach(cb => {
+            cb.checked = ids.includes(cb.value);
+        });
+
+        if (ids.length > 0) {
+            controlDiv.style.display = 'block';
+            countSpan.textContent = ids.length + " data dipilih";
+        } else {
+            controlDiv.style.display = 'none';
+        }
+    }
+
+    function clearSelection() {
+        if (confirm('Hapus semua pilihan?')) {
+            sessionStorage.removeItem(storageKey);
+            updateUI();
+        }
+    }
+
+    document.addEventListener('change', function (e) {
+        if (e.target.classList.contains('select-item')) {
+            let ids = getSelection();
+            const val = e.target.value;
+
+            if (e.target.checked) {
+                if (!ids.includes(val)) ids.push(val);
+            } else {
+                ids = ids.filter(id => id !== val);
+            }
+            saveSelection(ids);
+        }
+
+        if (e.target.id === 'selectAll') {
+            const checkboxes = document.querySelectorAll('.select-item');
+            let ids = getSelection();
+
+            checkboxes.forEach(cb => {
+                cb.checked = e.target.checked;
+                const val = cb.value;
+                if (e.target.checked) {
+                    if (!ids.includes(val)) ids.push(val);
+                } else {
+                    ids = ids.filter(id => id !== val);
+                }
+            });
+            saveSelection(ids);
+        }
+    });
+
+    form.addEventListener('submit', function (e) {
+        e.preventDefault();
+
+        const ids = getSelection();
+        if (ids.length === 0) {
+            alert('Tidak ada data yang dipilih!');
+            return;
+        }
+
+        const originalCheckboxes = form.querySelectorAll('.select-item');
+        originalCheckboxes.forEach(cb => cb.disabled = true);
+
+        ids.forEach(id => {
+            const input = document.createElement('input');
+            input.type = 'hidden';
+            input.name = 'selected_ids';
+            input.value = id;
+            form.appendChild(input);
+        });
+
+        form.submit();
+
+        setTimeout(() => {
+            originalCheckboxes.forEach(cb => cb.disabled = false);
+            const hiddens = form.querySelectorAll('input[type="hidden"][name="selected_ids"]');
+            hiddens.forEach(h => h.remove());
+        }, 500);
+    });
+
+    updateUI();
+</script>
+{% endblock %}

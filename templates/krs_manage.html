@@ -1,0 +1,182 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="row mb-4">
+    <div class="col-md-12">
+        <a href="{{ url_for('daftar_krs_mahasiswa') }}" class="btn btn-secondary mb-3">&laquo; Kembali</a>
+        <h2>Kartu Rencana Studi (KRS)</h2>
+        <div class="card p-3 bg-light mb-3">
+            <div class="row">
+                <div class="col-md-6">
+                    <p><strong>NIM:</strong> {{ mahasiswa['nim'] }}</p>
+                    <p><strong>Nama:</strong> {{ mahasiswa['nama'] }}</p>
+                </div>
+                <div class="col-md-6 text-end">
+                    <p><strong>Prodi:</strong> {{ mahasiswa['prodi'] }}</p>
+                    <h4>Total SKS: <span class="badge bg-{% if total_sks > 24 %}danger{% else %}success{% endif %}">{{
+                            total_sks }} / 24</span></h4>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <!-- Form Tambah Matkul -->
+    <div class="col-md-4">
+        <!-- CARD TAMBAH MATA KULIAH (Posisi Ditukar ke Atas) -->
+        <div class="card mb-4">
+            <div class="card-header bg-secondary text-white">
+                Tambah Mata Kuliah
+            </div>
+            <div class="card-body">
+                <form method="post">
+                    <div class="mb-3">
+                        <label class="form-label">Semester & Tahun Ajaran</label>
+                        <div class="input-group mb-2">
+                            <input type="text" class="form-control" name="tahun_ajaran" value="{{ tahun_ajaran_aktif }}"
+                                readonly>
+                            <span class="input-group-text">/ Sem</span>
+                            <input type="number" class="form-control" name="semester" value="{{ semester_aktif }}"
+                                readonly>
+                        </div>
+                        <small class="text-muted">Untuk mengubah semester, ganti di URL sementara.</small>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="kode_matkul" class="form-label">Mata Kuliah</label>
+                        <select class="form-select" name="kode_matkul" id="kode_matkul" required {% if status_pembayaran
+                            and status_pembayaran['status']=='Lunas' %}disabled{% endif %}>
+                            <option value="">-- Pilih Mata Kuliah --</option>
+                            {% for mk in semua_matkul %}
+                            <option value="{{ mk['kode_matkul'] }}">
+                                [{{ mk['semester'] }}] {{ mk['nama_matkul'] }} ({{ mk['sks'] }} SKS)
+                            </option>
+                            {% endfor %}
+                        </select>
+                        {% if status_pembayaran and status_pembayaran['status'] == 'Lunas' %}
+                        <small class="text-danger">KRS terkunci karena sudah lunas.</small>
+                        {% endif %}
+                    </div>
+
+                    <button type="submit" class="btn btn-success w-100" {% if total_sks>= 24 or (status_pembayaran and
+                        status_pembayaran['status'] == 'Lunas') %}disabled{% endif %}>
+                        <i class="bi bi-plus-circle"></i> Tambahkan
+                    </button>
+                    {% if total_sks >= 24 %}
+                    <div class="alert alert-warning mt-2 fs-6 p-2">
+                        <small>Batas SKS tercapai (Maks 24).</small>
+                    </div>
+                    {% endif %}
+                </form>
+            </div>
+        </div>
+
+        <!-- CARD PEMBAYARAN (Posisi Ditukar ke Bawah) -->
+        <div class="card border-primary">
+            <div class="card-header bg-primary text-white">
+                <i class="bi bi-wallet2"></i> Rincian Pembayaran
+            </div>
+            <div class="card-body">
+                <ul class="list-group list-group-flush mb-3">
+                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                        Total SKS diambil
+                        <span class="badge bg-secondary">{{ total_sks }}</span>
+                    </li>
+                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                        Biaya per SKS
+                        <span>Rp {{ "{:,.0f}".format(harga_per_sks) }}</span>
+                    </li>
+                    <li class="list-group-item d-flex justify-content-between align-items-center fw-bold">
+                        Total Tagihan
+                        <span class="text-primary">Rp {{ "{:,.0f}".format(total_biaya) }}</span>
+                    </li>
+                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                        Status
+                        {% if status_pembayaran and status_pembayaran['status'] == 'Lunas' %}
+                        <span class="badge bg-success">LUNAS</span>
+                        {% else %}
+                        <span class="badge bg-danger">BELUM LUNAS</span>
+                        {% endif %}
+                    </li>
+                </ul>
+
+                {% if status_pembayaran and status_pembayaran['status'] == 'Lunas' %}
+                <div class="alert alert-success py-2"><small>Pembayaran Lunas pada {{ status_pembayaran['tanggal_bayar']
+                        }} via {{ status_pembayaran['metode_pembayaran'] }}</small></div>
+                <a href="{{ url_for('invoice_krs', id_pembayaran=status_pembayaran['id']) }}" target="_blank"
+                    class="btn btn-outline-primary w-100">
+                    <i class="bi bi-printer"></i> Cetak Invoice / Bukti Bayar
+                </a>
+                {% else %}
+                <form action="{{ url_for('bayar_krs', nim=mahasiswa['nim']) }}" method="post">
+                    <input type="hidden" name="semester" value="{{ semester_aktif }}">
+                    <input type="hidden" name="tahun_ajaran" value="{{ tahun_ajaran_aktif }}">
+
+                    <div class="mb-3">
+                        <label class="form-label">Metode Pembayaran</label>
+                        <select class="form-select" name="metode_pembayaran" required>
+                            <option value="">-- Pilih --</option>
+                            <option value="QRIS">QRIS</option>
+                            <option value="Transfer Bank BNI">Transfer Bank BNI</option>
+                            <option value="Transfer Bank Mandiri">Transfer Bank Mandiri</option>
+                            <option value="GoPay">GoPay</option>
+                            <option value="OVO">OVO</option>
+                            <option value="Tunai">Tunai (Loket Kampus)</option>
+                        </select>
+                    </div>
+                    <button type="submit" class="btn btn-primary w-100"
+                        onclick="return confirm('Konfirmasi pembayaran sejumlah Rp {{ total_biaya }}? Data tidak bisa diubah setelah bayar.');">
+                        <i class="bi bi-credit-card"></i> Bayar Sekarang
+                    </button>
+                </form>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <!-- Tabel KRS -->
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-header bg-dark text-white">
+                Daftar Mata Kuliah Diambil
+            </div>
+            <div class="card-body p-0">
+                <table class="table table-striped mb-0">
+                    <thead>
+                        <tr>
+                            <th>Kode</th>
+                            <th>Mata Kuliah</th>
+                            <th class="text-center">SKS</th>
+                            <th class="text-center">Aksi</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for krs in krs_data %}
+                        <tr>
+                            <td>{{ krs['kode_matkul'] }}</td>
+                            <td>{{ krs['nama_matkul'] }}</td>
+                            <td class="text-center">{{ krs['sks'] }}</td>
+                            <td class="text-center">
+                                {% if status_pembayaran and status_pembayaran['status'] == 'Lunas' %}
+                                <button class="btn btn-sm btn-secondary" disabled>Terkunci</button>
+                                {% else %}
+                                <form action="{{ url_for('hapus_krs_item', id_krs=krs['id']) }}" method="post"
+                                    onsubmit="return confirm('Yakin hapus matkul ini?');">
+                                    <button type="submit" class="btn btn-sm btn-danger">Hapus</button>
+                                </form>
+                                {% endif %}
+                            </td>
+                        </tr>
+                        {% else %}
+                        <tr>
+                            <td colspan="4" class="text-center text-muted py-4">Belum ada mata kuliah yang diambil.</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

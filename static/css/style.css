@@ -1,0 +1,279 @@
+/* 1. Efek Hover pada Card (digunakan di home.html, dan form input/edit) */
+.card {
+    transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+}
+
+.card:hover {
+    transform: translateY(-3px);
+    /* Sedikit terangkat ke atas */
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+    /* Bayangan lebih jelas saat hover */
+}
+
+/* 2. Transisi Halus dan Efek Tekan pada Tombol */
+.btn {
+    transition: background-color 0.3s ease, border-color 0.3s ease, transform 0.1s ease;
+}
+
+.btn:active {
+    transform: scale(0.98);
+    /* Efek tombol sedikit 'masuk' saat ditekan */
+}
+
+/* 3. Mengubah warna Navbar brand saat hover */
+.navbar-brand:hover {
+    /* Menggunakan warna warning (kuning) dari tema Morph */
+    color: var(--bs-warning) !important;
+}
+
+/* 4. Mengatur warna latar belakang tabel agar lebih terlihat di tema Morph */
+.table-responsive {
+    background-color: var(--bs-body-bg);
+    border-radius: 0.5rem;
+    overflow: hidden;
+}
+
+/* 5. Efek hover pada baris tabel */
+.table tbody tr:hover {
+    background-color: var(--bs-secondary-bg);
+    /* Warna latar belakang sekunder saat di-hover */
+}
+
+/* 6. Efek Jumbotron/Hero Button (Home Page) */
+.btn-primary.btn-lg {
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    transition: all 0.3s ease-in-out;
+}
+
+.btn-primary.btn-lg:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 15px rgba(var(--bs-primary-rgb), 0.4);
+}
+
+/* 7. CSS Khusus untuk Header Home */
+.home-hero {
+    background-image: url('../images/background.jpg');
+    background-size: cover;
+    background-position: center;
+
+    /* CALCULATED HEIGHT: 100vh dikurangi tinggi Navbar dan margin atas */
+    min-height: calc(100vh - 56px - 16px);
+
+    display: flex;
+    align-items: center;
+    color: white;
+    position: relative;
+    z-index: 1;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
+}
+
+.home-hero::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.3);
+    z-index: -1;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+/* 8. Navbar Animation */
+.navbar {
+    transition: all 0.4s ease-in-out;
+    padding: 1rem 1rem;
+    /* Padding awal lebih besar */
+}
+
+.navbar-scrolled {
+    background-color: rgba(var(--bs-primary-rgb), 0.95) !important;
+    /* Sedikit transparan */
+    padding: 0.5rem 1rem;
+    /* Padding mengecil saat scroll */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    backdrop-filter: blur(5px);
+}
+
+/* 9. Keyframe Animations */
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translate3d(0, 40px, 0);
+    }
+
+    to {
+        opacity: 1;
+        transform: translate3d(0, 0, 0);
+    }
+}
+
+.animate-fade-in-up {
+    animation-name: fadeInUp;
+    animation-duration: 0.8s;
+    animation-fill-mode: both;
+}
+
+.delay-100 {
+    animation-delay: 0.1s;
+}
+
+.delay-200 {
+    animation-delay: 0.2s;
+}
+
+.delay-300 {
+    animation-delay: 0.3s;
+}
+
+/* 10. Footer Styling */
+/* 1. Efek Hover pada Card (digunakan di home.html, dan form input/edit) */
+.card {
+    transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+}
+
+.card:hover {
+    transform: translateY(-3px);
+    /* Sedikit terangkat ke atas */
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+    /* Bayangan lebih jelas saat hover */
+}
+
+/* 2. Transisi Halus dan Efek Tekan pada Tombol */
+.btn {
+    transition: background-color 0.3s ease, border-color 0.3s ease, transform 0.1s ease;
+}
+
+.btn:active {
+    transform: scale(0.98);
+    /* Efek tombol sedikit 'masuk' saat ditekan */
+}
+
+/* 3. Mengubah warna Navbar brand saat hover */
+.navbar-brand:hover {
+    /* Menggunakan warna warning (kuning) dari tema Morph */
+    color: var(--bs-warning) !important;
+}
+
+/* 4. Mengatur warna latar belakang tabel agar lebih terlihat di tema Morph */
+.table-responsive {
+    background-color: var(--bs-body-bg);
+    border-radius: 0.5rem;
+    overflow: hidden;
+}
+
+/* 5. Efek hover pada baris tabel */
+.table tbody tr:hover {
+    background-color: var(--bs-secondary-bg);
+    /* Warna latar belakang sekunder saat di-hover */
+}
+
+/* 6. Efek Jumbotron/Hero Button (Home Page) */
+.btn-primary.btn-lg {
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    transition: all 0.3s ease-in-out;
+}
+
+.btn-primary.btn-lg:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 15px rgba(var(--bs-primary-rgb), 0.4);
+}
+
+/* 7. CSS Khusus untuk Header Home */
+.home-hero {
+    background-image: url('../images/background.jpg');
+    background-size: cover;
+    background-position: center;
+
+    /* CALCULATED HEIGHT: 100vh dikurangi tinggi Navbar dan margin atas */
+    min-height: calc(100vh - 56px - 16px);
+
+    display: flex;
+    align-items: center;
+    color: white;
+    position: relative;
+    z-index: 1;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
+}
+
+.home-hero::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.3);
+    z-index: -1;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+/* 8. Navbar Animation */
+.navbar {
+    transition: all 0.4s ease-in-out;
+    padding: 1rem 1rem;
+    /* Padding awal lebih besar */
+}
+
+.navbar-scrolled {
+    background-color: rgba(var(--bs-primary-rgb), 0.95) !important;
+    /* Sedikit transparan */
+    padding: 0.5rem 1rem;
+    /* Padding mengecil saat scroll */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    backdrop-filter: blur(5px);
+}
+
+/* 9. Keyframe Animations */
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translate3d(0, 40px, 0);
+    }
+
+    to {
+        opacity: 1;
+        transform: translate3d(0, 0, 0);
+    }
+}
+
+.animate-fade-in-up {
+    animation-name: fadeInUp;
+    animation-duration: 0.8s;
+    animation-fill-mode: both;
+}
+
+.delay-100 {
+    animation-delay: 0.1s;
+}
+
+.delay-200 {
+    animation-delay: 0.2s;
+}
+
+.delay-300 {
+    animation-delay: 0.3s;
+}
+
+/* 10. Footer Styling */
+body {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+/* 10. Footer Styling */
+.main-footer {
+    background: #f8f9fa;
+    padding: 2rem 0;
+    margin-top: auto;
+    /* Pushes footer to bottom */
+    border-top: 1px solid #e9ecef;
+    color: #6c757d;
+}
