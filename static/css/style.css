@@ -1,159 +1,97 @@
-/* --- MODERN ACADEMIC DESIGN SYSTEM --- */
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+/* --- CLASSIC ACADEMIC DESIGN (BOOTSTRAP FOCUS) --- */
 
 :root {
-    --primary-color: #0f172a;
-    /* Slate 900 */
-    --accent-blue: #3b82f6;
-    /* Blue 500 */
-    --accent-emerald: #10b981;
-    /* Emerald 500 */
-    --accent-rose: #f43f5e;
-    /* Rose 500 */
-    --background-gray: #f8fafc;
-    --card-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
-    --card-shadow-hover: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
+    --bs-primary: #0d6efd;
+    --bs-secondary: #6c757d;
 }
 
+/* 1. Card Transitions & Proportions */
+.card {
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    border-radius: 0.5rem;
+    border: 1px solid rgba(0, 0, 0, 0.125);
+}
+
+.card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1) !important;
+}
+
+/* 2. User Comfort: Typography & Line Height */
 body {
-    font-family: 'Inter', system-ui, -apple-system, sans-serif;
-    background-color: var(--background-gray);
-    color: #1e293b;
+    font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
     line-height: 1.6;
+    background-color: #f8f9fa;
     display: flex;
     flex-direction: column;
     min-height: 100vh;
 }
 
-/* --- NAVBAR REFINEMENT --- */
+/* 3. Navbar Enhancements */
 .navbar {
-    background-color: rgba(15, 23, 42, 0.9) !important;
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
     transition: all 0.3s ease;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    padding: 0.8rem 1rem;
+}
+
+.navbar-scrolled {
+    padding: 0.5rem 1rem;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
 }
 
 .navbar-brand {
-    font-weight: 700;
-    letter-spacing: -0.025em;
-    color: white !important;
+    font-weight: bold;
 }
 
-.nav-link {
-    font-weight: 500;
-    font-size: 0.925rem;
-    transition: color 0.2s ease;
-    opacity: 0.8;
-}
-
-.nav-link:hover {
-    opacity: 1;
-    color: var(--accent-blue) !important;
-}
-
-/* --- CARDS & PANELS --- */
-.card {
-    border: 1px solid #e2e8f0;
-    border-radius: 1rem;
-    box-shadow: var(--card-shadow);
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    overflow: hidden;
-}
-
-.card:hover {
-    transform: translateY(-5px);
-    box-shadow: var(--card-shadow-hover);
-}
-
-.card-header {
-    background-color: transparent;
-    border-bottom: 1px solid #f1f5f9;
-    padding: 1.25rem 1.5rem;
-    font-weight: 600;
-    color: var(--primary-color);
-}
-
-/* --- HERO SECTION --- */
-.home-hero {
-    border-radius: 1.5rem !important;
-    background-position: center !important;
-    overflow: hidden;
-    position: relative;
-}
-
-.hero-overlay {
-    background: linear-gradient(to right, rgba(15, 23, 42, 0.9), rgba(15, 23, 42, 0.6));
-    height: 100%;
-    width: 100%;
-    padding: 4rem 3rem;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-}
-
-/* --- BUTTONS --- */
-.btn {
-    border-radius: 0.6rem;
-    font-weight: 500;
-    padding: 0.6rem 1.25rem;
-    transition: all 0.2s ease;
-}
-
-.btn-primary {
-    background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
-    border: none;
-}
-
-.btn-primary:hover {
-    transform: translateY(-1px);
-    box-shadow: 0 10px 15px -3px rgba(15, 23, 42, 0.3);
-}
-
-/* --- TABLES --- */
-.table {
-    margin-bottom: 0;
+/* 4. Table Compatibility */
+.table-responsive {
+    background-color: white;
+    border-radius: 0.5rem;
+    padding: 5px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
 }
 
 .table thead th {
-    background-color: #f8fafc;
-    border-bottom: 2px solid #e2e8f0;
+    background-color: #f1f3f5;
+    border-bottom: 2px solid #dee2e6;
+    font-size: 0.85rem;
     text-transform: uppercase;
-    font-size: 0.75rem;
-    font-weight: 700;
-    color: #64748b;
-    padding: 1rem;
+    letter-spacing: 0.5px;
 }
 
-.table tbody td {
-    padding: 1rem;
-    vertical-align: middle;
-    color: #334155;
-    border-bottom: 1px solid #f1f5f9;
+/* 5. Home Hero (Optimized with Flexbox) */
+.home-hero {
+    background-image: url('../images/background.jpg');
+    background-size: cover;
+    background-position: center;
+    min-height: 400px;
+    display: flex;
+    align-items: center;
+    position: relative;
+    color: white;
+    text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.8);
+    border-radius: 0.75rem;
+    overflow: hidden;
 }
 
-/* --- ALERTS --- */
-.alert {
-    border: none;
-    border-radius: 0.8rem;
-    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+.home-hero::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5);
+    /* Clearer overlay for readability */
+    z-index: 1;
 }
 
-/* --- FORM CONTROLS --- */
-.form-control,
-.form-select {
-    border-radius: 0.6rem;
-    border: 1px solid #e2e8f0;
-    padding: 0.6rem 0.9rem;
-    transition: all 0.2s ease;
+.home-hero .container-fluid {
+    position: relative;
+    z-index: 2;
+    padding: 3rem 2rem;
 }
 
-.form-control:focus {
-    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
-    border-color: var(--accent-blue);
-}
-
-/* --- ANIMATIONS --- */
+/* 6. Animations */
 @keyframes fadeInUp {
     from {
         opacity: 0;
@@ -166,36 +104,37 @@ body {
     }
 }
 
-.animate-up {
-    animation: fadeInUp 0.6s ease-out forwards;
+.animate-fade-in-up {
+    animation: fadeInUp 0.6s ease-both;
 }
 
-/* --- FOOTER --- */
+.delay-100 {
+    animation-delay: 0.1s;
+}
+
+.delay-200 {
+    animation-delay: 0.2s;
+}
+
+.delay-300 {
+    animation-delay: 0.3s;
+}
+
+/* 7. Footer */
 .main-footer {
-    background-color: white;
-    border-top: 1px solid #f1f5f9;
-    padding: 2.5rem 0;
-    margin-top: 4rem;
+    background: white;
+    border-top: 1px solid #dee2e6;
+    padding: 2rem 0;
+    margin-top: auto;
+    color: #6c757d;
 }
 
-/* Custom Checkbox */
-.form-check-input:checked {
-    background-color: var(--accent-blue);
-    border-color: var(--accent-blue);
+/* 8. Accessibility: Buttons & Focus */
+.btn {
+    font-weight: 500;
+    border-radius: 0.375rem;
 }
 
-/* --- UTILITIES --- */
-.bg-blue-accent {
-    background-color: var(--accent-blue) !important;
+.btn:focus {
+    box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
 }
-
-.backdrop-blur {
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
-}
-
-.text-info {
-    color: #60a5fa !important;
-}
-
-/* Modern Blue-Info */
