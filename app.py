@@ -215,6 +215,7 @@ def tambah_mahasiswa():
         nama = request.form['nama']
         alamat = request.form['alamat']
         prodi = request.form['prodi']
+        fakultas = request.form['fakultas']
         
         if not nim or not nama:
             flash('NIM dan Nama wajib diisi!', 'danger')
@@ -226,17 +227,22 @@ def tambah_mahasiswa():
             return redirect(url_for('tambah_mahasiswa'))
             
         try:
-            repo.tambah_data_mahasiswa(conn, nim, nama, alamat, prodi)
+            # 1. Tambah Biodata
+            repo.tambah_data_mahasiswa(conn, nim, nama, alamat, prodi, fakultas)
             
-            # --- AUTO REGISTER USER MAHASISWA ---
-            # Default Password = NIM
-            hashed_pw = generate_password_hash(nim, method='pbkdf2:sha256')
-            repo.tambah_user(conn, nim, hashed_pw, role='Mahasiswa')
+            # 2. Buat Akun Login Otomatis (Default Pass: NIM)
+            if repo.cari_user_by_username(conn, nim) is None:
+                hashed_pw = generate_password_hash(nim, method='pbkdf2:sha256')
+                repo.tambah_user(conn, nim, hashed_pw, role='Mahasiswa')
+                msg = f'Data {nim} disimpan & Akun Login dibuat.'
+            else:
+                msg = f'Data {nim} disimpan (Akun sudah ada).'
             
-            flash(f'Data Mahasiswa {nim} berhasil ditambahkan! Akun Login otomatis dibuat (Pass: {nim}).', 'success')
+            flash(msg, 'success')
             return redirect(url_for('daftar_mahasiswa'))
-        except:
-            flash('Gagal simpan atau NIM sudah ada akun.', 'danger')
+        except Exception as e:
+            flash(f'Gagal menyimpan: {str(e)}', 'danger')
+            return redirect(url_for('tambah_mahasiswa'))
             
     return render_template('tambah_mahasiswa.html')
 
