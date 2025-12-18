@@ -3,6 +3,106 @@
 {% block title %}Kartu Hasil Studi (KHS){% endblock %}
 
 {% block content %}
+<style>
+    @media print {
+
+        /* Sembunyikan elemen web yang tidak perlu */
+        .no-print,
+        .navbar,
+        .main-footer,
+        .btn,
+        .flash-messages,
+        .bg-light,
+        form,
+        .card-header .gap-2 {
+            display: none !important;
+        }
+
+        /* Reset container dan body */
+        body {
+            background-color: white !important;
+            padding: 0 !important;
+            margin: 0 !important;
+            color: black !important;
+        }
+
+        .container,
+        .container-fluid {
+            width: 100% !important;
+            max-width: none !important;
+            padding: 0 !important;
+            margin: 0 !important;
+        }
+
+        .card {
+            box-shadow: none !important;
+            border: none !important;
+            margin-bottom: 0 !important;
+        }
+
+        .card-header {
+            background-color: white !important;
+            color: black !important;
+            border-bottom: 2px solid black !important;
+            padding-left: 0 !important;
+            padding-right: 0 !important;
+        }
+
+        .card-header h4 {
+            font-size: 24px !important;
+            font-weight: bold !important;
+            text-transform: uppercase;
+        }
+
+        /* Tabel bergaya print */
+        .table {
+            width: 100% !important;
+            border-collapse: collapse !important;
+            margin-top: 20px !important;
+        }
+
+        .table th,
+        .table td {
+            border: 1px solid black !important;
+            padding: 8px !important;
+            color: black !important;
+            background-color: transparent !important;
+        }
+
+        .table thead th {
+            background-color: #eee !important;
+            font-weight: bold !important;
+        }
+
+        /* Hilangkan badge warna saat cetak */
+        .badge {
+            border: none !important;
+            background-color: transparent !important;
+            color: black !important;
+            padding: 0 !important;
+            font-weight: bold !important;
+        }
+
+        /* Ringkasan IPS */
+        .display-4 {
+            font-size: 30px !important;
+            color: black !important;
+        }
+
+        .card.bg-success {
+            background-color: white !important;
+            color: black !important;
+            border: 1px solid black !important;
+        }
+
+        .card.bg-success h6,
+        .card.bg-success small {
+            color: black !important;
+            opacity: 1 !important;
+        }
+    }
+</style>
+
 <div class="row">
     <div class="col-md-12">
         <div class="card shadow-lg border-0">
