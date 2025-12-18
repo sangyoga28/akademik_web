@@ -30,34 +30,57 @@
                 {% if session.get('logged_in') %}
                 <ul class="navbar-nav me-auto">
                     <li class="nav-item">
-                        <a class="nav-link px-3" href="{{ url_for('index') }}">Dashboard</a>
+                        <a class="nav-link px-3 d-flex align-items-center gap-2" href="{{ url_for('index') }}">
+                            <i class="bi bi-speedometer2"></i> Dashboard
+                        </a>
                     </li>
 
                     {% if session.get('role') == 'Admin Sistem' %}
                     <li class="nav-item">
-                        <a class="nav-link px-3" href="{{ url_for('daftar_mahasiswa') }}">Mahasiswa</a>
+                        <a class="nav-link px-3 d-flex align-items-center gap-2"
+                            href="{{ url_for('daftar_mahasiswa') }}">
+                            <i class="bi bi-people"></i> Mahasiswa
+                        </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link px-3" href="{{ url_for('daftar_dosen') }}">Dosen</a>
+                        <a class="nav-link px-3 d-flex align-items-center gap-2" href="{{ url_for('daftar_dosen') }}">
+                            <i class="bi bi-person-badge"></i> Dosen
+                        </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link px-3" href="{{ url_for('daftar_matkul') }}">Mata Kuliah</a>
+                        <a class="nav-link px-3 d-flex align-items-center gap-2" href="{{ url_for('daftar_matkul') }}">
+                            <i class="bi bi-book"></i> Mata Kuliah
+                        </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link px-3" href="{{ url_for('daftar_krs_mahasiswa') }}">Perwalian</a>
+                        <a class="nav-link px-3 d-flex align-items-center gap-2"
+                            href="{{ url_for('daftar_krs_mahasiswa') }}">
+                            <i class="bi bi-person-check"></i> Perwalian
+                        </a>
                     </li>
                     {% endif %}
 
                     {% if session.get('role') != 'Mahasiswa' %}
                     <li class="nav-item">
-                        <a class="nav-link px-3" href="{{ url_for('dosen_nilai_dashboard') }}">Input Nilai</a>
+                        <a class="nav-link px-3 d-flex align-items-center gap-2"
+                            href="{{ url_for('dosen_nilai_dashboard') }}">
+                            <i class="bi bi-pencil-square"></i> Input Nilai
+                        </a>
                     </li>
                     {% endif %}
 
                     {% if session.get('role') == 'Mahasiswa' %}
-                    <li class="nav-item"><a class="nav-link px-3"
-                            href="{{ url_for('manage_krs', nim=session.get('username')) }}">KRS Saya</a></li>
-                    <li class="nav-item"><a class="nav-link px-3" href="{{ url_for('lihat_khs') }}">Hasil Studi</a></li>
+                    <li class="nav-item">
+                        <a class="nav-link px-3 d-flex align-items-center gap-2"
+                            href="{{ url_for('manage_krs', nim=session.get('username')) }}">
+                            <i class="bi bi-calendar-check"></i> KRS Saya
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link px-3 d-flex align-items-center gap-2" href="{{ url_for('lihat_khs') }}">
+                            <i class="bi bi-file-earmark-text"></i> Hasil Studi
+                        </a>
+                    </li>
                     {% endif %}
                 </ul>
 
