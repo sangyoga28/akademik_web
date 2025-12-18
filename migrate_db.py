@@ -1,17 +1,28 @@
 import sqlite3
 import os
 
-DATABASE_NAME = "akademik.db"
+# Daftar kemungkinan lokasi database
+POSSIBLE_PATHS = ["akademik.db", "../akademik.db", "instance/akademik.db"]
 
 def migrate():
-    if not os.path.exists(DATABASE_NAME):
-        print(f"Database {DATABASE_NAME} tidak ditemukan. Jalankan aplikasi sekali utk membuat DB.")
-        return
+    db_path = None
+    for p in POSSIBLE_PATHS:
+        if os.path.exists(p):
+            db_path = p
+            print(f"Database ditemukan di: {os.path.abspath(p)}")
+            break
+            
+    if db_path is None:
+        print("PERINGATAN: File 'akademik.db' tidak ditemukan di folder ini maupun folder induk.")
+        print("Database baru akan dibuat di 'akademik.db' saat aplikasi berjalan.")
+        print("Jika aplikasi Anda sudah ada datanya, pastikan Anda berada di folder yang benar.")
+        # Kita tetap coba jalankan di 'akademik.db' lokal agar tidak error, tapi ini mungkin database baru/kosong
+        db_path = "akademik.db"
 
-    conn = sqlite3.connect(DATABASE_NAME)
+    conn = sqlite3.connect(db_path)
     cursor = conn.cursor()
     
-    print("Memeriksa kolom nilai di tbKRS...")
+    print(f"Memulai migrasi pada: {db_path}...")
     
     # Cek colom nilai_angka
     try:
