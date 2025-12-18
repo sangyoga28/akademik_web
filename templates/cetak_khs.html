@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KHS - {{ mahasiswa['nim'] }} - {{ semester }}</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        @page {
+            size: A4;
+            margin: 20mm;
+        }
+
+        body {
+            background-color: white;
+            font-family: 'Times New Roman', Times, serif;
+            font-size: 12pt;
+            color: black;
+        }
+
+        .header-box {
+            border-bottom: 3px double black;
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .khs-title {
+            font-weight: bold;
+            font-size: 16pt;
+            margin-bottom: 5px;
+        }
+
+        .info-table td {
+            padding: 2px 5px;
+            vertical-align: top;
+        }
+
+        .main-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+        }
+
+        .main-table th,
+        .main-table td {
+            border: 1px solid black;
+            padding: 6px 10px;
+        }
+
+        .main-table thead th {
+            text-align: center;
+            background-color: #f2f2f2 !important;
+            print-color-adjust: exact;
+            -webkit-print-color-adjust: exact;
+        }
+
+        .summary-box {
+            margin-top: 20px;
+            border: 1px solid black;
+            padding: 10px;
+            display: inline-block;
+            min-width: 200px;
+        }
+
+        .footer-sign {
+            margin-top: 50px;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .sign-placeholder {
+            width: 200px;
+            text-align: center;
+        }
+
+        @media print {
+            .no-print {
+                display: none !important;
+            }
+        }
+    </style>
+</head>
+
+<body {% if auto_print %}onload="window.print()" {% endif %}>
+
+    <div class="no-print text-center py-3 bg-light border-bottom mb-4">
+        <button onclick="window.print()" class="btn btn-primary shadow-sm"><i class="bi bi-printer"></i> Cetak
+            Sekarang</button>
+        <button onclick="window.close()" class="btn btn-outline-secondary ms-2">Tutup</button>
+    </div>
+
+    <div class="container">
+        <div class="header-box">
+            <div class="khs-title">KARTU HASIL STUDI (KHS)</div>
+            <div>Sistem Informasi Akademik Terpadu</div>
+        </div>
+
+        <div class="row">
+            <div class="col-7">
+                <table class="info-table">
+                    <tr>
+                        <td width="120">Nama Mahasiswa</td>
+                        <td>: <strong>{{ mahasiswa['nama'] }}</strong></td>
+                    </tr>
+                    <tr>
+                        <td>NIM</td>
+                        <td>: {{ mahasiswa['nim'] }}</td>
+                    </tr>
+                    <tr>
+                        <td>Program Studi</td>
+                        <td>: {{ mahasiswa['prodi'] }}</td>
+                    </tr>
+                </table>
+            </div>
+            <div class="col-5">
+                <table class="info-table">
+                    <tr>
+                        <td width="100">Semester</td>
+                        <td>: {{ semester }}</td>
+                    </tr>
+                    <tr>
+                        <td>Tahun Ajaran</td>
+                        <td>: {{ tahun }}</td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+
+        <table class="main-table">
+            <thead>
+                <tr>
+                    <th width="5%">No</th>
+                    <th width="15%">Kode MK</th>
+                    <th width="45%">Mata Kuliah</th>
+                    <th width="10%">SKS</th>
+                    <th width="10%">Nilai</th>
+                    <th width="15%">Bobot</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% set ns = namespace(total_sks=0, total_bobot=0) %}
+                {% set bobot_map = {'A': 4, 'B': 3, 'C': 2, 'D': 1, 'E': 0} %}
+                {% for row in data %}
+                {% set ns.total_sks = ns.total_sks + row['sks'] %}
+                {% set v_bobot = bobot_map.get(row['nilai_huruf'], 0) %}
+                {% set ns.total_bobot = ns.total_bobot + (row['sks'] * v_bobot) %}
+                <tr>
+                    <td class="text-center">{{ loop.index }}</td>
+                    <td class="text-center">{{ row['kode_matkul'] }}</td>
+                    <td>{{ row['nama_matkul'] }}</td>
+                    <td class="text-center">{{ row['sks'] }}</td>
+                    <td class="text-center">{{ row['nilai_huruf'] or '-' }}</td>
+                    <td class="text-center">{{ row['sks'] * v_bobot }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+            <tfoot>
+                <tr class="fw-bold">
+                    <td colspan="3" class="text-end">Total SKS & Bobot:</td>
+                    <td class="text-center">{{ ns.total_sks }}</td>
+                    <td></td>
+                    <td class="text-center">{{ ns.total_bobot }}</td>
+                </tr>
+            </tfoot>
+        </table>
+
+        <div class="mt-4">
+            <div class="summary-box">
+                <strong>Indeks Prestasi Semester (IPS): {{ ips }}</strong>
+            </div>
+        </div>
+
+        <div class="footer-sign">
+            <div class="sign-placeholder">
+                <p>Mengetahui,</p>
+                <p>Ketua Program Studi</p>
+                <br><br><br>
+                <p>( ................................ )</p>
+            </div>
+            <div class="sign-placeholder">
+                <p>Tanjung Selor, {{ current_date }}</p>
+                <p>Dibuat Oleh,</p>
+                <br><br><br>
+                <p><strong>Sangyoga Wahyu Utomo</strong></p>
+            </div>
+        </div>
+
+        <div class="mt-5 text-center text-muted small" style="font-style: italic;">
+            Dokumen ini dicetak secara otomatis melalui Sistem Informasi Akademik.
+        </div>
+    </div>
+
+</body>
+
+</html>

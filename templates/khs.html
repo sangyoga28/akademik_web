@@ -245,9 +245,10 @@
                 </div>
 
                 <div class="text-center mt-5 no-print">
-                    <button onclick="window.print()" class="btn btn-outline-dark">
-                        <i class="bi bi-printer"></i> Cetak KHS
-                    </button>
+                    <a href="{{ url_for('cetak_khs', nim=mahasiswa['nim'], semester=semester, tahun=tahun) }}"
+                        target="_blank" class="btn btn-outline-dark">
+                        <i class="bi bi-printer"></i> Cetak KHS (Preview & PDF)
+                    </a>
                 </div>
 
             </div>

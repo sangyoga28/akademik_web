@@ -801,6 +801,40 @@ def lihat_khs():
                            tahun=tahun,
                            ips=ips)
 
+@app.route('/mahasiswa/khs/cetak')
+def cetak_khs():
+    if not session.get('logged_in'): return redirect(url_for('login'))
+    
+    conn = get_db()
+    nim = request.args.get('nim') or session.get('username')
+    semester = request.args.get('semester', 1, type=int)
+    tahun = request.args.get('tahun', '2023/2024')
+    
+    data_khs = repo.ambil_khs(conn, nim, semester, tahun)
+    mahasiswa = repo.cari_by_nim(conn, nim)
+    
+    # Hitung IPS
+    total_sks = 0
+    total_bobot = 0
+    bobot_map = {'A': 4, 'B': 3, 'C': 2, 'D': 1, 'E': 0}
+    for mk in data_khs:
+        if mk['nilai_huruf']:
+            total_sks += mk['sks']
+            total_bobot += (mk['sks'] * bobot_map.get(mk['nilai_huruf'], 0))
+    ips = 0 if total_sks == 0 else round(total_bobot / total_sks, 2)
+    
+    import datetime
+    current_date = datetime.date.today().strftime('%d %B %Y')
+    
+    return render_template('cetak_khs.html',
+                           mahasiswa=mahasiswa,
+                           data=data_khs,
+                           semester=semester,
+                           tahun=tahun,
+                           ips=ips,
+                           current_date=current_date,
+                           auto_print=True)
+
 # ----------------- ROUTE PREVIEW/REPORT -----------------
 
 @app.route('/preview', methods=['POST'])
