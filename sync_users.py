@@ -1,10 +1,23 @@
 import sqlite3
+import os
 from werkzeug.security import generate_password_hash
 
-DATABASE_NAME = "akademik.db"
+# Daftar kemungkinan lokasi database
+POSSIBLE_PATHS = ["akademik.db", "../akademik.db", "instance/akademik.db"]
 
 def sync_users():
-    conn = sqlite3.connect(DATABASE_NAME)
+    db_path = None
+    for p in POSSIBLE_PATHS:
+        if os.path.exists(p):
+            db_path = p
+            print(f"Database ditemukan di: {os.path.abspath(p)}")
+            break
+            
+    if db_path is None:
+        print("ERROR: File 'akademik.db' tidak ditemukan. Pastikan Anda berada di folder yang benar.")
+        return
+
+    conn = sqlite3.connect(db_path)
     conn.row_factory = sqlite3.Row
     cursor = conn.cursor()
     
