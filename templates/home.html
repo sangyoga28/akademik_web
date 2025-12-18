@@ -1,198 +1,115 @@
 {% extends "base.html" %}
 
-{% block title %}Menu Utama - Dashboard Akademik{% endblock %}
+{% block title %}Beranda - SIAKAD Platform{% endblock %}
 
 {% block content %}
 
-<style>
-    /* CSS untuk Jumbotron dengan Background Gambar */
-    .home-hero {
-        /* Menggunakan 'cover' untuk memastikan gambar mengisi seluruh tinggi 400px */
-        background-image: url('{{ url_for("static", filename="images/background.jpg") }}');
-        background-size: cover;
-        background-position: bottom;
-        height: 400px;
-        /* TINGGI BANNER TERKUNCI */
-        color: white;
-
-        /* --- TEKNIK TABLE-CELL --- */
-        display: table-cell;
-        /* Container sebagai tabel */
-        width: 100%;
-        /* ------------------------ */
-
-        position: relative;
-        z-index: 1;
-        padding: 0;
-        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
-        border-radius: 0.5rem;
-    }
-
-    /* Div Pembungkus Konten untuk Vertical Align */
-    .home-hero .row-content {
-        /* --- TEKNIK TABLE-CELL --- */
-        display: table-cell;
-        /* Cell konten */
-        vertical-align: middle;
-        /* Memusatkan konten secara vertikal */
-        /* ------------------------ */
-        padding-top: 5rem;
-        /* Tambahkan padding agar tidak terlalu mepet */
-        padding-bottom: 5rem;
-    }
-
-    .home-hero::before {
-        content: "";
-        position: absolute;
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        background-color: rgba(0, 0, 0, 0.4);
-        /* Overlay gelap */
-        z-index: -1;
-        border-radius: 0.5rem;
-    }
-
-    /* CSS untuk Card Dashboard */
-    .home-card-link {
-        text-decoration: none;
-        display: block;
-        height: 100%;
-        transition: transform 0.2s ease, box-shadow 0.2s ease;
-    }
-
-    .home-card-link:hover {
-        transform: translateY(-5px);
-        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2) !important;
-    }
-
-    .home-card {
-        border: none;
-    }
-
-    .text-overlay {
-        z-index: 10;
-    }
-</style>
-
-<div class="home-hero mb-4 shadow-lg animate-fade-in-up">
-    <div class="row-content text-overlay">
-        <div class="container-fluid">
-            <div class="row align-items-center">
-
-                <div class="col-md-8">
-                    <h1 class="display-4 fw-bolder text-white">SISTEM INFORMASI AKADEMIK</h1>
-                    <p class="fs-5 text-light">
-                        Platform terpusat untuk mengelola data mahasiswa, dosen, dan mata kuliah secara efisien.
-                        Gunakan menu navigasi di atas untuk mengakses modul pengelolaan.
-                    </p>
-                    <a href="#Preview-data" class="btn btn-warning btn-lg mt-3 fw-bold shadow-sm">
-                        <i class="bi bi-arrow-down-circle"></i> LIHAT DATA AKADEMIK TERBARU
-                    </a>
+<div class="home-hero mb-5 animate-up shadow-lg" style="background-image: url('{{ url_for(" static",
+    filename="images/background.jpg" ) }}'); min-height: 450px;">
+    <div class="hero-overlay">
+        <div class="row align-items-center">
+            <div class="col-lg-7">
+                <span class="badge bg-primary px-3 py-2 mb-3 rounded-pill opacity-75">SISTEM INFORMASI AKADEMIK</span>
+                <h1 class="display-3 fw-bold text-white mb-3">Kelola Sivitas Akademik <br><span class="text-info">Lebih
+                        Profesional.</span></h1>
+                <p class="lead text-light mb-4 opacity-75">Solusiteknologi terpadu untuk efisiensi pengelolaan data
+                    mahasiswa, jadwal kuliah, dan penilaian hasil studi secara real-time.</p>
+                <div class="d-flex gap-3">
+                    <a href="#Preview-data" class="btn btn-primary btn-lg px-4">Eksplorasi Data</a>
+                    <a href="https://uca.ac.id/" target="_blank" class="btn btn-outline-light btn-lg px-4">Kunjungi
+                        Kampus</a>
                 </div>
-
-                <div class="col-md-4 py-4">
-
-                    <div
-                        class="card bg-transparent text-white shadow-lg border border-white animate-fade-in-up delay-200">
-
-                        <div class="card-header bg-dark text-white fw-bold">
-                            <i class="bi bi-megaphone-fill me-2"></i> Pengumuman Penting
+            </div>
+            <div class="col-lg-5 d-none d-lg-block">
+                <div class="card bg-white bg-opacity-10 backdrop-blur border-0 shadow-lg text-white">
+                    <div class="card-body p-4">
+                        <h6 class="text-uppercase small fw-bold mb-3 opacity-75"><i class="bi bi- megaphone me-2"></i>
+                            Pengumuman Terbaru</h6>
+                        <div class="mb-3 border-bottom border-white border-opacity-10 pb-2">
+                            <div class="d-flex justify-content-between">
+                                <span class="small fw-bold">Ujian Akhir Semester</span>
+                                <span class="badge bg-danger">05 Jan</span>
+                            </div>
+                            <p class="small opacity-50 mb-0">Pelaksanaan UAS Ganjil 2025</p>
                         </div>
-
-                        <div class="card-body p-0">
-                            <ul class="list-group list-group-flush small">
-
-                                <li
-                                    class="list-group-item bg-transparent text-white d-flex justify-content-between align-items-start">
-                                    <div class="ms-2 me-auto">
-                                        <div class="fw-bold">Ujian Akhir Semester</div>
-                                        Semester Ganjil 2025/2026
-                                    </div>
-                                    <span class="badge bg-danger rounded-pill">05/01/2026</span>
-                                </li>
-
-                                <li
-                                    class="list-group-item bg-transparent text-white d-flex justify-content-between align-items-start">
-                                    <div class="ms-2 me-auto">
-                                        <div class="fw-bold">Libur Semester</div>
-                                        Semester Ganjil 2025/2026
-                                    </div>
-                                    <span class="badge bg-success rounded-pill">19/01/2026</span>
-                                </li>
-
-                                <li
-                                    class="list-group-item bg-transparent text-white d-flex justify-content-between align-items-start">
-                                    <div class="ms-2 me-auto">
-                                        <div class="fw-bold">Batas Input Nilai SIAKAD</div>
-                                        Periode UAS
-                                    </div>
-                                    <span class="badge bg-secondary rounded-pill">23/01/2026</span>
-                                </li>
-                            </ul>
+                        <div class="mb-3 border-bottom border-white border-opacity-10 pb-2">
+                            <div class="d-flex justify-content-between">
+                                <span class="small fw-bold">Input Nilai Dosen</span>
+                                <span class="badge bg-warning text-dark">23 Jan</span>
+                            </div>
+                            <p class="small opacity-50 mb-0">Batas akhir penginputan nilai UAS</p>
                         </div>
-
-                        <div class="card-footer text-center bg-transparent border-top-0">
-                            <a href="https://uca.ac.id/" target="_blank" class="btn btn-link btn-sm text-white">Lihat
-                                Semua Pengumuman</a>
+                        <div class="text-center mt-3">
+                            <a href="#" class="text-light small text-decoration-none opacity-75">Lihat semua pengumuman
+                                &raquo;</a>
                         </div>
                     </div>
-
                 </div>
             </div>
         </div>
     </div>
 </div>
-<hr class="mb-4">
-<h2 class="mb-4 text-primary animate-fade-in-up delay-100" id="Preview-data"><i
-        class="bi bi-file-earmark-bar-graph"></i> Data Akademik Saat Ini</h2>
-<hr class="mb-4">
 
-<div class="row g-4 mb-5">
-
-    <div class="col-md-4 animate-fade-in-up delay-100">
-        <a href="{{ url_for('daftar_mahasiswa') }}" class="home-card-link">
-            <div class="card bg-info text-white home-card shadow h-100">
-                <div class="card-body text-center py-4">
-                    <i class="bi bi-person-bounding-box display-3 mb-2"></i>
-                    <h5 class="card-title fw-bold">DATA MAHASISWA</h5>
-                    <hr class="my-3 border-light">
-                    <p class="display-5 fw-bold mb-0">{{ total_mahasiswa }}</p>
-                    <p class="card-text text-uppercase opacity-75">Total Mahasiswa Aktif</p>
-                </div>
-            </div>
-        </a>
+<div class="container-fluid mb-5" id="Preview-data">
+    <div class="d-flex justify-content-between align-items-end mb-4 animate-up" style="animation-delay: 0.1s;">
+        <div>
+            <h2 class="fw-bold mb-0">Statistik Institusi</h2>
+            <p class="text-muted mb-0">Ringkasan data akademik yang terdaftar saat ini.</p>
+        </div>
     </div>
 
-    <div class="col-md-4 animate-fade-in-up delay-200">
-        <a href="{{ url_for('daftar_dosen') }}" class="home-card-link">
-            <div class="card bg-success text-white home-card shadow h-100">
-                <div class="card-body text-center py-4">
-                    <i class="bi bi-person-badge-fill display-3 mb-2"></i>
-                    <h5 class="card-title fw-bold">DATA DOSEN</h5>
-                    <hr class="my-3 border-light">
-                    <p class="display-5 fw-bold mb-0">{{ total_dosen }}</p>
-                    <p class="card-text text-uppercase opacity-75">Total Dosen Aktif</p>
+    <div class="row g-4 mb-5">
+        <div class="col-md-4 animate-up" style="animation-delay: 0.2s;">
+            <div class="card border-0 shadow-sm h-100">
+                <div class="card-body p-4 border-start border-4 border-primary">
+                    <div class="d-flex justify-content-between align-items-start mb-3">
+                        <div class="bg-primary bg-opacity-10 p-3 rounded-3 text-primary">
+                            <i class="bi bi-people fs-3"></i>
+                        </div>
+                        <span class="text-success small fw-bold">Aktif</span>
+                    </div>
+                    <h5 class="text-muted small fw-bold text-uppercase mb-1">Total Mahasiswa</h5>
+                    <h2 class="fw-bold mb-1">{{ total_mahasiswa }}</h2>
+                    <p class="mb-0 small"><a href="{{ url_for('daftar_mahasiswa') }}"
+                            class="text-primary text-decoration-none">Kelola Data &raquo;</a></p>
                 </div>
             </div>
-        </a>
-    </div>
+        </div>
 
-    <div class="col-md-4 animate-fade-in-up delay-300">
-        <a href="{{ url_for('daftar_matkul') }}" class="home-card-link">
-            <div class="card bg-danger text-white home-card shadow h-100">
-                <div class="card-body text-center py-4">
-                    <i class="bi bi-journals display-3 mb-2"></i>
-                    <h5 class="card-title fw-bold">DATA MATA KULIAH</h5>
-                    <hr class="my-3 border-light">
-                    <p class="display-5 fw-bold mb-0">{{ total_matkul }}</p>
-                    <p class="card-text text-uppercase opacity-75">Total Mata Kuliah Terdaftar</p>
+        <div class="col-md-4 animate-up" style="animation-delay: 0.3s;">
+            <div class="card border-0 shadow-sm h-100">
+                <div class="card-body p-4 border-start border-4 border-success">
+                    <div class="d-flex justify-content-between align-items-start mb-3">
+                        <div class="bg-success bg-opacity-10 p-3 rounded-3 text-success">
+                            <i class="bi bi-person-badge fs-3"></i>
+                        </div>
+                        <span class="text-success small fw-bold">Aktif</span>
+                    </div>
+                    <h5 class="text-muted small fw-bold text-uppercase mb-1">Tenaga Pengajar</h5>
+                    <h2 class="fw-bold mb-1">{{ total_dosen }}</h2>
+                    <p class="mb-0 small"><a href="{{ url_for('daftar_dosen') }}"
+                            class="text-success text-decoration-none">Kelola Data &raquo;</a></p>
                 </div>
             </div>
-        </a>
-    </div>
+        </div>
 
+        <div class="col-md-4 animate-up" style="animation-delay: 0.4s;">
+            <div class="card border-0 shadow-sm h-100">
+                <div class="card-body p-4 border-start border-4 border-danger">
+                    <div class="d-flex justify-content-between align-items-start mb-3">
+                        <div class="bg-danger bg-opacity-10 p-3 rounded-3 text-danger">
+                            <i class="bi bi-book fs-3"></i>
+                        </div>
+                        <span class="text-danger small fw-bold">Update</span>
+                    </div>
+                    <h5 class="text-muted small fw-bold text-uppercase mb-1">Mata Kuliah</h5>
+                    <h2 class="fw-bold mb-1">{{ total_matkul }}</h2>
+                    <p class="mb-0 small"><a href="{{ url_for('daftar_matkul') }}"
+                            class="text-danger text-decoration-none">Kelola Data &raquo;</a></p>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 
 {% endblock %}

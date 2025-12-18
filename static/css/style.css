@@ -1,279 +1,201 @@
-/* 1. Efek Hover pada Card (digunakan di home.html, dan form input/edit) */
-.card {
-    transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+/* --- MODERN ACADEMIC DESIGN SYSTEM --- */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+
+:root {
+    --primary-color: #0f172a;
+    /* Slate 900 */
+    --accent-blue: #3b82f6;
+    /* Blue 500 */
+    --accent-emerald: #10b981;
+    /* Emerald 500 */
+    --accent-rose: #f43f5e;
+    /* Rose 500 */
+    --background-gray: #f8fafc;
+    --card-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+    --card-shadow-hover: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
 }
 
-.card:hover {
-    transform: translateY(-3px);
-    /* Sedikit terangkat ke atas */
-    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
-    /* Bayangan lebih jelas saat hover */
-}
-
-/* 2. Transisi Halus dan Efek Tekan pada Tombol */
-.btn {
-    transition: background-color 0.3s ease, border-color 0.3s ease, transform 0.1s ease;
-}
-
-.btn:active {
-    transform: scale(0.98);
-    /* Efek tombol sedikit 'masuk' saat ditekan */
-}
-
-/* 3. Mengubah warna Navbar brand saat hover */
-.navbar-brand:hover {
-    /* Menggunakan warna warning (kuning) dari tema Morph */
-    color: var(--bs-warning) !important;
-}
-
-/* 4. Mengatur warna latar belakang tabel agar lebih terlihat di tema Morph */
-.table-responsive {
-    background-color: var(--bs-body-bg);
-    border-radius: 0.5rem;
-    overflow: hidden;
-}
-
-/* 5. Efek hover pada baris tabel */
-.table tbody tr:hover {
-    background-color: var(--bs-secondary-bg);
-    /* Warna latar belakang sekunder saat di-hover */
-}
-
-/* 6. Efek Jumbotron/Hero Button (Home Page) */
-.btn-primary.btn-lg {
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
-    transition: all 0.3s ease-in-out;
-}
-
-.btn-primary.btn-lg:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 8px 15px rgba(var(--bs-primary-rgb), 0.4);
-}
-
-/* 7. CSS Khusus untuk Header Home */
-.home-hero {
-    background-image: url('../images/background.jpg');
-    background-size: cover;
-    background-position: center;
-
-    /* CALCULATED HEIGHT: 100vh dikurangi tinggi Navbar dan margin atas */
-    min-height: calc(100vh - 56px - 16px);
-
-    display: flex;
-    align-items: center;
-    color: white;
-    position: relative;
-    z-index: 1;
-    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
-}
-
-.home-hero::before {
-    content: "";
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background-color: rgba(0, 0, 0, 0.3);
-    z-index: -1;
-}
-
-html {
-    scroll-behavior: smooth;
-}
-
-/* 8. Navbar Animation */
-.navbar {
-    transition: all 0.4s ease-in-out;
-    padding: 1rem 1rem;
-    /* Padding awal lebih besar */
-}
-
-.navbar-scrolled {
-    background-color: rgba(var(--bs-primary-rgb), 0.95) !important;
-    /* Sedikit transparan */
-    padding: 0.5rem 1rem;
-    /* Padding mengecil saat scroll */
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    backdrop-filter: blur(5px);
-}
-
-/* 9. Keyframe Animations */
-@keyframes fadeInUp {
-    from {
-        opacity: 0;
-        transform: translate3d(0, 40px, 0);
-    }
-
-    to {
-        opacity: 1;
-        transform: translate3d(0, 0, 0);
-    }
-}
-
-.animate-fade-in-up {
-    animation-name: fadeInUp;
-    animation-duration: 0.8s;
-    animation-fill-mode: both;
-}
-
-.delay-100 {
-    animation-delay: 0.1s;
-}
-
-.delay-200 {
-    animation-delay: 0.2s;
-}
-
-.delay-300 {
-    animation-delay: 0.3s;
-}
-
-/* 10. Footer Styling */
-/* 1. Efek Hover pada Card (digunakan di home.html, dan form input/edit) */
-.card {
-    transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
-}
-
-.card:hover {
-    transform: translateY(-3px);
-    /* Sedikit terangkat ke atas */
-    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
-    /* Bayangan lebih jelas saat hover */
-}
-
-/* 2. Transisi Halus dan Efek Tekan pada Tombol */
-.btn {
-    transition: background-color 0.3s ease, border-color 0.3s ease, transform 0.1s ease;
-}
-
-.btn:active {
-    transform: scale(0.98);
-    /* Efek tombol sedikit 'masuk' saat ditekan */
-}
-
-/* 3. Mengubah warna Navbar brand saat hover */
-.navbar-brand:hover {
-    /* Menggunakan warna warning (kuning) dari tema Morph */
-    color: var(--bs-warning) !important;
-}
-
-/* 4. Mengatur warna latar belakang tabel agar lebih terlihat di tema Morph */
-.table-responsive {
-    background-color: var(--bs-body-bg);
-    border-radius: 0.5rem;
-    overflow: hidden;
-}
-
-/* 5. Efek hover pada baris tabel */
-.table tbody tr:hover {
-    background-color: var(--bs-secondary-bg);
-    /* Warna latar belakang sekunder saat di-hover */
-}
-
-/* 6. Efek Jumbotron/Hero Button (Home Page) */
-.btn-primary.btn-lg {
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
-    transition: all 0.3s ease-in-out;
-}
-
-.btn-primary.btn-lg:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 8px 15px rgba(var(--bs-primary-rgb), 0.4);
-}
-
-/* 7. CSS Khusus untuk Header Home */
-.home-hero {
-    background-image: url('../images/background.jpg');
-    background-size: cover;
-    background-position: center;
-
-    /* CALCULATED HEIGHT: 100vh dikurangi tinggi Navbar dan margin atas */
-    min-height: calc(100vh - 56px - 16px);
-
-    display: flex;
-    align-items: center;
-    color: white;
-    position: relative;
-    z-index: 1;
-    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
-}
-
-.home-hero::before {
-    content: "";
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background-color: rgba(0, 0, 0, 0.3);
-    z-index: -1;
-}
-
-html {
-    scroll-behavior: smooth;
-}
-
-/* 8. Navbar Animation */
-.navbar {
-    transition: all 0.4s ease-in-out;
-    padding: 1rem 1rem;
-    /* Padding awal lebih besar */
-}
-
-.navbar-scrolled {
-    background-color: rgba(var(--bs-primary-rgb), 0.95) !important;
-    /* Sedikit transparan */
-    padding: 0.5rem 1rem;
-    /* Padding mengecil saat scroll */
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    backdrop-filter: blur(5px);
-}
-
-/* 9. Keyframe Animations */
-@keyframes fadeInUp {
-    from {
-        opacity: 0;
-        transform: translate3d(0, 40px, 0);
-    }
-
-    to {
-        opacity: 1;
-        transform: translate3d(0, 0, 0);
-    }
-}
-
-.animate-fade-in-up {
-    animation-name: fadeInUp;
-    animation-duration: 0.8s;
-    animation-fill-mode: both;
-}
-
-.delay-100 {
-    animation-delay: 0.1s;
-}
-
-.delay-200 {
-    animation-delay: 0.2s;
-}
-
-.delay-300 {
-    animation-delay: 0.3s;
-}
-
-/* 10. Footer Styling */
 body {
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    background-color: var(--background-gray);
+    color: #1e293b;
+    line-height: 1.6;
     display: flex;
     flex-direction: column;
     min-height: 100vh;
 }
 
-/* 10. Footer Styling */
-.main-footer {
-    background: #f8f9fa;
-    padding: 2rem 0;
-    margin-top: auto;
-    /* Pushes footer to bottom */
-    border-top: 1px solid #e9ecef;
-    color: #6c757d;
+/* --- NAVBAR REFINEMENT --- */
+.navbar {
+    background-color: rgba(15, 23, 42, 0.9) !important;
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    transition: all 0.3s ease;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
 }
+
+.navbar-brand {
+    font-weight: 700;
+    letter-spacing: -0.025em;
+    color: white !important;
+}
+
+.nav-link {
+    font-weight: 500;
+    font-size: 0.925rem;
+    transition: color 0.2s ease;
+    opacity: 0.8;
+}
+
+.nav-link:hover {
+    opacity: 1;
+    color: var(--accent-blue) !important;
+}
+
+/* --- CARDS & PANELS --- */
+.card {
+    border: 1px solid #e2e8f0;
+    border-radius: 1rem;
+    box-shadow: var(--card-shadow);
+    transition: all 0.3s cubit-bezier(0.4, 0, 0.2, 1);
+    overflow: hidden;
+}
+
+.card:hover {
+    transform: translateY(-5px);
+    box-shadow: var(--card-shadow-hover);
+}
+
+.card-header {
+    background-color: transparent;
+    border-bottom: 1px solid #f1f5f9;
+    padding: 1.25rem 1.5rem;
+    font-weight: 600;
+    color: var(--primary-color);
+}
+
+/* --- HERO SECTION --- */
+.home-hero {
+    border-radius: 1.5rem !important;
+    background-position: center !important;
+    overflow: hidden;
+    position: relative;
+}
+
+.hero-overlay {
+    background: linear-gradient(to right, rgba(15, 23, 42, 0.9), rgba(15, 23, 42, 0.6));
+    height: 100%;
+    width: 100%;
+    padding: 4rem 3rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+/* --- BUTTONS --- */
+.btn {
+    border-radius: 0.6rem;
+    font-weight: 500;
+    padding: 0.6rem 1.25rem;
+    transition: all 0.2s ease;
+}
+
+.btn-primary {
+    background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+    border: none;
+}
+
+.btn-primary:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 10px 15px -3px rgba(15, 23, 42, 0.3);
+}
+
+/* --- TABLES --- */
+.table {
+    margin-bottom: 0;
+}
+
+.table thead th {
+    background-color: #f8fafc;
+    border-bottom: 2px solid #e2e8f0;
+    text-transform: uppercase;
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: #64748b;
+    padding: 1rem;
+}
+
+.table tbody td {
+    padding: 1rem;
+    vertical-align: middle;
+    color: #334155;
+    border-bottom: 1px solid #f1f5f9;
+}
+
+/* --- ALERTS --- */
+.alert {
+    border: none;
+    border-radius: 0.8rem;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+}
+
+/* --- FORM CONTROLS --- */
+.form-control,
+.form-select {
+    border-radius: 0.6rem;
+    border: 1px solid #e2e8f0;
+    padding: 0.6rem 0.9rem;
+    transition: all 0.2s ease;
+}
+
+.form-control:focus {
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+    border-color: var(--accent-blue);
+}
+
+/* --- ANIMATIONS --- */
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.animate-up {
+    animation: fadeInUp 0.6s ease-out forwards;
+}
+
+/* --- FOOTER --- */
+.main-footer {
+    background-color: white;
+    border-top: 1px solid #f1f5f9;
+    padding: 2.5rem 0;
+    margin-top: 4rem;
+}
+
+/* Custom Checkbox */
+.form-check-input:checked {
+    background-color: var(--accent-blue);
+    border-color: var(--accent-blue);
+}
+
+/* --- UTILITIES --- */
+.bg-blue-accent {
+    background-color: var(--accent-blue) !important;
+}
+
+.backdrop-blur {
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+}
+
+.text-info {
+    color: #60a5fa !important;
+}
+
+/* Modern Blue-Info */
