@@ -1,9 +1,12 @@
 # File: repository.py (VERSI LENGKAP & FINAL)
 
 import sqlite3
+import os
 from flask import g
 
-DATABASE_NAME = "akademik.db"
+# Gunakan absolute path agar tidak bingung lokasi DB
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+DATABASE_NAME = os.path.join(BASE_DIR, "akademik.db")
 
 # ----------------- FUNGSI KONTEKS DATABASE FLASK -----------------
 

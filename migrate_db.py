@@ -1,28 +1,22 @@
 import sqlite3
 import os
 
-# Daftar kemungkinan lokasi database
-POSSIBLE_PATHS = ["akademik.db", "../akademik.db", "instance/akademik.db"]
+import sqlite3
+import os
+
+# Gunakan lokasi yang PASTI sama dengan repository.py
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+DATABASE_NAME = os.path.join(BASE_DIR, "akademik.db")
 
 def migrate():
-    db_path = None
-    for p in POSSIBLE_PATHS:
-        if os.path.exists(p):
-            db_path = p
-            print(f"Database ditemukan di: {os.path.abspath(p)}")
-            break
-            
-    if db_path is None:
-        print("PERINGATAN: File 'akademik.db' tidak ditemukan di folder ini maupun folder induk.")
-        print("Database baru akan dibuat di 'akademik.db' saat aplikasi berjalan.")
-        print("Jika aplikasi Anda sudah ada datanya, pastikan Anda berada di folder yang benar.")
-        # Kita tetap coba jalankan di 'akademik.db' lokal agar tidak error, tapi ini mungkin database baru/kosong
-        db_path = "akademik.db"
-
-    conn = sqlite3.connect(db_path)
+    if not os.path.exists(DATABASE_NAME):
+        print(f"DEBUG: Mencari database di: {DATABASE_NAME}")
+        print("PERINGATAN: Database belum ditemukan di path tersebut.")
+        
+    conn = sqlite3.connect(DATABASE_NAME)
     cursor = conn.cursor()
     
-    print(f"Memulai migrasi pada: {db_path}...")
+    print(f"Memulai migrasi pada: {DATABASE_NAME}...")
     
     # Cek colom nilai_angka
     try:
