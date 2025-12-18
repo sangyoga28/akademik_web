@@ -60,23 +60,23 @@ def fix_matkul_prodi():
             
         # 2. Mapping Berdasarkan NAMA (Fuzzy) - Jika Kode belum spesifik
         if new_prodi == "Umum":
-            if 'informatika' in nama or 'komputer' in nama:
+            if any(k in nama for k in ['informatika', 'komputer', 'pemrograman', 'data', 'jaringan']):
                 new_prodi = "Teknik Informatika"
-            elif 'sistem informasi' in nama:
+            elif any(k in nama for k in ['sistem informasi', 'bisnis', 'analisis']):
                 new_prodi = "Sistem Informasi"
-            elif 'elektro' in nama:
+            elif any(k in nama for k in ['elektro', 'listrik']):
                 new_prodi = "Teknik Elektro"
-            elif 'industri' in nama:
+            elif any(k in nama for k in ['industri', 'pabrik']):
                 new_prodi = "Teknik Industri"
-            elif 'manajemen' in nama:
+            elif any(k in nama for k in ['manajemen', 'bisnis', 'pemasaran', 'sdm']):
                 new_prodi = "Manajemen"
-            elif 'akuntansi' in nama:
+            elif any(k in nama for k in ['akuntansi', 'pajak', 'audit', 'fiskal']):
                 new_prodi = "Akuntansi"
-            elif 'inggris' in nama:
+            elif any(k in nama for k in ['inggris', 'english']):
                 new_prodi = "Sastra Inggris"
-            elif 'jepang' in nama:
+            elif any(k in nama for k in ['jepang', 'japan']):
                 new_prodi = "Sastra Jepang"
-            elif 'hukum' in nama:
+            elif any(k in nama for k in ['hukum', 'perdata', 'pidana', 'ih']):
                 new_prodi = "Ilmu Hukum"
         
         # Update ke database

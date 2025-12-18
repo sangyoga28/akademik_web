@@ -60,8 +60,8 @@
                         <td>{{ mk['nama_matkul'] }}</td>
                         <td>{{ mk['sks'] }}</td>
                         <td>{{ mk['semester'] }}</td>
-                        <td><span class="badge bg-info text-dark">{{ mk['prodi'] if mk['prodi'] else 'Umum' }}</span>
-                        </td>
+                        <td><span class="{{ 'text-primary' if mk['prodi'] else 'text-muted' }}">{{ mk['prodi'] if
+                                mk['prodi'] else 'Semua Prodi' }}</span></td>
                         <td>
                             <a href="{{ url_for('edit_matkul', kode=mk['kode_matkul']) }}"
                                 class="btn btn-sm btn-warning">Edit</a>
