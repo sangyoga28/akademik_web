@@ -46,7 +46,7 @@
                         <th scope="col" style="width: 50px;"><input type="checkbox" id="selectAll"></th>
                         <th scope="col">NIM</th>
                         <th scope="col">Nama Mahasiswa</th>
-                        <th scope="col">Alamat</th>
+                        <th scope="col">Fakultas</th>
                         <th scope="col">Prodi</th>
                         <th scope="col">Aksi</th>
                     </tr>
@@ -58,7 +58,7 @@
                         </td>
                         <td>{{ mhs['nim'] }}</td>
                         <td>{{ mhs['nama'] }}</td>
-                        <td>{{ mhs['alamat'] }}</td>
+                        <td>{{ mhs['fakultas'] or '-' }}</td>
                         <td>{{ mhs['prodi'] }}</td>
                         <td>
                             <a href="{{ url_for('edit_mahasiswa', nim=mhs['nim']) }}"

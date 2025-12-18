@@ -258,13 +258,18 @@ def edit_mahasiswa(nim):
         nama_baru = request.form['nama']
         alamat_baru = request.form['alamat']
         prodi_baru = request.form['prodi']
+        fakultas_baru = request.form['fakultas']
 
         if not nama_baru:
             flash('Nama wajib diisi!', 'danger')
             return redirect(url_for('edit_mahasiswa', nim=nim))
             
-        repo.ubah_data_mahasiswa(conn, nim, nama_baru, alamat_baru, prodi_baru)
-        flash(f'Data Mahasiswa {nim} berhasil diubah!', 'warning')
+        try:
+            repo.ubah_data_mahasiswa(conn, nim, nama_baru, alamat_baru, prodi_baru, fakultas_baru)
+            flash(f'Data Mahasiswa {nim} berhasil diubah!', 'success')
+        except Exception as e:
+            flash(f'Gagal mengubah data: {e}', 'danger')
+            
         return redirect(url_for('daftar_mahasiswa'))
         
     return render_template('edit_mahasiswa.html', mhs=data)
