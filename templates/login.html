@@ -1,55 +1,109 @@
 {% extends "base.html" %}
 
-{% block title %}Login - SIAKAD Platform{% endblock %}
+{% block title %}Login - Sistem Informasi Akademik{% endblock %}
 
-{% block content %}
-<div class="flex-grow-1 d-flex justify-content-center align-items-center py-5">
-    <div class="col-md-5 col-lg-4 animate-up">
+{% block navbar %}{% endblock %}
+{% block footer %}{% endblock %}
+
+{% block content_container %}
+<style>
+    /* Full Screen Login Specific */
+    .login-wrapper {
+        min-height: 100vh;
+        width: 100%;
+        background: linear-gradient(rgba(44, 62, 80, 0.8), rgba(44, 62, 80, 0.8)),
+        url("{{ url_for('static', filename='images/background.jpg') }}");
+        background-size: cover;
+        background-position: center;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 1rem;
+        overflow: hidden;
+    }
+
+    .login-box {
+        width: 100%;
+        max-width: 400px;
+        animation: fadeInUp 0.8s ease-both;
+    }
+
+    /* Override body padding if any */
+    body {
+        padding: 0 !important;
+        margin: 0 !important;
+    }
+
+    @media (max-height: 600px) {
+        .login-wrapper {
+            align-items: flex-start;
+            overflow-y: auto;
+            padding: 2rem 1rem;
+        }
+    }
+</style>
+
+<div class="login-wrapper">
+    <div class="login-box">
+        <!-- Flash Messages inside Login Box -->
+        {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+        {% for category, message in messages %}
+        <div class="alert alert-{{ category }} alert-dismissible fade show shadow-sm mb-4" role="alert">
+            {{ message }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+        {% endfor %}
+        {% endif %}
+        {% endwith %}
 
         <div class="text-center mb-4">
-            <div class="bg-primary bg-opacity-10 d-inline-block p-4 rounded-circle mb-3">
-                <i class="bi bi-shield-lock-fill text-primary display-4"></i>
+            <div class="bg-white p-3 d-inline-block rounded-circle shadow-lg mb-3">
+                <i class="bi bi-shield-lock-fill text-primary fs-1"></i>
             </div>
-            <h3 class="fw-bold text-primary">SIAKAD LOGIN</h3>
-            <p class="text-muted">Silakan masuk menggunakan akun terdaftar Anda.</p>
+            <h2 class="text-white fw-bold mb-0">MASUK SIAKAD</h2>
+            <p class="text-white-50 small">Sistem Informasi Akademik Terpadu</p>
         </div>
 
-        <div class="card border-0 shadow-lg">
-            <div class="card-body p-4 p-md-5">
+        <div class="card border-0 shadow-lg rounded-4 overflow-hidden">
+            <div class="card-body p-4 p-md-5 bg-white">
                 <form method="POST" action="{{ url_for('login') }}">
                     <div class="mb-3">
                         <label for="username" class="form-label small fw-bold text-muted">USERNAME / NIM</label>
-                        <div class="input-group">
-                            <span class="input-group-text bg-transparent border-end-0 text-muted"><i
-                                    class="bi bi-person-fill"></i></span>
-                            <input type="text" class="form-control border-start-0" id="username" name="username"
+                        <div class="input-group border rounded-3 overflow-hidden">
+                            <span class="input-group-text bg-light border-0"><i
+                                    class="bi bi-person text-muted"></i></span>
+                            <input type="text" class="form-control border-0 bg-light" id="username" name="username"
                                 placeholder="Masukkan username" required autofocus>
                         </div>
                     </div>
 
                     <div class="mb-4">
                         <label for="password" class="form-label small fw-bold text-muted">KATA SANDI</label>
-                        <div class="input-group">
-                            <span class="input-group-text bg-transparent border-end-0 text-muted"><i
-                                    class="bi bi-key-fill"></i></span>
-                            <input type="password" class="form-control border-start-0" id="password" name="password"
+                        <div class="input-group border rounded-3 overflow-hidden">
+                            <span class="input-group-text bg-light border-0"><i class="bi bi-key text-muted"></i></span>
+                            <input type="password" class="form-control border-0 bg-light" id="password" name="password"
                                 placeholder="Masukkan password" required>
                         </div>
                     </div>
 
-                    <div class="d-grid">
-                        <button type="submit"
-                            class="btn btn-primary d-flex align-items-center justify-content-center gap-2">
-                            Masuk ke Platform <i class="bi bi-arrow-right-short fs-4"></i>
+                    <div class="d-grid mt-2">
+                        <button type="submit" class="btn btn-primary btn-lg shadow-sm">
+                            MASUK SEKARANG <i class="bi bi-arrow-right-short fs-4"></i>
                         </button>
                     </div>
                 </form>
             </div>
+            <div class="card-footer bg-light border-0 text-center py-3">
+                <a href="{{ url_for('index') }}" class="text-decoration-none small text-muted">
+                    <i class="bi bi-arrow-left me-1"></i> Kembali ke Beranda
+                </a>
+            </div>
         </div>
 
-        <div class="text-center mt-4 text-muted small">
-            <p>Lupa password? Hubungi Administrator Akademik.</p>
-        </div>
+        <p class="text-center mt-4 text-white-50 small">
+            &copy; 2025 Sistem Informasi Akademik
+        </p>
     </div>
 </div>
 {% endblock %}
