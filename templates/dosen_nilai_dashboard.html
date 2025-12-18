@@ -40,8 +40,15 @@
                     pada periode <strong>Sem {{ semester }} - {{ tahun }}</strong>.
                 </div>
 
+                <!-- Search Bar -->
+                <div class="mb-4 position-relative">
+                    <input type="text" id="searchInput" class="form-control form-control-lg ps-5"
+                        placeholder="Cari Mata Kuliah atau Kode..." onkeyup="filterMatkul()">
+                    <i class="bi bi-search position-absolute top-50 start-0 translate-middle-y ms-3 text-secondary"></i>
+                </div>
+
                 <!-- List Mata Kuliah -->
-                <div class="row">
+                <div class="row" id="matkulList">
                     {% for matkul in matkul_list %}
                     <div class="col-md-6 mb-3">
                         <div class="card h-100 hover-shadow border-primary">
@@ -77,6 +84,32 @@
         </div>
     </div>
 </div>
+
+<script>
+    function filterMatkul() {
+        // Ambil value search
+        const input = document.getElementById('searchInput');
+        const filter = input.value.toLowerCase();
+
+        // Ambil semua card container
+        const container = document.getElementById('matkulList');
+        const cards = container.getElementsByClassName('col-md-6'); // Selector wrapper card
+
+        // Loop dan sembunyikan yang tidak match
+        for (let i = 0; i < cards.length; i++) {
+            const cardBody = cards[i].getElementsByClassName('card-body')[0];
+            const title = cardBody.getElementsByClassName('card-title')[0].textContent || cardBody.getElementsByClassName('card-title')[0].innerText;
+            const subtitle = cardBody.getElementsByClassName('card-subtitle')[0].textContent || cardBody.getElementsByClassName('card-subtitle')[0].innerText;
+
+            // Cek match di Judul (Nama Matkul) atau Subtitle (Kode)
+            if (title.toLowerCase().indexOf(filter) > -1 || subtitle.toLowerCase().indexOf(filter) > -1) {
+                cards[i].style.display = "";
+            } else {
+                cards[i].style.display = "none";
+            }
+        }
+    }
+</script>
 
 <style>
     .hover-shadow:hover {
