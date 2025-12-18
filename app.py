@@ -403,7 +403,7 @@ def konversi_nilai(angka):
 
 @app.route('/dosen/nilai', methods=['GET', 'POST'])
 def dosen_nilai_dashboard():
-    if not session.get('logged_in') or session.get('role') != 'Dosen':
+    if not session.get('logged_in') or session.get('role') not in ['Dosen', 'Admin Sistem']:
         return redirect(url_for('login'))
     
     conn = get_db()
@@ -424,7 +424,7 @@ def dosen_nilai_dashboard():
 
 @app.route('/dosen/nilai/input/<kode_matkul>', methods=['GET', 'POST'])
 def input_nilai(kode_matkul):
-    if not session.get('logged_in') or session.get('role') != 'Dosen':
+    if not session.get('logged_in') or session.get('role') not in ['Dosen', 'Admin Sistem']:
         return redirect(url_for('login'))
         
     conn = get_db()
