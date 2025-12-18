@@ -1,55 +1,106 @@
-{% extends "base.html" %}
+{% extends 'base.html' %}
 
-{% block title %}Tambah Data Mahasiswa{% endblock %}
+{% block title %}Tambah Mahasiswa Baru{% endblock %}
 
 {% block content %}
-    <h1 class="mb-4">Tambah Data Mahasiswa</h1>
-    <a href="{{ url_for('daftar_mahasiswa') }}" class="btn btn-sm btn-outline-secondary mb-3"><i class="bi bi-arrow-left"></i> Kembali ke Daftar</a>
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="card shadow-lg border-0 rounded-lg">
+            <div class="card-header bg-primary text-white">
+                <h4 class="mb-0"><i class="bi bi-person-plus-fill"></i> Tambah Mahasiswa</h4>
+            </div>
+            <div class="card-body p-4">
+                <form method="POST">
 
-    <div class="card shadow">
-        <div class="card-header bg-success text-white">
-            <h5 class="card-title mb-0">Form Input Data Mahasiswa Baru</h5>
-        </div>
-        <div class="card-body">
-            <form method="POST" action="{{ url_for('tambah_mahasiswa') }}">
-                <div class="row">
-                    <div class="col-md-6">
-                        <div class="mb-3">
-                            <label for="nim" class="form-label">NIM <span class="text-danger">*</span></label>
-                            <input type="text" class="form-control" id="nim" name="nim" required placeholder="Masukkan Nomor Induk Mahasiswa">
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <label class="form-label fw-bold">NIM (Nomor Induk Mahasiswa)</label>
+                            <div class="input-group">
+                                <span class="input-group-text"><i class="bi bi-123"></i></span>
+                                <input type="text" name="nim" class="form-control" placeholder="Contoh: 2023100001"
+                                    required minlength="10" maxlength="10" pattern="\d{10}"
+                                    title="NIM harus terdiri dari 10 angka">
+                            </div>
+                            <div class="form-text">Wajib 10 digit angka.</div>
                         </div>
-                        
-                        <div class="mb-3">
-                            <label for="nama" class="form-label">Nama <span class="text-danger">*</span></label>
-                            <input type="text" class="form-control" id="nama" name="nama" required placeholder="Masukkan Nama Lengkap">
+                        <div class="col-md-6">
+                            <label class="form-label fw-bold">Nama Lengkap</label>
+                            <div class="input-group">
+                                <span class="input-group-text"><i class="bi bi-person"></i></span>
+                                <input type="text" name="nama" class="form-control" placeholder="Nama Mahasiswa"
+                                    required>
+                            </div>
                         </div>
                     </div>
-                    
-                    <div class="col-md-6">
-                        <div class="mb-3">
-                            <label for="prodi" class="form-label">Program Studi</label>
-                            <select class="form-select" id="prodi" name="prodi">
-                                <option value="">Pilih Program Studi</option>
-                                <option value="Teknik Informatika">Teknik Informatika</option>
-                                <option value="Teknik Elektro">Teknik Elektro</option>
-                                <option value="Sistem Informasi">Sistem Informasi</option>
-                                <option value="Akutansi">Akuntansi</option>
-                                <option value="Manajemen">Manajemen</option>
-                            </select>
-                        </div>
 
-                        <div class="mb-3">
-                            <label for="alamat" class="form-label">Alamat</label>
-                            <textarea class="form-control" id="alamat" name="alamat" rows="3" placeholder="Masukkan Alamat Lengkap"></textarea>
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">Alamat</label>
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="bi bi-geo-alt"></i></span>
+                            <textarea name="alamat" class="form-control" rows="2" required></textarea>
                         </div>
                     </div>
-                </div>
-                
-                <hr>
-                
-                <button type="submit" class="btn btn-success me-2"><i class="bi bi-save"></i> Simpan Data</button>
-                <a href="{{ url_for('daftar_mahasiswa') }}" class="btn btn-secondary"><i class="bi bi-x-circle"></i> Batal</a>
-            </form>
+
+                    <div class="row mb-4">
+                        <div class="col-md-6">
+                            <label class="form-label fw-bold">Fakultas</label>
+                            <div class="input-group">
+                                <span class="input-group-text"><i class="bi bi-building"></i></span>
+                                <select name="fakultas" id="fakultas" class="form-select" required
+                                    onchange="updateProdi()">
+                                    <option value="" selected disabled>-- Pilih Fakultas --</option>
+                                    <option value="Fakultas Teknik">Fakultas Teknik</option>
+                                    <option value="Fakultas Ekonomi">Fakultas Ekonomi</option>
+                                    <option value="Fakultas Sastra">Fakultas Sastra</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label fw-bold">Program Studi</label>
+                            <div class="input-group">
+                                <span class="input-group-text"><i class="bi bi-mortarboard"></i></span>
+                                <select name="prodi" id="prodi" class="form-select" required>
+                                    <option value="" selected disabled>-- Pilih Fakultas Dulu --</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                        <a href="{{ url_for('daftar_mahasiswa') }}" class="btn btn-secondary me-md-2">
+                            <i class="bi bi-arrow-left"></i> Batal
+                        </a>
+                        <button type="submit" class="btn btn-primary px-4">
+                            <i class="bi bi-save"></i> Simpan Data
+                        </button>
+                    </div>
+
+                </form>
+            </div>
         </div>
     </div>
+</div>
+
+<script>
+    // Logic Sederhana Update Prodi
+    function updateProdi() {
+        const fakultas = document.getElementById('fakultas').value;
+        const prodiSelect = document.getElementById('prodi');
+
+        let options = '<option value="" selected disabled>-- Pilih Program Studi --</option>';
+
+        if (fakultas === 'Fakultas Teknik') {
+            options += '<option value="Teknik Informatika">Teknik Informatika</option>';
+            options += '<option value="Sistem Informasi">Sistem Informasi</option>';
+        } else if (fakultas === 'Fakultas Ekonomi') {
+            options += '<option value="Manajemen">Manajemen</option>';
+            options += '<option value="Akuntansi">Akuntansi</option>';
+        } else if (fakultas === 'Fakultas Sastra') {
+            options += '<option value="Sastra Inggris">Sastra Inggris</option>';
+            options += '<option value="Sastra Jepan">Sastra Jepang</option>';
+        }
+
+        prodiSelect.innerHTML = options;
+    }
+</script>
 {% endblock %}
