@@ -9,16 +9,26 @@ def determine_faculty(prodi):
     if not prodi:
         return None
         
-    p = prodi.lower()
-    if 'teknik' in p or 'sistem informasi' in p or 'komputer' in p:
+    p = prodi.lower().strip()
+    
+    # Cek yang spesifik dulu
+    if p in ['ti', 'si', 'if', 'ilkom']:
         return 'Fakultas Teknik'
-    elif 'manajemen' in p or 'akuntansi' in p or 'ekonomi' in p or 'bisnis' in p:
+    if p in ['mn', 'mj', 'ak', 'akt']:
         return 'Fakultas Ekonomi'
-    elif 'sastra' in p or 'bahasa' in p:
+        
+    # Cek substring
+    if 'teknik' in p or 'sistem informasi' in p or 'informatika' in p or 'komputer' in p or 'elektro' in p:
+        return 'Fakultas Teknik'
+    elif 'manajemen' in p or 'akuntansi' in p or 'ekonomi' in p or 'bisnis' in p or 'fiskal' in p:
+        return 'Fakultas Ekonomi'
+    elif 'sastra' in p or 'bahasa' in p or 'inggris' in p or 'jepang' in p:
         return 'Fakultas Sastra'
     elif 'hukum' in p:
         return 'Fakultas Hukum'
     else:
+        # Debugging: Print apa yang gagal dimapping
+        print(f"[DEBUG] Prodi '{prodi}' masuk kategori Lainnya.")
         return 'Fakultas Lainnya'
 
 def fix_data():
@@ -64,10 +74,10 @@ def fix_data():
                 print(f"[NIM] Gagal update {old_nim}: {e}")
         
         # --- FIX 2: ISI FAKULTAS ---
-        # Jika kolom fakultas kosong/None, kita isi otomatis
+        # Jika kosong ATAU "Fakultas Lainnya" (karena salah mapping sebelumnya), kita coba fix lagi
         current_fakultas = m['fakultas'] if 'fakultas' in m.keys() else None
         
-        if not current_fakultas:
+        if not current_fakultas or current_fakultas == 'Fakultas Lainnya':
             fakultas_baru = determine_faculty(prodi)
             if fakultas_baru:
                 cursor.execute("UPDATE tbMahasiswa SET fakultas=? WHERE nim=?", (fakultas_baru, new_nim))
