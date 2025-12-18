@@ -11,13 +11,23 @@ def determine_faculty(prodi):
         
     p = prodi.lower().strip()
     
-    # Cek yang spesifik dulu
-    if p in ['ti', 'si', 'if', 'ilkom']:
+    # Cek yang spesifik dulu (Strict Matching)
+    if p in ['ti', 'si', 'if', 'ilkom', 'teknik informatika', 'sistem informasi']:
         return 'Fakultas Teknik'
-    if p in ['mn', 'mj', 'ak', 'akt']:
+    if p in ['te', 'elektro', 'teknik elektro']:
+        return 'Fakultas Teknik'
+    if p in ['tin', 'industri', 'teknik industri']:
+        return 'Fakultas Teknik'
+    
+    if p in ['mn', 'mj', 'manajemen']:
+        return 'Fakultas Ekonomi'
+    if p in ['ak', 'akt', 'akuntansi']:
         return 'Fakultas Ekonomi'
         
-    # Cek substring
+    if p in ['ih', 'hukum', 'ilmu hukum']:
+        return 'Fakultas Hukum'
+        
+    # Cek substring (Fuzzy Matching)
     if 'teknik' in p or 'sistem informasi' in p or 'informatika' in p or 'komputer' in p or 'elektro' in p:
         return 'Fakultas Teknik'
     elif 'manajemen' in p or 'akuntansi' in p or 'ekonomi' in p or 'bisnis' in p or 'fiskal' in p:
