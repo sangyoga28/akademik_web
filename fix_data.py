@@ -75,10 +75,21 @@ def fix_data():
                 new_nim = old_nim.zfill(10) # Pad zero depan
             
             try:
+                # 1. Update NIM di Tabel Biodata & FK
                 cursor.execute("UPDATE tbMahasiswa SET nim=? WHERE nim=?", (new_nim, old_nim))
-                cursor.execute("UPDATE tbUser SET username=? WHERE username=?", (new_nim, old_nim))
                 cursor.execute("UPDATE tbKRS SET nim=? WHERE nim=?", (new_nim, old_nim))
-                print(f"[NIM] Fixed {old_nim} -> {new_nim}")
+                
+                # 2. Update Akun Login (Username & Password)
+                # Kita ubah Username jadi NIM baru
+                cursor.execute("UPDATE tbUser SET username=? WHERE username=?", (new_nim, old_nim))
+                
+                # Kita RESET password agar sama dengan NIM baru (menjaga konsistensi)
+                # Import di luar loop idealnya, tapi biar ringkas di sini ok
+                from werkzeug.security import generate_password_hash
+                new_hash = generate_password_hash(new_nim, method='pbkdf2:sha256')
+                cursor.execute("UPDATE tbUser SET password=? WHERE username=?", (new_hash, new_nim))
+                
+                print(f"[NIM & AKUN] Fixed {old_nim} -> {new_nim} (Password reset ke NIM baru)")
                 count_nim += 1
             except Exception as e:
                 print(f"[NIM] Gagal update {old_nim}: {e}")
