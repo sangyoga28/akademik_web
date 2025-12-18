@@ -657,11 +657,13 @@ def manage_krs(nim):
     # Create a set of taken course codes for O(1) lookup
     taken_codes = {item['kode_matkul'] for item in krs_data}
     
-    # Filter available courses by Student's Prodi
-    # This addresses the user's request to restrict courses by major
+    # Filter available courses by Student's Prodi AND Semester
+    # This addresses the user's request to restrict courses by major and semester
     matkul_tersedia = [
         mk for mk in semua_matkul 
-        if mk['kode_matkul'] not in taken_codes and (mk['prodi'] == mahasiswa['prodi'] or mk['prodi'] == 'Umum' or not mk['prodi'])
+        if mk['kode_matkul'] not in taken_codes and 
+           (mk['prodi'] == mahasiswa['prodi'] or mk['prodi'] == 'Umum' or not mk['prodi']) and
+           mk['semester'] == semester_aktif
     ]
     
     # Add KRS Logic
@@ -757,11 +759,19 @@ def hapus_krs_item(id_krs):
 
 @app.route('/mahasiswa/khs')
 def lihat_khs():
-    if not session.get('logged_in') or session.get('role') != 'Mahasiswa':
+    if not session.get('logged_in'):
         return redirect(url_for('login'))
         
     conn = get_db()
-    nim = session.get('username')
+    
+    # Akses NIM: Mahasiswa ambil dari session, Admin/Dosen bisa ambil dari parameter
+    if session.get('role') in ['Admin Sistem', 'Dosen']:
+        nim = request.args.get('nim')
+        if not nim:
+            flash('NIM harus ditentukan.', 'warning')
+            return redirect(url_for('index'))
+    else:
+        nim = session.get('username')
     
     # Filter
     semester = request.args.get('semester', 1, type=int)
