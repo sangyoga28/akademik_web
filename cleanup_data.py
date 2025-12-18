@@ -14,35 +14,33 @@ def cleanup_data():
     cursor = conn.cursor()
     print(f"Memulai PEMBERSIHAN data di: {DATABASE_NAME}")
 
-    # 1. Cari Mahasiswa dengan NIM != 10 digit ATAU Fakultas Kosong
-    # Kita cari yang length(nim) != 10 (biasanya < 10)
-    query = "SELECT nim, nama FROM tbMahasiswa WHERE length(nim) != 10 OR fakultas IS NULL OR fakultas = ''"
+    # 1. Cari Mahasiswa dengan NIM != 10 digit (termasuk yang 3 digit) ATAU Fakultas Kosong
+    query = "SELECT nim, nama FROM tbMahasiswa WHERE length(trim(nim)) != 10 OR fakultas IS NULL OR fakultas = ''"
     cursor.execute(query)
     bad_data = cursor.fetchall()
 
     if not bad_data:
-        print("Tidak ditemukan data bermasalah (NIM != 10 digit atau Fakultas kosong).")
+        print("Tidak ditemukan data mahasiswa dengan NIM < 10 digit (seperti NIM 3 angka) atau Fakultas kosong.")
         conn.close()
         return
 
-    print(f"Ditemukan {len(bad_data)} data mahasiswa invalid.")
+    print(f"Ditemukan {len(bad_data)} data mahasiswa invalid yang akan dihapus (termasuk NIM 3 angka).")
     
-    # Konfirmasi (optional di script, tapi langsung eksekusi aja biar cepat sesuai request user)
+    # Konfirmasi (langsung eksekusi sesuai request user)
     count = 0
     cursor.execute("PRAGMA foreign_keys=OFF")
 
     for m in bad_data:
         nim = m['nim']
         nama = m['nama']
-        print(f"MENGHAPUS: {nim} - {nama}")
+        print(f"MENGHAPUS DATA LEGACY: {nim} - {nama}")
         
         try:
-            # Hapus dari tbMahasiswa
+            # Hapus dari semua tabel terkait
             cursor.execute("DELETE FROM tbMahasiswa WHERE nim=?", (nim,))
-            # Hapus dari tbUser
             cursor.execute("DELETE FROM tbUser WHERE username=?", (nim,))
-            # Hapus dari tbKRS
             cursor.execute("DELETE FROM tbKRS WHERE nim=?", (nim,))
+            cursor.execute("DELETE FROM tbPembayaran WHERE nim=?", (nim,))
             
             count += 1
         except Exception as e:
