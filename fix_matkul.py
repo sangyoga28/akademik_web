@@ -28,29 +28,56 @@ def fix_matkul_prodi():
     
     count = 0
     for mk in matkul_list:
-        kode = mk['kode_matkul'].upper()
-        nama = mk['nama_matkul'].lower()
+        kode = mk['kode_matkul'].upper().strip()
+        nama = mk['nama_matkul'].lower().strip()
         new_prodi = "Umum"
 
-        # Mapping berdasarkan Awalan Kode (Prefix)
-        if kode.startswith('TI'):
+        # 1. Mapping Berdasarkan KODE (Prefix)
+        # Teknik Informatika
+        if any(kode.startswith(pre) for pre in ['TI', 'IF', 'ILKOM', 'KOM']):
             new_prodi = "Teknik Informatika"
-        elif kode.startswith('SI'):
+        # Sistem Informasi
+        elif any(kode.startswith(pre) for pre in ['SI', 'MSI']):
             new_prodi = "Sistem Informasi"
-        elif kode.startswith('TE'):
+        # Teknik Elektro
+        elif any(kode.startswith(pre) for pre in ['TE', 'EL']):
             new_prodi = "Teknik Elektro"
-        elif kode.startswith('TIN') or kode.startswith('ID'):
+        # Teknik Industri
+        elif any(kode.startswith(pre) for pre in ['TIN', 'ID', 'IND']):
             new_prodi = "Teknik Industri"
-        elif kode.startswith('MN'):
+        # Manajemen
+        elif any(kode.startswith(pre) for pre in ['MN', 'MJ', 'MAN']):
             new_prodi = "Manajemen"
-        elif kode.startswith('AK'):
+        # Akuntansi
+        elif any(kode.startswith(pre) for pre in ['AK', 'AKT', 'ACC']):
             new_prodi = "Akuntansi"
-        elif kode.startswith('ENG') or 'inggris' in nama:
-            new_prodi = "Sastra Inggris"
-        elif kode.startswith('JPN') or 'jepang' in nama:
-            new_prodi = "Sastra Jepang"
-        elif kode.startswith('HK') or kode.startswith('IH') or 'hukum' in nama:
+        # Sastra Inggris
+        elif any(kode.startswith(pre) for pre in ['ENG', 'ING', 'SI']):
+             if 'inggris' in nama: new_prodi = "Sastra Inggris"
+        # Ilmu Hukum
+        elif any(kode.startswith(pre) for pre in ['HK', 'IH', 'LAW']):
             new_prodi = "Ilmu Hukum"
+            
+        # 2. Mapping Berdasarkan NAMA (Fuzzy) - Jika Kode belum spesifik
+        if new_prodi == "Umum":
+            if 'informatika' in nama or 'komputer' in nama:
+                new_prodi = "Teknik Informatika"
+            elif 'sistem informasi' in nama:
+                new_prodi = "Sistem Informasi"
+            elif 'elektro' in nama:
+                new_prodi = "Teknik Elektro"
+            elif 'industri' in nama:
+                new_prodi = "Teknik Industri"
+            elif 'manajemen' in nama:
+                new_prodi = "Manajemen"
+            elif 'akuntansi' in nama:
+                new_prodi = "Akuntansi"
+            elif 'inggris' in nama:
+                new_prodi = "Sastra Inggris"
+            elif 'jepang' in nama:
+                new_prodi = "Sastra Jepang"
+            elif 'hukum' in nama:
+                new_prodi = "Ilmu Hukum"
         
         # Update ke database
         cursor.execute("UPDATE tbMatakuliah SET prodi=? WHERE kode_matkul=?", (new_prodi, mk['kode_matkul']))
