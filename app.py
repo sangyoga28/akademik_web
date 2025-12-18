@@ -423,10 +423,20 @@ def dosen_nilai_dashboard():
     semester = request.args.get('semester', 1, type=int)
     tahun = request.args.get('tahun', '2023/2024')
     
-    # Dosen bisa memilih mata kuliah apa saja yg mau dinilai (Simplifikasi)
-    # Idealnya hanya MK yang diajar, tapi karena struktur DB simple, kita tampilkan semua MK
-    # Nanti sistem akan cek apakah ada mahasiswa di MK itu di sem/tahun tsb
-    daftar_matkul = repo.daftar_matkul(conn, limit=1000)
+    # Ambil daftar mata kuliah berdasarkan hak akses
+    if session.get('role') == 'Dosen':
+        # Dosen hanya boleh lihat MK yang dia ajar
+        nip_dosen = session.get('username')
+        dosen_profile = repo.cari_by_nip(conn, nip_dosen)
+        matkul_diampu = dosen_profile['matkul_ajar'] if dosen_profile else None
+        
+        # Ambil semua matkul lalu filter
+        semua_mk = repo.daftar_matkul(conn, limit=1000)
+        # Filter berdasarkan NAMA matkul yang cocok dengan data profile dosen
+        daftar_matkul = [mk for mk in semua_mk if mk['nama_matkul'] == matkul_diampu]
+    else:
+        # Admin / Lainnya bisa lihat semua
+        daftar_matkul = repo.daftar_matkul(conn, limit=1000)
     
     return render_template('dosen_nilai_dashboard.html', 
                            matkul_list=daftar_matkul,
@@ -443,6 +453,18 @@ def input_nilai(kode_matkul):
     tahun = request.args.get('tahun', '2023/2024')
     
     matkul = repo.cari_by_kode_matkul(conn, kode_matkul)
+    
+    # --- SECURITY CHECK ---
+    # Pastikan Dosen tidak "nembak" URL matkul orang lain
+    if session.get('role') == 'Dosen':
+        nip_dosen = session.get('username')
+        dosen_profile = repo.cari_by_nip(conn, nip_dosen)
+        matkul_diampu = dosen_profile['matkul_ajar'] if dosen_profile else None
+        
+        if not matkul or matkul['nama_matkul'] != matkul_diampu:
+            flash(f'Anda tidak memiliki akses untuk menilai mata kuliah "{matkul["nama_matkul"] if matkul else kode_matkul}".', 'danger')
+            return redirect(url_for('dosen_nilai_dashboard'))
+    # ----------------------
     
     if request.method == 'POST':
         # Loop semua input dari form
@@ -512,6 +534,7 @@ def tambah_matkul():
         nama = request.form['nama_matkul']
         sks = request.form['sks']
         smt = request.form['semester']
+        prodi = request.form.get('prodi')
 
         if not kode or not nama:
             flash('Kode dan Nama Mata Kuliah wajib diisi!', 'danger')
@@ -523,7 +546,7 @@ def tambah_matkul():
             return redirect(url_for('tambah_matkul'))
             
         try:
-            repo.tambah_data_matkul(conn, kode, nama, int(sks), int(smt))
+            repo.tambah_data_matkul(conn, kode, nama, int(sks), int(smt), prodi)
             flash(f'Data Mata Kuliah {kode} berhasil ditambahkan!', 'success')
             return redirect(url_for('daftar_matkul'))
         except:
@@ -543,6 +566,7 @@ def edit_matkul(kode):
         nama_baru = request.form['nama_matkul']
         sks_baru = request.form['sks']
         semester_baru = request.form['semester']
+        prodi_baru = request.form.get('prodi')
 
         if not nama_baru:
             flash('Nama Mata Kuliah wajib diisi!', 'danger')
@@ -555,7 +579,7 @@ def edit_matkul(kode):
             flash('SKS dan Semester harus berupa angka!', 'danger')
             return redirect(url_for('edit_matkul', kode=kode))
             
-        repo.ubah_data_matkul(conn, kode, nama_baru, sks_baru, semester_baru)
+        repo.ubah_data_matkul(conn, kode, nama_baru, sks_baru, semester_baru, prodi_baru)
         flash(f'Data Mata Kuliah {kode} berhasil diubah!', 'warning')
         return redirect(url_for('daftar_matkul'))
         
@@ -633,8 +657,12 @@ def manage_krs(nim):
     # Create a set of taken course codes for O(1) lookup
     taken_codes = {item['kode_matkul'] for item in krs_data}
     
-    # Filter available courses
-    matkul_tersedia = [mk for mk in semua_matkul if mk['kode_matkul'] not in taken_codes]
+    # Filter available courses by Student's Prodi
+    # This addresses the user's request to restrict courses by major
+    matkul_tersedia = [
+        mk for mk in semua_matkul 
+        if mk['kode_matkul'] not in taken_codes and (mk['prodi'] == mahasiswa['prodi'] or mk['prodi'] == 'Umum' or not mk['prodi'])
+    ]
     
     # Add KRS Logic
     if request.method == 'POST':

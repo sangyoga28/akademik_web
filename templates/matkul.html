@@ -47,6 +47,7 @@
                         <th scope="col">Nama Mata Kuliah</th>
                         <th scope="col">SKS</th>
                         <th scope="col">Semester</th>
+                        <th scope="col">Program Studi</th>
                         <th scope="col">Aksi</th>
                     </tr>
                 </thead>
@@ -59,6 +60,8 @@
                         <td>{{ mk['nama_matkul'] }}</td>
                         <td>{{ mk['sks'] }}</td>
                         <td>{{ mk['semester'] }}</td>
+                        <td><span class="badge bg-info text-dark">{{ mk['prodi'] if mk['prodi'] else 'Umum' }}</span>
+                        </td>
                         <td>
                             <a href="{{ url_for('edit_matkul', kode=mk['kode_matkul']) }}"
                                 class="btn btn-sm btn-warning">Edit</a>

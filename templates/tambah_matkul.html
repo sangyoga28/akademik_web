@@ -3,42 +3,62 @@
 {% block title %}Tambah Mata Kuliah{% endblock %}
 
 {% block content %}
-    <h1 class="mb-4">Tambah Data Mata Kuliah</h1>
-    <a href="{{ url_for('daftar_matkul') }}" class="btn btn-sm btn-outline-secondary mb-3"><i class="bi bi-arrow-left"></i> Kembali ke Daftar</a>
+<h1 class="mb-4">Tambah Data Mata Kuliah</h1>
+<a href="{{ url_for('daftar_matkul') }}" class="btn btn-sm btn-outline-secondary mb-3"><i class="bi bi-arrow-left"></i>
+    Kembali ke Daftar</a>
 
-    <div class="card shadow">
-        <div class="card-header bg-success text-white">
-            <h5 class="card-title mb-0">Form Input Mata Kuliah Baru</h5>
-        </div>
-        <div class="card-body">
-            <form method="POST" action="{{ url_for('tambah_matkul') }}">
-                
-                <div class="mb-3">
-                    <label for="kode_matkul" class="form-label">Kode Mata Kuliah <span class="text-danger">*</span></label>
-                    <input type="text" class="form-control" id="kode_matkul" name="kode_matkul" required placeholder="Contoh: WEB101">
-                </div>
-                
-                <div class="mb-3">
-                    <label for="nama_matkul" class="form-label">Nama Mata Kuliah <span class="text-danger">*</span></label>
-                    <input type="text" class="form-control" id="nama_matkul" name="nama_matkul" required placeholder="Contoh: Pemrograman Web">
-                </div>
-
-                <div class="row">
-                    <div class="col-md-6 mb-3">
-                        <label for="sks" class="form-label">SKS</label>
-                        <input type="number" class="form-control" id="sks" name="sks" placeholder="Contoh: 3" min="1" required>
-                    </div>
-                    <div class="col-md-6 mb-3">
-                        <label for="semester" class="form-label">Semester</label>
-                        <input type="number" class="form-control" id="semester" name="semester" placeholder="Contoh: 3" min="1" required>
-                    </div>
-                </div>
-                
-                <hr>
-                
-                <button type="submit" class="btn btn-success me-2"><i class="bi bi-save"></i> Simpan Data</button>
-                <a href="{{ url_for('daftar_matkul') }}" class="btn btn-secondary"><i class="bi bi-x-circle"></i> Batal</a>
-            </form>
-        </div>
+<div class="card shadow">
+    <div class="card-header bg-success text-white">
+        <h5 class="card-title mb-0">Form Input Mata Kuliah Baru</h5>
     </div>
+    <div class="card-body">
+        <form method="POST" action="{{ url_for('tambah_matkul') }}">
+
+            <div class="mb-3">
+                <label for="kode_matkul" class="form-label">Kode Mata Kuliah <span class="text-danger">*</span></label>
+                <input type="text" class="form-control" id="kode_matkul" name="kode_matkul" required
+                    placeholder="Contoh: WEB101">
+            </div>
+
+            <div class="mb-3">
+                <label for="nama_matkul" class="form-label">Nama Mata Kuliah <span class="text-danger">*</span></label>
+                <input type="text" class="form-control" id="nama_matkul" name="nama_matkul" required
+                    placeholder="Contoh: Pemrograman Web">
+            </div>
+
+            <div class="row">
+                <div class="col-md-4 mb-3">
+                    <label for="sks" class="form-label">SKS</label>
+                    <input type="number" class="form-control" id="sks" name="sks" placeholder="Contoh: 3" min="1"
+                        required>
+                </div>
+                <div class="col-md-4 mb-3">
+                    <label for="semester" class="form-label">Semester</label>
+                    <input type="number" class="form-control" id="semester" name="semester" placeholder="Contoh: 3"
+                        min="1" required>
+                </div>
+                <div class="col-md-4 mb-3">
+                    <label for="prodi" class="form-label">Program Studi</label>
+                    <select class="form-select" id="prodi" name="prodi" required>
+                        <option value="Umum">Umum (Semua Prodi)</option>
+                        <option value="Teknik Informatika">Teknik Informatika</option>
+                        <option value="Sistem Informasi">Sistem Informasi</option>
+                        <option value="Teknik Elektro">Teknik Elektro</option>
+                        <option value="Teknik Industri">Teknik Industri</option>
+                        <option value="Manajemen">Manajemen</option>
+                        <option value="Akuntansi">Akuntansi</option>
+                        <option value="Sastra Inggris">Sastra Inggris</option>
+                        <option value="Sastra Jepang">Sastra Jepang</option>
+                        <option value="Ilmu Hukum">Ilmu Hukum</option>
+                    </select>
+                </div>
+            </div>
+
+            <hr>
+
+            <button type="submit" class="btn btn-success me-2"><i class="bi bi-save"></i> Simpan Data</button>
+            <a href="{{ url_for('daftar_matkul') }}" class="btn btn-secondary"><i class="bi bi-x-circle"></i> Batal</a>
+        </form>
+    </div>
+</div>
 {% endblock %}

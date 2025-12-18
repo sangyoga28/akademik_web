@@ -55,7 +55,8 @@ def buat_tabel(conn):
             kode_matkul TEXT PRIMARY KEY, 
             nama_matkul TEXT NOT NULL, 
             sks INTEGER,
-            semester INTEGER
+            semester INTEGER,
+            prodi TEXT
         );
     """)
     
@@ -212,10 +213,10 @@ def hapus_data_dosen(conn, nip):
 
 # ----------------- FUNGSI MATA KULIAH -----------------
 
-def tambah_data_matkul(conn, kode, nama, sks, semester):
+def tambah_data_matkul(conn, kode, nama, sks, semester, prodi=None):
     cursor = conn.cursor()
-    cursor.execute("INSERT INTO tbMatakuliah (kode_matkul, nama_matkul, sks, semester) VALUES (?, ?, ?, ?)", 
-                   (kode, nama, sks, semester))
+    cursor.execute("INSERT INTO tbMatakuliah (kode_matkul, nama_matkul, sks, semester, prodi) VALUES (?, ?, ?, ?, ?)", 
+                   (kode, nama, sks, semester, prodi))
     conn.commit()
 
 # FUNGSI INI MENDUKUNG PAGINATION DAN SEARCH
@@ -240,10 +241,10 @@ def cari_by_kode_matkul(conn, kode):
     cursor.execute("SELECT * FROM tbMatakuliah WHERE kode_matkul=?", (kode,))
     return cursor.fetchone()
 
-def ubah_data_matkul(conn, kode, nama, sks, semester):
+def ubah_data_matkul(conn, kode, nama, sks, semester, prodi=None):
     cursor = conn.cursor()
-    cursor.execute("UPDATE tbMatakuliah SET nama_matkul=?, sks=?, semester=? WHERE kode_matkul=?", 
-                   (nama, sks, semester, kode))
+    cursor.execute("UPDATE tbMatakuliah SET nama_matkul=?, sks=?, semester=?, prodi=? WHERE kode_matkul=?", 
+                   (nama, sks, semester, prodi, kode))
     conn.commit()
     return cursor.rowcount > 0
 

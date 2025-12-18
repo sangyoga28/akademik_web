@@ -3,42 +3,72 @@
 {% block title %}Ubah Mata Kuliah{% endblock %}
 
 {% block content %}
-    <h1 class="mb-4">Ubah Data Mata Kuliah: {{ matkul['kode_matkul'] }}</h1>
-    <a href="{{ url_for('daftar_matkul') }}" class="btn btn-sm btn-outline-secondary mb-3"><i class="bi bi-arrow-left"></i> Kembali ke Daftar</a>
+<h1 class="mb-4">Ubah Data Mata Kuliah: {{ matkul['kode_matkul'] }}</h1>
+<a href="{{ url_for('daftar_matkul') }}" class="btn btn-sm btn-outline-secondary mb-3"><i class="bi bi-arrow-left"></i>
+    Kembali ke Daftar</a>
 
-    <div class="card shadow">
-        <div class="card-header bg-warning text-white">
-            <h5 class="card-title mb-0">Form Ubah Data Mata Kuliah</h5>
-        </div>
-        <div class="card-body">
-            <form method="POST" action="{{ url_for('edit_matkul', kode=matkul['kode_matkul']) }}">
-                
-                <div class="mb-3">
-                    <label for="kode_matkul" class="form-label">Kode Mata Kuliah</label>
-                    <input type="text" class="form-control" value="{{ matkul['kode_matkul'] }}" readonly>
-                </div>
-                
-                <div class="mb-3">
-                    <label for="nama_matkul" class="form-label">Nama Mata Kuliah <span class="text-danger">*</span></label>
-                    <input type="text" class="form-control" id="nama_matkul" name="nama_matkul" value="{{ matkul['nama_matkul'] }}" required>
-                </div>
-
-                <div class="row">
-                    <div class="col-md-6 mb-3">
-                        <label for="sks" class="form-label">SKS</label>
-                        <input type="number" class="form-control" id="sks" name="sks" value="{{ matkul['sks'] }}" min="1" required>
-                    </div>
-                    <div class="col-md-6 mb-3">
-                        <label for="semester" class="form-label">Semester</label>
-                        <input type="number" class="form-control" id="semester" name="semester" value="{{ matkul['semester'] }}" min="1" required>
-                    </div>
-                </div>
-                
-                <hr>
-                
-                <button type="submit" class="btn btn-warning me-2"><i class="bi bi-arrow-clockwise"></i> Update Data</button>
-                <a href="{{ url_for('daftar_matkul') }}" class="btn btn-secondary"><i class="bi bi-x-circle"></i> Batal</a>
-            </form>
-        </div>
+<div class="card shadow">
+    <div class="card-header bg-warning text-white">
+        <h5 class="card-title mb-0">Form Ubah Data Mata Kuliah</h5>
     </div>
+    <div class="card-body">
+        <form method="POST" action="{{ url_for('edit_matkul', kode=matkul['kode_matkul']) }}">
+
+            <div class="mb-3">
+                <label for="kode_matkul" class="form-label">Kode Mata Kuliah</label>
+                <input type="text" class="form-control" value="{{ matkul['kode_matkul'] }}" readonly>
+            </div>
+
+            <div class="mb-3">
+                <label for="nama_matkul" class="form-label">Nama Mata Kuliah <span class="text-danger">*</span></label>
+                <input type="text" class="form-control" id="nama_matkul" name="nama_matkul"
+                    value="{{ matkul['nama_matkul'] }}" required>
+            </div>
+
+            <div class="row">
+                <div class="col-md-4 mb-3">
+                    <label for="sks" class="form-label">SKS</label>
+                    <input type="number" class="form-control" id="sks" name="sks" value="{{ matkul['sks'] }}" min="1"
+                        required>
+                </div>
+                <div class="col-md-4 mb-3">
+                    <label for="semester" class="form-label">Semester</label>
+                    <input type="number" class="form-control" id="semester" name="semester"
+                        value="{{ matkul['semester'] }}" min="1" required>
+                </div>
+                <div class="col-md-4 mb-3">
+                    <label for="prodi" class="form-label">Program Studi</label>
+                    <select class="form-select" id="prodi" name="prodi" required>
+                        <option value="Umum" {% if matkul['prodi']=='Umum' %}selected{% endif %}>Umum (Semua Prodi)
+                        </option>
+                        <option value="Teknik Informatika" {% if matkul['prodi']=='Teknik Informatika' %}selected{%
+                            endif %}>Teknik Informatika</option>
+                        <option value="Sistem Informasi" {% if matkul['prodi']=='Sistem Informasi' %}selected{% endif
+                            %}>Sistem Informasi</option>
+                        <option value="Teknik Elektro" {% if matkul['prodi']=='Teknik Elektro' %}selected{% endif %}>
+                            Teknik Elektro</option>
+                        <option value="Teknik Industri" {% if matkul['prodi']=='Teknik Industri' %}selected{% endif %}>
+                            Teknik Industri</option>
+                        <option value="Manajemen" {% if matkul['prodi']=='Manajemen' %}selected{% endif %}>Manajemen
+                        </option>
+                        <option value="Akuntansi" {% if matkul['prodi']=='Akuntansi' %}selected{% endif %}>Akuntansi
+                        </option>
+                        <option value="Sastra Inggris" {% if matkul['prodi']=='Sastra Inggris' %}selected{% endif %}>
+                            Sastra Inggris</option>
+                        <option value="Sastra Jepang" {% if matkul['prodi']=='Sastra Jepang' %}selected{% endif %}>
+                            Sastra Jepang</option>
+                        <option value="Ilmu Hukum" {% if matkul['prodi']=='Ilmu Hukum' %}selected{% endif %}>Ilmu Hukum
+                        </option>
+                    </select>
+                </div>
+            </div>
+
+            <hr>
+
+            <button type="submit" class="btn btn-warning me-2"><i class="bi bi-arrow-clockwise"></i> Update
+                Data</button>
+            <a href="{{ url_for('daftar_matkul') }}" class="btn btn-secondary"><i class="bi bi-x-circle"></i> Batal</a>
+        </form>
+    </div>
+</div>
 {% endblock %}

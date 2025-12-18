@@ -45,6 +45,10 @@
 
                     <div class="mb-3">
                         <label for="kode_matkul" class="form-label">Mata Kuliah</label>
+                        <div class="alert alert-info py-1 px-2 mb-2" style="font-size: 0.8rem;">
+                            <i class="bi bi-info-circle"></i> Menampilkan MK prodi <strong>{{ mahasiswa['prodi']
+                                }}</strong> & Umum.
+                        </div>
                         <select class="form-select" name="kode_matkul" id="kode_matkul" required {% if status_pembayaran
                             and status_pembayaran['status']=='Lunas' %}disabled{% endif %}>
                             <option value="">-- Pilih Mata Kuliah --</option>
