@@ -73,6 +73,8 @@ def buat_tabel(conn):
             kode_matkul TEXT,
             semester INTEGER,
             tahun_ajaran TEXT,
+            nilai_angka REAL,
+            nilai_huruf TEXT,
             FOREIGN KEY(nim) REFERENCES tbMahasiswa(nim),
             FOREIGN KEY(kode_matkul) REFERENCES tbMatakuliah(kode_matkul)
         );
@@ -109,6 +111,11 @@ def cari_user_by_username(conn, username):
     cursor = conn.cursor()
     cursor.execute("SELECT * FROM tbUser WHERE username=?", (username,))
     return cursor.fetchone()
+
+def hapus_user(conn, username):
+    cursor = conn.cursor()
+    cursor.execute("DELETE FROM tbUser WHERE username=?", (username,))
+    conn.commit()
 
 # ----------------- FUNGSI MAHASISWA -----------------
 
@@ -319,6 +326,46 @@ def cek_krs_exist(conn, nim, kode_matkul, semester, tahun_ajaran):
     query = "SELECT * FROM tbKRS WHERE nim=? AND kode_matkul=? AND semester=? AND tahun_ajaran=?"
     cursor.execute(query, (nim, kode_matkul, semester, tahun_ajaran))
     return cursor.fetchone()
+
+# --- FUNGSI PENILAIAN ---
+
+def ambil_mahasiswa_kelas(conn, kode_matkul, semester, tahun_ajaran):
+    """Mengambil daftar mahasiswa yang mengambil suatu MK di semester/tahun tertentu."""
+    cursor = conn.cursor()
+    query = """
+        SELECT k.id, k.nim, mhs.nama, k.nilai_angka, k.nilai_huruf
+        FROM tbKRS k
+        JOIN tbMahasiswa mhs ON k.nim = mhs.nim
+        WHERE k.kode_matkul = ? AND k.semester = ? AND k.tahun_ajaran = ?
+        ORDER BY k.nim
+    """
+    cursor.execute(query, (kode_matkul, semester, tahun_ajaran))
+    return cursor.fetchall()
+
+def simpan_nilai(conn, id_krs, nilai_angka, nilai_huruf):
+    cursor = conn.cursor()
+    cursor.execute("UPDATE tbKRS SET nilai_angka=?, nilai_huruf=? WHERE id=?", 
+                   (nilai_angka, nilai_huruf, id_krs))
+    conn.commit()
+    return cursor.rowcount > 0
+
+def ambil_khs(conn, nim, semester, tahun_ajaran):
+    """Mengambil KHS (KRS + Nilai) untuk mahasiswa."""
+    # Sebenarnya mirip ambil_krs, tapi kita fokuskan penamaan untuk KHS
+    return ambil_krs_mahasiswa(conn, nim, semester, tahun_ajaran)
+
+# Update ambil_krs_mahasiswa agar SELECT nilai juga
+def ambil_krs_mahasiswa(conn, nim, semester, tahun_ajaran):
+    cursor = conn.cursor()
+    query = """
+        SELECT k.id, k.nim, k.kode_matkul, k.semester, k.tahun_ajaran, 
+               m.nama_matkul, m.sks, k.nilai_angka, k.nilai_huruf
+        FROM tbKRS k
+        JOIN tbMatakuliah m ON k.kode_matkul = m.kode_matkul
+        WHERE k.nim = ? AND k.semester = ? AND k.tahun_ajaran = ?
+    """
+    cursor.execute(query, (nim, semester, tahun_ajaran))
+    return cursor.fetchall()
 
 # ----------------- FUNGSI PEMBAYARAN -----------------
 

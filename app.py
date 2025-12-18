@@ -132,26 +132,42 @@ def logout():
 
 # ----------------- ROUTE UTAMA -----------------
 
+# ----------------- ROUTE UTAMA -----------------
+
 @app.route('/')
 def index():
-    # ... (Proteksi login dan get_db() sudah benar)
     if not session.get('logged_in'):
         flash('Anda harus login untuk mengakses halaman ini.', 'warning')
         return redirect(url_for('login'))
         
     conn = get_db()
     
-    #Mengambil data total
-    total_mahasiswa = repo.hitung_jumlah_mahasiswa(conn)
-    total_dosen = repo.hitung_jumlah_dosen(conn)
-    total_matkul = repo.hitung_jumlah_matkul(conn)
+    # Kustomisasi Dashboard berdasarkan Role
+    role = session.get('role')
     
-    # Render template dengan data total
-    return render_template('home.html',
-        total_mahasiswa=total_mahasiswa,
-        total_dosen=total_dosen,
-        total_matkul=total_matkul
-    )
+    # Jika Admin, tampilkan statistik
+    if role == 'Admin Sistem':
+        total_mahasiswa = repo.hitung_jumlah_mahasiswa(conn)
+        total_dosen = repo.hitung_jumlah_dosen(conn)
+        total_matkul = repo.hitung_jumlah_matkul(conn)
+        
+        return render_template('home.html',
+            total_mahasiswa=total_mahasiswa,
+            total_dosen=total_dosen,
+            total_matkul=total_matkul
+        )
+    
+    # Jika Mahasiswa, mungkin redirect ke KRS atau tampilkan info mahasiswa
+    elif role == 'Mahasiswa':
+        # Bisa redirect langsung ke halaman KRS milik sendiri
+        return redirect(url_for('manage_krs', nim=session.get('username')))
+        
+    # Jika Dosen, redirect atau tampilkan dashboard simple
+    elif role == 'Dosen':
+        return render_template('home.html', 
+                               total_mahasiswa=0, total_dosen=0, total_matkul=0) # Dummy data agar tidak error
+    
+    return render_template('home.html')
 
 # ----------------- ROUTE MAHASISWA -----------------
 
@@ -211,10 +227,16 @@ def tambah_mahasiswa():
             
         try:
             repo.tambah_data_mahasiswa(conn, nim, nama, alamat, prodi)
-            flash(f'Data Mahasiswa {nim} berhasil ditambahkan!', 'success')
+            
+            # --- AUTO REGISTER USER MAHASISWA ---
+            # Default Password = NIM
+            hashed_pw = generate_password_hash(nim, method='pbkdf2:sha256')
+            repo.tambah_user(conn, nim, hashed_pw, role='Mahasiswa')
+            
+            flash(f'Data Mahasiswa {nim} berhasil ditambahkan! Akun Login otomatis dibuat (Pass: {nim}).', 'success')
             return redirect(url_for('daftar_mahasiswa'))
         except:
-            flash('Gagal simpan. Pastikan input benar.', 'danger')
+            flash('Gagal simpan atau NIM sudah ada akun.', 'danger')
             
     return render_template('tambah_mahasiswa.html')
 
@@ -246,9 +268,14 @@ def hapus_mahasiswa(nim):
     if not session.get('logged_in'): return redirect(url_for('login'))
         
     conn = get_db()
+    
+    # Hapus Data Mahasiswa
     success = repo.hapus_data_mahasiswa(conn, nim)
+    
     if success:
-        flash(f'Data Mahasiswa {nim} berhasil dihapus!', 'danger')
+        # --- HAPUS JUGA AKUN LOGIN ---
+        repo.hapus_user(conn, username=nim)
+        flash(f'Data Mahasiswa {nim} dan akun loginnya berhasil dihapus!', 'danger')
     else:
         flash(f'Gagal menghapus data Mahasiswa {nim}.', 'danger')
         
@@ -312,10 +339,16 @@ def tambah_dosen():
             
         try:
             repo.tambah_data_dosen(conn, nip, nama, matkul_ajar, telepon)
-            flash(f'Data Dosen {nip} berhasil ditambahkan!', 'success')
+            
+            # --- AUTO REGISTER USER DOSEN ---
+            # Default Password = NIP
+            hashed_pw = generate_password_hash(nip, method='pbkdf2:sha256')
+            repo.tambah_user(conn, nip, hashed_pw, role='Dosen')
+            
+            flash(f'Data Dosen {nip} berhasil ditambahkan! Akun Login otomatis dibuat (Pass: {nip}).', 'success')
             return redirect(url_for('daftar_dosen'))
         except:
-            flash('Gagal simpan. Pastikan input benar.', 'danger')
+            flash('Gagal simpan atau NIP sudah ada akun.', 'danger')
             
     return render_template('tambah_dosen.html')
 
@@ -349,13 +382,80 @@ def hapus_dosen(nip):
     conn = get_db()
     success = repo.hapus_data_dosen(conn, nip)
     if success:
-        flash(f'Data Dosen {nip} berhasil dihapus!', 'danger')
+        # --- HAPUS JUGA AKUN LOGIN ---
+        repo.hapus_user(conn, username=nip)
+        flash(f'Data Dosen {nip} dan akun loginnya berhasil dihapus!', 'danger')
     else:
         flash(f'Gagal menghapus data Dosen {nip}.', 'danger')
         
     return redirect(url_for('daftar_dosen'))
 
-# ----------------- ROUTE MATA KULIAH -----------------
+    return redirect(url_for('daftar_dosen'))
+
+# ----------------- ROUTE PENILAIAN (DOSEN) -----------------
+
+def konversi_nilai(angka):
+    if angka >= 85: return 'A'
+    elif angka >= 75: return 'B'
+    elif angka >= 60: return 'C'
+    elif angka >= 50: return 'D'
+    else: return 'E'
+
+@app.route('/dosen/nilai', methods=['GET', 'POST'])
+def dosen_nilai_dashboard():
+    if not session.get('logged_in') or session.get('role') != 'Dosen':
+        return redirect(url_for('login'))
+    
+    conn = get_db()
+    
+    # Filter Default
+    semester = request.args.get('semester', 1, type=int)
+    tahun = request.args.get('tahun', '2023/2024')
+    
+    # Dosen bisa memilih mata kuliah apa saja yg mau dinilai (Simplifikasi)
+    # Idealnya hanya MK yang diajar, tapi karena struktur DB simple, kita tampilkan semua MK
+    # Nanti sistem akan cek apakah ada mahasiswa di MK itu di sem/tahun tsb
+    daftar_matkul = repo.daftar_matkul(conn, limit=1000)
+    
+    return render_template('dosen_nilai_dashboard.html', 
+                           matkul_list=daftar_matkul,
+                           semester=semester,
+                           tahun=tahun)
+
+@app.route('/dosen/nilai/input/<kode_matkul>', methods=['GET', 'POST'])
+def input_nilai(kode_matkul):
+    if not session.get('logged_in') or session.get('role') != 'Dosen':
+        return redirect(url_for('login'))
+        
+    conn = get_db()
+    semester = request.args.get('semester', 1, type=int)
+    tahun = request.args.get('tahun', '2023/2024')
+    
+    matkul = repo.cari_by_kode_matkul(conn, kode_matkul)
+    
+    if request.method == 'POST':
+        # Loop semua input dari form
+        # Form name pattern: nilai_angka_{id_krs}
+        for key, val in request.form.items():
+            if key.startswith('nilai_angka_'):
+                id_krs = key.split('_')[2]
+                try:
+                    nilai_angka = float(val)
+                    nilai_huruf = konversi_nilai(nilai_angka)
+                    repo.simpan_nilai(conn, id_krs, nilai_angka, nilai_huruf)
+                except ValueError:
+                    pass # Ignore invalid input
+                    
+        flash('Nilai berhasil disimpan!', 'success')
+        return redirect(url_for('input_nilai', kode_matkul=kode_matkul, semester=semester, tahun=tahun))
+    
+    mahasiswa_list = repo.ambil_mahasiswa_kelas(conn, kode_matkul, semester, tahun)
+    
+    return render_template('input_nilai.html', 
+                           matkul=matkul,
+                           mahasiswa_list=mahasiswa_list,
+                           semester=semester,
+                           tahun=tahun)
 
 @app.route('/matkul')
 def daftar_matkul():
@@ -495,6 +595,12 @@ def daftar_krs_mahasiswa():
 def manage_krs(nim):
     if not session.get('logged_in'): return redirect(url_for('login'))
     
+    # --- PROTEKSI AKSES DATA ORANG LAIN ---
+    if session.get('role') == 'Mahasiswa' and session.get('username') != nim:
+        flash('Anda tidak memiliki izin mengakses data KRS mahasiswa lain.', 'danger')
+        return redirect(url_for('manage_krs', nim=session.get('username')))
+    # --------------------------------------
+    
     conn = get_db()
     mahasiswa = repo.cari_by_nim(conn, nim)
     if not mahasiswa:
@@ -605,6 +711,46 @@ def hapus_krs_item(id_krs):
     repo.hapus_krs(conn, id_krs)
     flash('Mata kuliah dihapus dari KRS.', 'success')
     return redirect(request.referrer)
+
+    return redirect(request.referrer)
+
+# ----------------- ROUTE KHS (MAHASISWA) -----------------
+
+@app.route('/mahasiswa/khs')
+def lihat_khs():
+    if not session.get('logged_in') or session.get('role') != 'Mahasiswa':
+        return redirect(url_for('login'))
+        
+    conn = get_db()
+    nim = session.get('username')
+    
+    # Filter
+    semester = request.args.get('semester', 1, type=int)
+    tahun = request.args.get('tahun', '2023/2024')
+    
+    data_khs = repo.ambil_khs(conn, nim, semester, tahun)
+    mahasiswa = repo.cari_by_nim(conn, nim)
+    
+    # Hitung IP Semester (IPS) Sederhana
+    total_sks = 0
+    total_bobot = 0
+    bobot_map = {'A': 4, 'B': 3, 'C': 2, 'D': 1, 'E': 0}
+    
+    for mk in data_khs:
+        if mk['nilai_huruf']:
+            sks = mk['sks']
+            bobot = bobot_map.get(mk['nilai_huruf'], 0)
+            total_sks += sks
+            total_bobot += (sks * bobot)
+            
+    ips = 0 if total_sks == 0 else round(total_bobot / total_sks, 2)
+    
+    return render_template('khs.html',
+                           mahasiswa=mahasiswa,
+                           data=data_khs,
+                           semester=semester,
+                           tahun=tahun,
+                           ips=ips)
 
 # ----------------- ROUTE PREVIEW/REPORT -----------------
 

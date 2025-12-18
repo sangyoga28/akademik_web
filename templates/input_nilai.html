@@ -1,0 +1,108 @@
+{% extends 'base.html' %}
+
+{% block title %}Input Nilai: {{ matkul['nama_matkul'] }}{% endblock %}
+
+{% block content %}
+<div class="row mb-4">
+    <div class="col-md-12">
+        <a href="{{ url_for('dosen_nilai_dashboard', semester=semester, tahun=tahun) }}"
+            class="btn btn-outline-secondary mb-3">
+            <i class="bi bi-arrow-left"></i> Kembali ke Dashboard
+        </a>
+
+        <div class="card shadow">
+            <div class="card-header bg-success text-white">
+                <div class="d-flex justify-content-between align-items-center">
+                    <h4 class="mb-0"><i class="bi bi-pencil-fill"></i> Input Nilai Mahasiswa</h4>
+                    <span class="badge bg-white text-success fs-6">
+                        Sem {{ semester }} - {{ tahun }}
+                    </span>
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="row mb-4">
+                    <div class="col-md-6">
+                        <table class="table table-borderless">
+                            <tr>
+                                <th width="150">Mata Kuliah</th>
+                                <td>: {{ matkul['nama_matkul'] }}</td>
+                            </tr>
+                            <tr>
+                                <th>Kode</th>
+                                <td>: {{ matkul['kode_matkul'] }}</td>
+                            </tr>
+                            <tr>
+                                <th>SKS</th>
+                                <td>: {{ matkul['sks'] }}</td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+
+                <form method="POST">
+                    <div class="table-responsive">
+                        <table class="table table-hover table-bordered align-middle">
+                            <thead class="table-light text-center">
+                                <tr>
+                                    <th width="5%">No</th>
+                                    <th width="15%">NIM</th>
+                                    <th width="30%">Nama Mahasiswa</th>
+                                    <th width="20%">Nilai Angka (0-100)</th>
+                                    <th width="15%">Nilai Huruf</th>
+                                    <th width="15%">Status</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for mhs in mahasiswa_list %}
+                                <tr>
+                                    <td class="text-center">{{ loop.index }}</td>
+                                    <td class="text-center fw-bold">{{ mhs['nim'] }}</td>
+                                    <td>{{ mhs['nama'] }}</td>
+                                    <td>
+                                        <input type="number" step="0.01" min="0" max="100"
+                                            name="nilai_angka_{{ mhs['id'] }}" class="form-control text-center fw-bold"
+                                            value="{{ mhs['nilai_angka'] if mhs['nilai_angka'] is not none else '' }}"
+                                            placeholder="0-100">
+                                    </td>
+                                    <td class="text-center">
+                                        {% if mhs['nilai_huruf'] %}
+                                        <span class="badge bg-primary fs-6">{{ mhs['nilai_huruf'] }}</span>
+                                        {% else %}
+                                        <span class="text-muted">-</span>
+                                        {% endif %}
+                                    </td>
+                                    <td class="text-center">
+                                        {% if mhs['nilai_angka'] is not none %}
+                                        <i class="bi bi-check-circle-fill text-success"></i> Tersimpan
+                                        {% else %}
+                                        <i class="bi bi-circle text-muted"></i> Belum
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                                {% else %}
+                                <tr>
+                                    <td colspan="6" class="text-center py-4 text-muted">
+                                        <i class="bi bi-info-circle display-4"></i>
+                                        <p class="mt-2">Belum ada mahasiswa yang mengambil mata kuliah ini di
+                                            semester/tahun terpilih.</p>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+
+                    {% if mahasiswa_list %}
+                    <div class="d-grid gap-2 d-md-flex justify-content-md-end mt-4">
+                        <button type="submit" class="btn btn-success btn-lg px-5">
+                            <i class="bi bi-save"></i> Simpan Semua Nilai
+                        </button>
+                    </div>
+                    {% endif %}
+                </form>
+
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
