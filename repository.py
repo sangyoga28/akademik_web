@@ -122,10 +122,10 @@ def hapus_user(conn, username):
 
 # ----------------- FUNGSI MAHASISWA -----------------
 
-def tambah_data_mahasiswa(conn, nim, nama, alamat, prodi):
+def tambah_data_mahasiswa(conn, nim, nama, alamat, prodi, fakultas=None):
     cursor = conn.cursor()
-    cursor.execute("INSERT INTO tbMahasiswa (nim, nama, alamat, prodi) VALUES (?, ?, ?, ?)", 
-                   (nim, nama, alamat, prodi))
+    cursor.execute("INSERT INTO tbMahasiswa (nim, nama, alamat, prodi, fakultas) VALUES (?, ?, ?, ?, ?)", 
+                   (nim, nama, alamat, prodi, fakultas))
     conn.commit()
 
 # FUNGSI INI MENDUKUNG PAGINATION DAN SEARCH
