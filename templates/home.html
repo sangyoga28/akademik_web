@@ -4,8 +4,14 @@
 
 {% block content %}
 
-<div class="home-hero mb-5 animate-up shadow-lg" style="background-image: url('{{ url_for(" static",
-    filename="images/background.jpg" ) }}'); min-height: 450px;">
+<style>
+    .home-hero {
+        background-image: url("{{ url_for('static', filename='images/background.jpg') }}");
+        min-height: 450px;
+    }
+</style>
+
+<div class="home-hero mb-5 animate-up shadow-lg">
     <div class="hero-overlay">
         <div class="row align-items-center">
             <div class="col-lg-7">
@@ -23,7 +29,7 @@
             <div class="col-lg-5 d-none d-lg-block">
                 <div class="card bg-white bg-opacity-10 backdrop-blur border-0 shadow-lg text-white">
                     <div class="card-body p-4">
-                        <h6 class="text-uppercase small fw-bold mb-3 opacity-75"><i class="bi bi- megaphone me-2"></i>
+                        <h6 class="text-uppercase small fw-bold mb-3 opacity-75"><i class="bi bi-megaphone me-2"></i>
                             Pengumuman Terbaru</h6>
                         <div class="mb-3 border-bottom border-white border-opacity-10 pb-2">
                             <div class="d-flex justify-content-between">
