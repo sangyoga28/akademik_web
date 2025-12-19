@@ -35,7 +35,8 @@ def buat_tabel(conn):
             nim TEXT PRIMARY KEY, 
             nama TEXT NOT NULL, 
             alamat TEXT,
-            prodi TEXT
+            prodi TEXT,
+            fakultas TEXT
         );
     """)
     
@@ -153,10 +154,10 @@ def cari_by_nim(conn, nim):
     cursor.execute("SELECT * FROM tbMahasiswa WHERE nim=?", (nim,))
     return cursor.fetchone()
 
-def ubah_data_mahasiswa(conn, nim, nama, alamat, prodi):
+def ubah_data_mahasiswa(conn, nim, nama, alamat, prodi, fakultas=None):
     cursor = conn.cursor()
-    cursor.execute("UPDATE tbMahasiswa SET nama=?, alamat=?, prodi=? WHERE nim=?", 
-                   (nama, alamat, prodi, nim))
+    cursor.execute("UPDATE tbMahasiswa SET nama=?, alamat=?, prodi=?, fakultas=? WHERE nim=?", 
+                   (nama, alamat, prodi, fakultas, nim))
     conn.commit()
     return cursor.rowcount > 0
 

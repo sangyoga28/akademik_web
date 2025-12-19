@@ -24,80 +24,11 @@ def get_db():
 def close_connection(exception):
     repo.close_connection(exception)
     
-# Inisialisasi DB dan data dummy saat startup
+# Inisialisasi DB saat startup (Hanya buat tabel)
 with app.app_context():
     conn = get_db()
     repo.buat_tabel(conn)
-    
-    # --- Tambahkan Dummy User untuk Login ---
-    try:
-        if repo.cari_user_by_username(conn, 'admin') is None:
-            # Hashing password sebelum disimpan. Password: 'admin123'
-            hashed_pw = generate_password_hash('admin123', method='pbkdf2:sha256')
-            repo.tambah_user(conn, 'admin', hashed_pw, role='Admin Sistem')
-            print("User 'admin' berhasil ditambahkan (Password: admin123).")
-    except Exception as e:
-        print(f"Error tambah user dummy: {e}") 
-        
-    # --- Data Dummy Mahasiswa (21 Data) ---
-    try:
-        repo.tambah_data_mahasiswa(conn, '123', 'Ahmad Budiman', 'Bandung', 'TI')
-        repo.tambah_data_mahasiswa(conn, '124', 'Budi Cahyono', 'Jakarta', 'TI')
-        repo.tambah_data_mahasiswa(conn, '125', 'Citra Dewi', 'Surabaya', 'SI')
-        repo.tambah_data_mahasiswa(conn, '126', 'Dedi Firmansyah', 'Malang', 'TE')
-        repo.tambah_data_mahasiswa(conn, '127', 'Eka Lestari', 'Yogyakarta', 'TI')
-        repo.tambah_data_mahasiswa(conn, '128', 'Fajar Gunawan', 'Bandung', 'SI')
-        repo.tambah_data_mahasiswa(conn, '129', 'Gita Hutami', 'Jakarta', 'TI')
-        repo.tambah_data_mahasiswa(conn, '130', 'Hendra Irawan', 'Surabaya', 'TE')
-        repo.tambah_data_mahasiswa(conn, '131', 'Indah Jaya', 'Malang', 'SI')
-        repo.tambah_data_mahasiswa(conn, '132', 'Joko Kusuma', 'Yogyakarta', 'TI')
-        repo.tambah_data_mahasiswa(conn, '133', 'Kiki Larasati', 'Bandung', 'SI') 
-        repo.tambah_data_mahasiswa(conn, '134', 'Lukman Nur', 'Jakarta', 'TI')
-        repo.tambah_data_mahasiswa(conn, '135', 'Mia Puspita', 'Surabaya', 'SI')
-        repo.tambah_data_mahasiswa(conn, '136', 'Nanda Octavia', 'Malang', 'TE')
-        repo.tambah_data_mahasiswa(conn, '137', 'Oscar Putra', 'Yogyakarta', 'TI')
-        repo.tambah_data_mahasiswa(conn, '138', 'Putri Qalesya', 'Bandung', 'SI')
-        repo.tambah_data_mahasiswa(conn, '139', 'Rizky Satria', 'Jakarta', 'TI')
-        repo.tambah_data_mahasiswa(conn, '140', 'Sinta Tania', 'Surabaya', 'TE')
-        repo.tambah_data_mahasiswa(conn, '141', 'Umar Vanu', 'Malang', 'SI')
-        repo.tambah_data_mahasiswa(conn, '142', 'Wulan Xena', 'Yogyakarta', 'TI')
-        repo.tambah_data_mahasiswa(conn, '143', 'Yusuf Zaki', 'Bandung', 'SI')
-    except Exception as e:
-        # print(f"Error tambah data dummy mahasiswa: {e}") 
-        pass 
-        
-    # --- Data Dummy Dosen (12 Data) ---
-    try:
-        repo.tambah_data_dosen(conn, '9901', 'Dr. Ir. Budi Utama', 'Pemrograman Web', '0812123456')
-        repo.tambah_data_dosen(conn, '9902', 'Prof. Dr. Citra Sari', 'Jaringan Komputer', '0813234567')
-        repo.tambah_data_dosen(conn, '9903', 'M.T. Dedi Irawan', 'Basis Data', '0815456789')
-        repo.tambah_data_dosen(conn, '9904', 'Drs. Eka Putra', 'Kalkulus', '0817678901')
-        repo.tambah_data_dosen(conn, '9905', 'Ir. Fajar Setiawan', 'Sistem Operasi', '0818890123')
-        repo.tambah_data_dosen(conn, '9906', 'Ph.D. Gita Larasati', 'Statistika', '0819012345')
-        repo.tambah_data_dosen(conn, '9907', 'M.Kom. Haris Jaya', 'Keamanan Informasi', '0812234567')
-        repo.tambah_data_dosen(conn, '9908', 'M.Sc. Intan Permata', 'Pemrograman Mobile', '0813345678')
-        repo.tambah_data_dosen(conn, '9909', 'Dr. Joko Susilo', 'Riset Operasi', '0815567890')
-        repo.tambah_data_dosen(conn, '9910', 'Ir. Kiki Andriani', 'Grafika Komputer', '0817789012')
-        repo.tambah_data_dosen(conn, '9911', 'Prof. Lukman S.', 'Struktur Data', '0818901234')
-        repo.tambah_data_dosen(conn, '9912', 'M.T. Nia Zulaika', 'Manajemen Proyek', '0812345678')
-    except Exception as e:
-        pass
-        
-    # --- Data Dummy Mata Kuliah (11 Data) ---
-    try:
-        repo.tambah_data_matkul(conn, 'WEB101', 'Pemrograman Web', 3, 3)
-        repo.tambah_data_matkul(conn, 'NET201', 'Jaringan Komputer', 3, 4)
-        repo.tambah_data_matkul(conn, 'DBA301', 'Basis Data', 3, 5)
-        repo.tambah_data_matkul(conn, 'MTH101', 'Kalkulus I', 4, 1)
-        repo.tambah_data_matkul(conn, 'OSY202', 'Sistem Operasi', 3, 4)
-        repo.tambah_data_matkul(conn, 'STA102', 'Statistika Dasar', 3, 2)
-        repo.tambah_data_matkul(conn, 'INF305', 'Keamanan Informasi', 3, 6)
-        repo.tambah_data_matkul(conn, 'MOB401', 'Pemrograman Mobile', 3, 7)
-        repo.tambah_data_matkul(conn, 'RSO402', 'Riset Operasi', 3, 7)
-        repo.tambah_data_matkul(conn, 'GRA403', 'Grafika Komputer', 3, 8)
-        repo.tambah_data_matkul(conn, 'STR203', 'Struktur Data', 3, 3)
-    except Exception as e:
-        pass
+    # Seeding dilakukan secara terpisah melalui reset_and_seed.py
 
 # ----------------- ROUTE LOGIN & LOGOUT -----------------
 
