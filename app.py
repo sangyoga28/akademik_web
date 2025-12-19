@@ -421,7 +421,7 @@ def dosen_nilai_dashboard():
     
     # Filter Default
     semester = request.args.get('semester', 1, type=int)
-    tahun = request.args.get('tahun', '2023/2024')
+    tahun_ajaran = request.args.get('tahun_ajaran', '2023/2024')
     
     # Ambil daftar mata kuliah berdasarkan hak akses
     if session.get('role') == 'Dosen':
@@ -441,7 +441,7 @@ def dosen_nilai_dashboard():
     return render_template('dosen_nilai_dashboard.html', 
                            matkul_list=daftar_matkul,
                            semester=semester,
-                           tahun=tahun)
+                           tahun_ajaran=tahun_ajaran)
 
 @app.route('/dosen/nilai/input/<kode_matkul>', methods=['GET', 'POST'])
 def input_nilai(kode_matkul):
@@ -450,7 +450,7 @@ def input_nilai(kode_matkul):
         
     conn = get_db()
     semester = request.args.get('semester', 1, type=int)
-    tahun = request.args.get('tahun', '2023/2024')
+    tahun_ajaran = request.args.get('tahun_ajaran', '2023/2024')
     
     matkul = repo.cari_by_kode_matkul(conn, kode_matkul)
     
@@ -463,7 +463,7 @@ def input_nilai(kode_matkul):
         
         if not matkul or matkul['nama_matkul'] != matkul_diampu:
             flash(f'Anda tidak memiliki akses untuk menilai mata kuliah "{matkul["nama_matkul"] if matkul else kode_matkul}".', 'danger')
-            return redirect(url_for('dosen_nilai_dashboard'))
+            return redirect(url_for('dosen_nilai_dashboard', semester=semester, tahun_ajaran=tahun_ajaran))
     # ----------------------
     
     if request.method == 'POST':
@@ -480,15 +480,15 @@ def input_nilai(kode_matkul):
                     pass # Ignore invalid input
                     
         flash('Nilai berhasil disimpan!', 'success')
-        return redirect(url_for('input_nilai', kode_matkul=kode_matkul, semester=semester, tahun=tahun))
+        return redirect(url_for('input_nilai', kode_matkul=kode_matkul, semester=semester, tahun_ajaran=tahun_ajaran))
     
-    mahasiswa_list = repo.ambil_mahasiswa_kelas(conn, kode_matkul, semester, tahun)
+    mahasiswa_list = repo.ambil_mahasiswa_kelas(conn, kode_matkul, semester, tahun_ajaran)
     
     return render_template('input_nilai.html', 
                            matkul=matkul,
                            mahasiswa_list=mahasiswa_list,
                            semester=semester,
-                           tahun=tahun)
+                           tahun_ajaran=tahun_ajaran)
 
 @app.route('/matkul')
 def daftar_matkul():

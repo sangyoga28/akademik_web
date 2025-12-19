@@ -5,7 +5,7 @@
 {% block content %}
 <div class="row mb-4">
     <div class="col-md-12">
-        <a href="{{ url_for('dosen_nilai_dashboard', semester=semester, tahun=tahun) }}"
+        <a href="{{ url_for('dosen_nilai_dashboard', semester=semester, tahun_ajaran=tahun_ajaran) }}"
             class="btn btn-outline-secondary mb-3">
             <i class="bi bi-arrow-left"></i> Kembali ke Dashboard
         </a>
@@ -15,7 +15,7 @@
                 <div class="d-flex justify-content-between align-items-center">
                     <h4 class="mb-0"><i class="bi bi-pencil-fill"></i> Input Nilai Mahasiswa</h4>
                     <span class="badge bg-white text-success fs-6">
-                        Sem {{ semester }} - {{ tahun }}
+                        Sem {{ semester }} - {{ tahun_ajaran }}
                     </span>
                 </div>
             </div>
@@ -80,13 +80,17 @@
                                     </td>
                                 </tr>
                                 {% else %}
-                                <tr>
-                                    <td colspan="6" class="text-center py-4 text-muted">
-                                        <i class="bi bi-info-circle display-4"></i>
-                                        <p class="mt-2">Belum ada mahasiswa yang mengambil mata kuliah ini di
-                                            semester/tahun terpilih.</p>
-                                    </td>
-                                </tr>
+                                <td colspan="6" class="text-center py-5 text-muted">
+                                    <i class="bi bi-cash-stack display-4 mb-3 d-block"></i>
+                                    <h5 class="fw-bold">Tidak ada mahasiswa yang ditemukan</h5>
+                                    <p>Pastikan mahasiswa sudah:</p>
+                                    <ul class="list-unstyled">
+                                        <li><i class="bi bi-check2-circle text-success me-1"></i> Mengambil mata kuliah
+                                            ini di KRS</li>
+                                        <li><i class="bi bi-check2-circle text-success me-1"></i> <strong>Melunasi
+                                                Pembayaran</strong> untuk semester ini</li>
+                                    </ul>
+                                </td>
                                 {% endfor %}
                             </tbody>
                         </table>

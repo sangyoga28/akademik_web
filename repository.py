@@ -334,13 +334,14 @@ def cek_krs_exist(conn, nim, kode_matkul, semester, tahun_ajaran):
 # --- FUNGSI PENILAIAN ---
 
 def ambil_mahasiswa_kelas(conn, kode_matkul, semester, tahun_ajaran):
-    """Mengambil daftar mahasiswa yang mengambil suatu MK di semester/tahun tertentu."""
+    """Mengambil daftar mahasiswa yang mengambil suatu MK dan SUDAH LUNAS pembayarannya."""
     cursor = conn.cursor()
     query = """
         SELECT k.id, k.nim, mhs.nama, k.nilai_angka, k.nilai_huruf
         FROM tbKRS k
         JOIN tbMahasiswa mhs ON k.nim = mhs.nim
-        WHERE k.kode_matkul = ? AND k.semester = ? AND k.tahun_ajaran = ?
+        JOIN tbPembayaran p ON k.nim = p.nim AND k.semester = p.semester AND k.tahun_ajaran = p.tahun_ajaran
+        WHERE k.kode_matkul = ? AND k.semester = ? AND k.tahun_ajaran = ? AND p.status = 'Lunas'
         ORDER BY k.nim
     """
     cursor.execute(query, (kode_matkul, semester, tahun_ajaran))
