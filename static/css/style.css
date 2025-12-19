@@ -10,39 +10,52 @@
 /* 1. Card Transitions & Proportions */
 .card {
     transition: transform 0.2s ease, box-shadow 0.2s ease;
-    border-radius: 0.4rem;
+    border-radius: 0.6rem;
+    border: none;
 }
 
 .card:hover {
     transform: translateY(-3px);
-    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1) !important;
+    box-shadow: 0 12px 24px rgba(0, 0, 0, 0.1) !important;
 }
 
 /* 2. User Comfort: General Proportions */
 body {
-    background-color: #fcfcfc;
+    background-color: #f8f9fa;
     display: flex;
     flex-direction: column;
     min-height: 100vh;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
 }
 
 /* 3. Navbar Refinement */
 .navbar {
     padding: 0.75rem 1rem;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    backdrop-filter: blur(10px);
 }
 
 .navbar-brand {
     font-weight: 700;
-    letter-spacing: 0.5px;
+    letter-spacing: -0.5px;
+    font-size: 1.15rem;
 }
 
 /* 4. Table Compatibility */
 .table-responsive {
     background-color: white;
-    border-radius: 0.4rem;
+    border-radius: 0.6rem;
     padding: 0.5rem;
-    border: 1px solid #dee2e6;
+    border: 1px solid #e9ecef;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.02);
+}
+
+.table thead th {
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    font-weight: 600;
+    border-top: none;
 }
 
 /* 5. Home Hero (Optimized for Flatly) */
@@ -50,14 +63,23 @@ body {
     background-image: url('../images/background.jpg');
     background-size: cover;
     background-position: center;
-    min-height: 420px;
+    min-height: 380px;
     display: flex;
     align-items: center;
     position: relative;
     color: white;
-    text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.6);
-    border-radius: 0.5rem;
+    border-radius: 1rem;
     overflow: hidden;
+    margin-top: 1rem;
+}
+
+@media (max-width: 768px) {
+    .home-hero {
+        min-height: 450px;
+        text-align: center;
+        border-radius: 0.5rem;
+        margin-top: 0;
+    }
 }
 
 .home-hero::before {
@@ -67,15 +89,14 @@ body {
     left: 0;
     right: 0;
     bottom: 0;
-    background: rgba(44, 62, 80, 0.6);
-    /* Flatly primary overlay */
+    background: linear-gradient(135deg, rgba(44, 62, 80, 0.9) 0%, rgba(44, 62, 80, 0.6) 100%);
     z-index: 1;
 }
 
 .home-hero .container-fluid {
     position: relative;
     z-index: 2;
-    padding: 4rem 2rem;
+    padding: 3rem 1.5rem;
 }
 
 /* 6. Animations */
@@ -111,17 +132,47 @@ body {
 .main-footer {
     background: white;
     color: #7b8a8b;
-    /* Using Flatly secondary text color */
-    padding: 2.5rem 0;
+    padding: 2rem 0;
     margin-top: auto;
     border-top: 1px solid #ecf0f1;
 }
 
-.main-footer small {
-    opacity: 1;
+/* 8. Utility & Responsive tweaks */
+.search-input {
+    border-radius: 20px;
+    padding-left: 1.25rem;
 }
 
-/* 8. Accessibility: Focus States */
+.clear-icon {
+    right: 1rem;
+    padding: 0.5rem;
+}
+
+@media (max-width: 576px) {
+    .display-4 {
+        font-size: 2.2rem;
+    }
+
+    .btn-lg {
+        padding: 0.6rem 1.2rem;
+        font-size: 1rem;
+    }
+
+    .container {
+        padding-left: 1rem;
+        padding-right: 1rem;
+    }
+
+    #selection-controls {
+        left: 1rem;
+        right: 1rem;
+        bottom: 1rem;
+        margin: 0 !important;
+        text-align: center;
+    }
+}
+
+/* 9. Accessibility: Focus States */
 .btn-warning {
     color: white !important;
 }

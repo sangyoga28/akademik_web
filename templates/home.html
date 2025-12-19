@@ -7,14 +7,15 @@
 <!-- Hero Section Optimized -->
 <div class="home-hero mb-5 shadow-lg animate-fade-in-up">
     <div class="container-fluid">
-        <div class="row align-items-center">
-            <div class="col-lg-8">
-                <h1 class="display-4 fw-bold">SISTEM INFORMASI AKADEMIK</h1>
-                <p class="lead text-light mb-4">
+        <div class="row align-items-center text-center text-lg-start">
+            <div class="col-lg-8 animate-fade-in-up">
+                <h1 class="display-5 display-md-4 fw-bold">SISTEM INFORMASI AKADEMIK</h1>
+                <p class="lead text-light mb-4 px-3 px-lg-0">
                     Platform terpadu untuk pengelolaan data mahasiswa, dosen, dan mata kuliah secara efisien dan
                     profesional.
                 </p>
-                <div class="d-flex gap-3">
+                <div
+                    class="d-flex flex-column flex-sm-row justify-content-center justify-content-lg-start gap-3 mb-4 mb-lg-0">
                     <a href="#Preview-data" class="btn btn-warning btn-lg fw-bold shadow-sm">
                         <i class="bi bi-arrow-down-circle me-1"></i> LIHAT DATA
                     </a>
@@ -56,44 +57,47 @@
         <h2 class="fw-bold text-primary mb-0"><i class="bi bi-file-earmark-bar-graph me-2"></i>Statistik Institusi</h2>
     </div>
 
-    <div class="row g-4 mb-5">
+    <div class="row g-3 g-md-4 mb-5">
         <!-- Mahasiswa Card -->
-        <div class="col-md-4 animate-fade-in-up delay-100">
-            <a href="{{ url_for('daftar_mahasiswa') }}" class="text-decoration-none">
+        <div class="col-6 col-md-4 animate-fade-in-up delay-100">
+            <a href="{{ url_for('daftar_mahasiswa') }}" class="text-decoration-none h-100 d-block">
                 <div class="card bg-info text-white h-100 shadow-sm border-0">
-                    <div class="card-body text-center p-4">
-                        <i class="bi bi-people display-4 mb-3"></i>
-                        <h5 class="fw-bold mb-1">DATA MAHASISWA</h5>
-                        <p class="small text-white-50 mb-3">PENGELOLAAN BIODATA</p>
-                        <h2 class="display-5 fw-bold mb-0">{{ total_mahasiswa }}</h2>
+                    <div class="card-body text-center p-3 p-md-4">
+                        <i class="bi bi-people fs-1 fs-md-2 mb-2 mb-md-3"></i>
+                        <h6 class="fw-bold mb-1 small d-none d-sm-block">DATA MAHASISWA</h6>
+                        <h6 class="fw-bold mb-1 x-small d-block d-sm-none">MAHASISWA</h6>
+                        <p class="small text-white-50 mb-2 mb-md-3 d-none d-md-block">PENGELOLAAN BIODATA</p>
+                        <h2 class="display-6 fw-bold mb-0">{{ total_mahasiswa }}</h2>
                     </div>
                 </div>
             </a>
         </div>
 
         <!-- Dosen Card -->
-        <div class="col-md-4 animate-fade-in-up delay-200">
-            <a href="{{ url_for('daftar_dosen') }}" class="text-decoration-none">
+        <div class="col-6 col-md-4 animate-fade-in-up delay-200">
+            <a href="{{ url_for('daftar_dosen') }}" class="text-decoration-none h-100 d-block">
                 <div class="card bg-success text-white h-100 shadow-sm border-0">
-                    <div class="card-body text-center p-4">
-                        <i class="bi bi-person-badge display-4 mb-3"></i>
-                        <h5 class="fw-bold mb-1">DATA DOSEN</h5>
-                        <p class="small text-white-50 mb-3">DATA TENAGA PENGAJAR</p>
-                        <h2 class="display-5 fw-bold mb-0">{{ total_dosen }}</h2>
+                    <div class="card-body text-center p-3 p-md-4">
+                        <i class="bi bi-person-badge fs-1 fs-md-2 mb-2 mb-md-3"></i>
+                        <h6 class="fw-bold mb-1 small d-none d-sm-block">DATA DOSEN</h6>
+                        <h6 class="fw-bold mb-1 x-small d-block d-sm-none">DOSEN</h6>
+                        <p class="small text-white-50 mb-2 mb-md-3 d-none d-md-block">TENAGA PENGAJAR</p>
+                        <h2 class="display-6 fw-bold mb-0">{{ total_dosen }}</h2>
                     </div>
                 </div>
             </a>
         </div>
 
         <!-- Matkul Card -->
-        <div class="col-md-4 animate-fade-in-up delay-300">
-            <a href="{{ url_for('daftar_matkul') }}" class="text-decoration-none">
+        <div class="col-12 col-md-4 animate-fade-in-up delay-300">
+            <a href="{{ url_for('daftar_matkul') }}" class="text-decoration-none h-100 d-block">
                 <div class="card bg-danger text-white h-100 shadow-sm border-0">
-                    <div class="card-body text-center p-4">
-                        <i class="bi bi-book display-4 mb-3"></i>
-                        <h5 class="fw-bold mb-1">MATA KULIAH</h5>
-                        <p class="small text-white-50 mb-3">KURIKULUM & SKS</p>
-                        <h2 class="display-5 fw-bold mb-0">{{ total_matkul }}</h2>
+                    <div class="card-body text-center p-3 p-md-4">
+                        <i class="bi bi-book fs-1 fs-md-2 mb-2 mb-md-3"></i>
+                        <h6 class="fw-bold mb-1 small d-none d-sm-block">MATA KULIAH</h6>
+                        <h6 class="fw-bold mb-1 x-small d-block d-sm-none">MATKUL</h6>
+                        <p class="small text-white-50 mb-2 mb-md-3 d-none d-md-block">KURIKULUM & SKS</p>
+                        <h2 class="display-6 fw-bold mb-0">{{ total_matkul }}</h2>
                     </div>
                 </div>
             </a>
