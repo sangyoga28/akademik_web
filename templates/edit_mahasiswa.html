@@ -30,14 +30,11 @@
                     <div class="mb-3">
                         <label class="form-label fw-bold">Fakultas</label>
                         <select name="fakultas" id="fakultas" class="form-select" required onchange="updateProdi()">
-                            <option value="Fakultas Teknik" {% if mhs['fakultas']=='Fakultas Teknik' %}selected{% endif
-                                %}>Fakultas Teknik</option>
-                            <option value="Fakultas Ekonomi" {% if mhs['fakultas']=='Fakultas Ekonomi' %}selected{%
-                                endif %}>Fakultas Ekonomi</option>
-                            <option value="Fakultas Sastra" {% if mhs['fakultas']=='Fakultas Sastra' %}selected{% endif
-                                %}>Fakultas Sastra</option>
-                            <option value="Fakultas Hukum" {% if mhs['fakultas']=='Fakultas Hukum' %}selected{% endif
-                                %}>Fakultas Hukum</option>
+                            {% for fakultas in daftar_fakultas %}
+                            <option value="{{ fakultas }}" {% if mhs['fakultas']==fakultas %}selected{% endif %}>
+                                {{ fakultas }}
+                            </option>
+                            {% endfor %}
                         </select>
                     </div>
 
@@ -45,7 +42,11 @@
                         <label class="form-label fw-bold">Program Studi</label>
                         <select name="prodi" id="prodi" class="form-select" required>
                             <option value="{{ mhs['prodi'] }}" selected>{{ mhs['prodi'] }}</option>
-                            <!-- Opsi lain akan diisi via JS jika Fakultas berubah, tapi untuk edit biarkan default dulu -->
+                            {% for prodi in daftar_prodi %}
+                            {% if prodi != mhs['prodi'] %}
+                            <option value="{{ prodi }}">{{ prodi }}</option>
+                            {% endif %}
+                            {% endfor %}
                         </select>
                     </div>
 
@@ -67,11 +68,12 @@
         const prodiSelect = document.getElementById('prodi');
         let options = '';
 
+        // Mapping berdasarkan data AKTUAL di database
         if (fakultas === 'Fakultas Teknik') {
-            options += '<option value="Teknik Informatika">Teknik Informatika</option>';
+            options += '<option value="Informatika">Informatika</option>';
             options += '<option value="Sistem Informasi">Sistem Informasi</option>';
             options += '<option value="Teknik Elektro">Teknik Elektro</option>';
-            options += '<option value="Teknik Industri">Teknik Industri</option>';
+            options += '<option value="Teknik Sipil">Teknik Sipil</option>';
         } else if (fakultas === 'Fakultas Ekonomi') {
             options += '<option value="Manajemen">Manajemen</option>';
             options += '<option value="Akuntansi">Akuntansi</option>';

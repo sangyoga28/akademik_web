@@ -415,3 +415,43 @@ def ambil_pembayaran_by_id(conn, id_pembayaran):
     cursor = conn.cursor()
     cursor.execute("SELECT * FROM tbPembayaran WHERE id=?", (id_pembayaran,))
     return cursor.fetchone()
+
+# ----------------- FUNGSI HELPER UNTUK DROPDOWN DINAMIS -----------------
+
+def ambil_daftar_prodi(conn):
+    """Mengambil daftar program studi unik dari database (kecuali 'Umum')."""
+    cursor = conn.cursor()
+    cursor.execute('SELECT DISTINCT prodi FROM tbMatakuliah WHERE prodi != "Umum" ORDER BY prodi')
+    return [row[0] for row in cursor.fetchall()]
+
+def ambil_daftar_fakultas(conn):
+    """Mengambil daftar fakultas unik dari database mahasiswa."""
+    cursor = conn.cursor()
+    cursor.execute('SELECT DISTINCT fakultas FROM tbMahasiswa WHERE fakultas IS NOT NULL ORDER BY fakultas')
+    result = [row[0] for row in cursor.fetchall()]
+    # Jika belum ada data, return default fakultas
+    if not result:
+        return ['Fakultas Teknik', 'Fakultas Ekonomi', 'Fakultas Sastra', 'Fakultas Hukum']
+    return result
+
+def ambil_matkul_by_prodi_semester(conn, prodi, semester):
+    """Mengambil mata kuliah berdasarkan prodi dan semester tertentu."""
+    cursor = conn.cursor()
+    cursor.execute('''
+        SELECT kode_matkul, nama_matkul, sks, semester, prodi 
+        FROM tbMatakuliah 
+        WHERE (prodi = ? OR prodi = 'Umum') AND semester = ?
+        ORDER BY semester, nama_matkul
+    ''', (prodi, semester))
+    return cursor.fetchall()
+
+def ambil_semua_matkul_untuk_dosen(conn):
+    """Mengambil semua mata kuliah untuk dropdown dosen (kecuali Umum)."""
+    cursor = conn.cursor()
+    cursor.execute('''
+        SELECT kode_matkul, nama_matkul, prodi, semester 
+        FROM tbMatakuliah 
+        WHERE prodi != 'Umum'
+        ORDER BY prodi, semester, nama_matkul
+    ''')
+    return cursor.fetchall()

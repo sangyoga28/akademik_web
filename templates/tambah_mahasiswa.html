@@ -49,10 +49,9 @@
                                 <select name="fakultas" id="fakultas" class="form-select" required
                                     onchange="updateProdi()">
                                     <option value="" selected disabled>-- Pilih Fakultas --</option>
-                                    <option value="Fakultas Teknik">Fakultas Teknik</option>
-                                    <option value="Fakultas Ekonomi">Fakultas Ekonomi</option>
-                                    <option value="Fakultas Sastra">Fakultas Sastra</option>
-                                    <option value="Fakultas Hukum">Fakultas Hukum</option>
+                                    {% for fakultas in daftar_fakultas %}
+                                    <option value="{{ fakultas }}">{{ fakultas }}</option>
+                                    {% endfor %}
                                 </select>
                             </div>
                         </div>
@@ -83,17 +82,19 @@
 </div>
 
 <script>
-    // Logic Sederhana Update Prodi
+    // Logic Update Prodi - Sesuaikan dengan data database
     function updateProdi() {
         const fakultas = document.getElementById('fakultas').value;
         const prodiSelect = document.getElementById('prodi');
         let options = '<option value="" selected disabled>-- Pilih Program Studi --</option>';
 
+        // Mapping berdasarkan data AKTUAL di database
         if (fakultas === 'Fakultas Teknik') {
-            options += '<option value="Teknik Informatika">Teknik Informatika</option>';
+            // Sesuaikan dengan nama prodi di database
+            options += '<option value="Informatika">Informatika</option>';
             options += '<option value="Sistem Informasi">Sistem Informasi</option>';
             options += '<option value="Teknik Elektro">Teknik Elektro</option>';
-            options += '<option value="Teknik Industri">Teknik Industri</option>';
+            options += '<option value="Teknik Sipil">Teknik Sipil</option>';
         } else if (fakultas === 'Fakultas Ekonomi') {
             options += '<option value="Manajemen">Manajemen</option>';
             options += '<option value="Akuntansi">Akuntansi</option>';

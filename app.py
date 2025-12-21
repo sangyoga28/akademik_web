@@ -140,6 +140,8 @@ def daftar_mahasiswa():
 @app.route('/mahasiswa/tambah', methods=['GET', 'POST'])
 def tambah_mahasiswa():
     if not session.get('logged_in'): return redirect(url_for('login'))
+    
+    conn = get_db()
         
     if request.method == 'POST':
         nim = request.form['nim']
@@ -152,7 +154,6 @@ def tambah_mahasiswa():
             flash('NIM dan Nama wajib diisi!', 'danger')
             return redirect(url_for('tambah_mahasiswa'))
             
-        conn = get_db()
         if repo.cari_by_nim(conn, nim):
             flash(f'NIM {nim} sudah terdaftar!', 'danger')
             return redirect(url_for('tambah_mahasiswa'))
@@ -174,8 +175,14 @@ def tambah_mahasiswa():
         except Exception as e:
             flash(f'Gagal menyimpan: {str(e)}', 'danger')
             return redirect(url_for('tambah_mahasiswa'))
-            
-    return render_template('tambah_mahasiswa.html')
+    
+    # GET: Kirim data untuk dropdown
+    daftar_prodi = repo.ambil_daftar_prodi(conn)
+    daftar_fakultas = repo.ambil_daftar_fakultas(conn)
+    
+    return render_template('tambah_mahasiswa.html', 
+                          daftar_prodi=daftar_prodi,
+                          daftar_fakultas=daftar_fakultas)
 
 @app.route('/mahasiswa/edit/<nim>', methods=['GET', 'POST'])
 def edit_mahasiswa(nim):
@@ -202,8 +209,15 @@ def edit_mahasiswa(nim):
             flash(f'Gagal mengubah data: {e}', 'danger')
             
         return redirect(url_for('daftar_mahasiswa'))
+    
+    # GET: Kirim data untuk dropdown
+    daftar_prodi = repo.ambil_daftar_prodi(conn)
+    daftar_fakultas = repo.ambil_daftar_fakultas(conn)
         
-    return render_template('edit_mahasiswa.html', mhs=data)
+    return render_template('edit_mahasiswa.html', 
+                          mhs=data,
+                          daftar_prodi=daftar_prodi,
+                          daftar_fakultas=daftar_fakultas)
 
 @app.route('/mahasiswa/hapus/<nim>', methods=['POST'])
 def hapus_mahasiswa(nim):
@@ -263,6 +277,8 @@ def daftar_dosen():
 @app.route('/dosen/tambah', methods=['GET', 'POST'])
 def tambah_dosen():
     if not session.get('logged_in'): return redirect(url_for('login'))
+    
+    conn = get_db()
         
     if request.method == 'POST':
         nip = request.form['nip']
@@ -274,7 +290,6 @@ def tambah_dosen():
             flash('NIP dan Nama wajib diisi!', 'danger')
             return redirect(url_for('tambah_dosen'))
             
-        conn = get_db()
         if repo.cari_by_nip(conn, nip):
             flash(f'NIP {nip} sudah terdaftar!', 'danger')
             return redirect(url_for('tambah_dosen'))
@@ -291,8 +306,11 @@ def tambah_dosen():
             return redirect(url_for('daftar_dosen'))
         except:
             flash('Gagal simpan atau NIP sudah ada akun.', 'danger')
+    
+    # GET: Kirim daftar mata kuliah untuk dropdown
+    matkul_list = repo.ambil_semua_matkul_untuk_dosen(conn)
             
-    return render_template('tambah_dosen.html')
+    return render_template('tambah_dosen.html', matkul_list=matkul_list)
 
 @app.route('/dosen/edit/<nip>', methods=['GET', 'POST'])
 def edit_dosen(nip):
@@ -314,8 +332,13 @@ def edit_dosen(nip):
         repo.ubah_data_dosen(conn, nip, nama_baru, matkul_ajar_baru, telepon_baru)
         flash(f'Data Dosen {nip} berhasil diubah!', 'warning')
         return redirect(url_for('daftar_dosen'))
+    
+    # GET: Kirim daftar mata kuliah untuk dropdown
+    matkul_list = repo.ambil_semua_matkul_untuk_dosen(conn)
         
-    return render_template('edit_dosen.html', dosen=data)
+    return render_template('edit_dosen.html', 
+                          dosen=data,
+                          matkul_list=matkul_list)
 
 @app.route('/dosen/hapus/<nip>', methods=['POST'])
 def hapus_dosen(nip):

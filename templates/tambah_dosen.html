@@ -32,15 +32,17 @@
                     <select class="form-select" id="matkul_ajar" name="matkul_ajar" required>
                         <option value="" selected disabled>-- Pilih Mata Kuliah --</option>
                         {% for mk in matkul_list %}
-                        <option value="{{ mk['nama_matkul'] }}">{{ mk['nama_matkul'] }} ({{ mk['kode_matkul'] }})
+                        <option value="{{ mk['kode_matkul'] }}">
+                            [{{ mk['prodi'] }} - Sem {{ mk['semester'] }}] {{ mk['nama_matkul'] }} ({{ mk['kode_matkul']
+                            }})
                         </option>
                         {% endfor %}
-                        <option value="Lainnya">Lainnya (Tulis Manual)</option>
                     </select>
                     <a href="{{ url_for('daftar_matkul') }}" class="btn btn-outline-primary" target="_blank"
                         title="Tambah Matkul Baru"><i class="bi bi-plus-lg"></i></a>
                 </div>
-                <div class="form-text">Jika mapel belum ada, silakan tambah dulu di menu Mata Kuliah.</div>
+                <div class="form-text">Pilih mata kuliah yang akan diampu. Jika belum ada, tambah dulu di menu Mata
+                    Kuliah.</div>
             </div>
 
             <!-- Input Manual jika pilih Lainnya (Optional, handled via JS usually but let's keep it simple first) -->
