@@ -49,9 +49,10 @@
                                 <select name="fakultas" id="fakultas" class="form-select" required
                                     onchange="updateProdi()">
                                     <option value="" selected disabled>-- Pilih Fakultas --</option>
-                                    {% for fakultas in daftar_fakultas %}
-                                    <option value="{{ fakultas }}">{{ fakultas }}</option>
-                                    {% endfor %}
+                                    <option value="Fakultas Teknik">Fakultas Teknik</option>
+                                    <option value="Fakultas Ekonomi">Fakultas Ekonomi</option>
+                                    <option value="Fakultas Sastra">Fakultas Sastra</option>
+                                    <option value="Fakultas Hukum">Fakultas Hukum</option>
                                 </select>
                             </div>
                         </div>
