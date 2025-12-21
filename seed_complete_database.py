@@ -314,6 +314,7 @@ MATKUL_SASTRA_JEPANG = {
         ("JPN206", "Sejarah Jepang", 3),
         ("JPN207", "Bahasa Inggris", 2),
         ("JPN208", "Pengantar Linguistik", 2),
+        ("JPN209", "Dasar Etika Budaya Jepang", 2),
     ],
     3: [
         ("JPN301", "Kanji Menengah", 3),
@@ -353,7 +354,7 @@ MATKUL_SASTRA_JEPANG = {
         ("JPN605", "Budaya Pop Jepang", 3),
         ("JPN606", "Seminar Bahasa dan Sastra Jepang", 2),
         ("JPN607", "Praktikum Bahasa Jepang", 4),
-        ("JPN608", "Keigo (Bahasa Hormat)", 2),
+        ("JPN608", "Keigo (Bahasa Hormat)", 3),
     ],
     7: [
         ("JPN701", "Sastra Jepang Kontemporer", 3),
@@ -362,7 +363,7 @@ MATKUL_SASTRA_JEPANG = {
         ("JPN704", "Jepang dalam Konteks Global", 3),
         ("JPN705", "Magang", 4),
         ("JPN706", "Kuliah Kerja Nyata", 3),
-        ("JPN707", "Proposal Skripsi", 2),
+        ("JPN707", "Proposal Skripsi", 3),
         ("JPN708", "Presentasi Akademik", 2),
     ],
     8: [
@@ -449,16 +450,237 @@ MATKUL_ILMU_HUKUM = {
     ]
 }
 
+# ===== KURIKULUM FAKULTAS TEKNIK =====
+
+MATKUL_INFORMATIKA = {
+    1: [
+        ("INF101", "Dasar Pemrograman", 3), ("INF102", "Matematika Diskrit", 3),
+        ("INF103", "Pengantar Teknologi Informasi", 3), ("INF104", "Logika Informatika", 3),
+        ("INF105", "Bahasa Inggris I", 2), ("INF106", "Pendidikan Agama", 2),
+        ("INF107", "Pancasila", 2), ("INF108", "Kalkulus I", 3), ("INF109", "Fisika Dasar", 3),
+    ],
+    2: [
+        ("INF201", "Struktur Data", 4), ("INF202", "Algoritma Pemrograman", 4),
+        ("INF203", "Arsitektur Komputer", 3), ("INF204", "Aljabar Linear", 3),
+        ("INF205", "Kalkulus II", 3), ("INF206", "Bahasa Inggris II", 2),
+        ("INF207", "Kewarganegaraan", 2), ("INF208", "Statistika Dasar", 3),
+    ],
+    3: [
+        ("INF301", "Pemrograman Berorientasi Objek", 4), ("INF302", "Basis Data", 4),
+        ("INF303", "Sistem Operasi", 3), ("INF304", "Matematika Numerik", 3),
+        ("INF305", "Jaringan Komputer Dasar", 3), ("INF306", "Interaksi Manusia dan Komputer", 3),
+        ("INF307", "Probabilitas dan Statistika", 2), ("INF308", "Etika Profesi", 2),
+    ],
+    4: [
+        ("INF401", "Pemrograman Web", 4), ("INF402", "Sistem Basis Data Lanjut", 3),
+        ("INF403", "Jaringan Komputer Lanjut", 3), ("INF404", "Analisis dan Desain Algoritma", 3),
+        ("INF405", "Pemrograman Mobile", 4), ("INF406", "Grafika Komputer", 3),
+        ("INF407", "Teori Bahasa dan Automata", 2), ("INF408", "Kewirausahaan", 2),
+    ],
+    5: [
+        ("INF501", "Rekayasa Perangkat Lunak", 4), ("INF502", "Kecerdasan Buatan", 4),
+        ("INF503", "Sistem Terdistribusi", 3), ("INF504", "Keamanan Informasi", 3),
+        ("INF505", "Pemrograman Framework", 3), ("INF506", "Data Mining", 3),
+        ("INF507", "Manajemen Proyek TI", 2), ("INF508", "Bahasa Indonesia", 2),
+    ],
+    6: [
+        ("INF601", "Machine Learning", 4), ("INF602", "Cloud Computing", 3),
+        ("INF603", "Internet of Things", 3), ("INF604", "Pengolahan Citra Digital", 3),
+        ("INF605", "Sistem Informasi Enterprise", 3), ("INF606", "Pemrograman Game", 3),
+        ("INF607", "Metodologi Penelitian", 2), ("INF608", "Komputer dan Masyarakat", 3),
+    ],
+    7: [
+        ("INF701", "Big Data Analytics", 3), ("INF702", "Blockchain Technology", 3),
+        ("INF703", "Cyber Security", 3), ("INF704", "DevOps dan CI/CD", 3),
+        ("INF705", "Artificial Intelligence Lanjut", 3), ("INF706", "Kerja Praktek", 3),
+        ("INF707", "Proposal Skripsi", 3), ("INF708", "Bahasa Indonesia II", 3),
+    ],
+    8: [("INF801", "Skripsi", 6)]
+}
+
+MATKUL_SISTEM_INFORMASI = {
+    1: [
+        ("SI101", "Pengantar Sistem Informasi", 3), ("SI102", "Dasar Pemrograman", 3),
+        ("SI103", "Matematika Bisnis", 3), ("SI104", "Pengantar Manajemen", 3),
+        ("SI105", "Pengantar Akuntansi", 3), ("SI106", "Bahasa Inggris I", 2),
+        ("SI107", "Pendidikan Agama", 2), ("SI108", "Pancasila", 2), ("SI109", "Statistika Bisnis", 3),
+    ],
+    2: [
+        ("SI201", "Analisis Proses Bisnis", 4), ("SI202", "Basis Data", 4),
+        ("SI203", "Pemrograman Berorientasi Objek", 3), ("SI204", "Sistem Operasi", 3),
+        ("SI205", "Manajemen Organisasi", 3), ("SI206", "Akuntansi Manajemen", 3),
+        ("SI207", "Bahasa Inggris II", 2), ("SI208", "Kewarganegaraan", 2),
+    ],
+    3: [
+        ("SI301", "Manajemen Database", 4), ("SI302", "Analisis dan Desain Sistem", 4),
+        ("SI303", "Pemrograman Web", 3), ("SI304", "Jaringan Komputer", 3),
+        ("SI305", "Manajemen Pemasaran", 3), ("SI306", "Sistem Informasi Manajemen", 3),
+        ("SI307", "Etika Profesi", 2), ("SI308", "Riset Operasi", 2),
+    ],
+    4: [
+        ("SI401", "E-Business", 4), ("SI402", "Desain UI/UX", 3),
+        ("SI403", "Pemrograman Mobile", 3), ("SI404", "Manajemen Rantai Pasok", 3),
+        ("SI405", "Sistem Informasi Akuntansi", 3), ("SI406", "Manajemen Keuangan", 3),
+        ("SI407", "Kewirausahaan", 2), ("SI408", "Komunikasi Bisnis", 3),
+    ],
+    5: [
+        ("SI501", "Manajemen Proyek SI", 4), ("SI502", "Enterprise Resource Planning", 4),
+        ("SI503", "Business Intelligence", 3), ("SI504", "Audit Sistem Informasi", 3),
+        ("SI505", "CRM Systems", 3), ("SI506", "E-Commerce", 3),
+        ("SI507", "Bahasa Indonesia", 2), ("SI508", "Manajemen Strategi", 2),
+    ],
+    6: [
+        ("SI601", "Perencanaan Strategis SI", 4), ("SI602", "Data Warehouse", 3),
+        ("SI603", "Tata Kelola TI", 3), ("SI604", "Keamanan Sistem Informasi", 3),
+        ("SI605", "Sistem Pendukung Keputusan", 3), ("SI606", "Digital Marketing", 3),
+        ("SI607", "Metodologi Penelitian", 2), ("SI608", "Manajemen Risiko TI", 3),
+    ],
+    7: [
+        ("SI701", "Inovasi Sistem Informasi", 3), ("SI702", "Cloud Computing Bisnis", 3),
+        ("SI703", "Analytics Big Data", 3), ("SI704", "Proposal Skripsi", 3),
+        ("SI705", "Magang", 4), ("SI706", "Kuliah Kerja Nyata", 3),
+        ("SI707", "Pilihan I", 3), ("SI708", "Pilihan II", 3),
+    ],
+    8: [("SI801", "Skripsi", 6)]
+}
+
+MATKUL_TEKNIK_ELEKTRO = {
+    1: [
+        ("TE101", "Rangkaian Listrik I", 3), ("TE102", "Fisika Dasar I", 3),
+        ("TE103", "Kalkulus I", 3), ("TE104", "Kimia Dasar", 3),
+        ("TE105", "Gambar Teknik", 2), ("TE106", "Pengantar Teknik Elektro", 3),
+        ("TE107", "Bahasa Inggris I", 2), ("TE108", "Pendidikan Agama", 2),
+        ("TE109", "Pancasila", 2), ("TE110", "Praktikum Fisika Dasar", 1),
+    ],
+    2: [
+        ("TE201", "Rangkaian Listrik II", 3), ("TE202", "Elektronika Dasar", 4),
+        ("TE203", "Fisika Dasar II", 3), ("TE204", "Kalkulus II", 3),
+        ("TE205", "Pemrograman Komputer", 3), ("TE206", "Matematika Teknik I", 3),
+        ("TE207", "Bahasa Inggris II", 2), ("TE208", "Kewarganegaraan", 2),
+        ("TE209", "Praktikum Elektronika Dasar", 1),
+    ],
+    3: [
+        ("TE301", "Sistem Digital", 4), ("TE302", "Sinyal dan Sistem", 3),
+        ("TE303", "Elektronika Analog", 4), ("TE304", "Matematika Teknik II", 3),
+        ("TE305", "Mesin Listrik I", 3), ("TE306", "Pengukuran Listrik", 3),
+        ("TE307", "Etika Profesi", 2), ("TE308", "Praktikum Sistem Digital", 2),
+    ],
+    4: [
+        ("TE401", "Medan Elektromagnetik", 3), ("TE402", "Sistem Kendali", 4),
+        ("TE403", "Elektronika Daya", 3), ("TE404", "Mesin Listrik II", 3),
+        ("TE405", "Mikroprosesor", 4), ("TE406", "Teknik Telekomunikasi", 3),
+        ("TE407", "Kewirausahaan", 2), ("TE408", "Praktikum Mikroprosesor", 2),
+    ],
+    5: [
+        ("TE501", "Mikrokontroler", 4), ("TE502", "Sistem Tenaga Listrik", 3),
+        ("TE503", "Pengolahan Sinyal Digital", 3), ("TE504", "Sistem Komunikasi", 3),
+        ("TE505", "Instrumentasi Industri", 3), ("TE506", "Sistem Embedded", 3),
+        ("TE507", "Bahasa Indonesia", 2), ("TE508", "Praktikum Mikrokontroler", 3),
+    ],
+    6: [
+        ("TE601", "Sistem Kendali Digital", 3), ("TE602", "Proteksi Sistem Tenaga", 3),
+        ("TE603", "Antena dan Propagasi", 3), ("TE604", "Robotika", 4),
+        ("TE605", "PLC dan SCADA", 3), ("TE606", "Energi Terbarukan", 3),
+        ("TE607", "Metodologi Penelitian", 2), ("TE608", "Praktikum Robotika", 3),
+    ],
+    7: [
+        ("TE701", "Teknik Tegangan Tinggi", 3), ("TE702", "Sistem Kontrol Cerdas", 3),
+        ("TE703", "IoT Systems", 3), ("TE704", "Proposal Skripsi", 3),
+        ("TE705", "Magang", 4), ("TE706", "Kuliah Kerja Nyata", 3),
+        ("TE707", "Pilihan I", 3), ("TE708", "Pilihan II", 3),
+    ],
+    8: [("TE801", "Skripsi", 6)]
+}
+
+MATKUL_TEKNIK_SIPIL = {
+    1: [
+        ("SIP101", "Mekanika Fluida", 3), ("SIP102", "Statika", 3),
+        ("SIP103", "Gambar Teknik Sipil", 3), ("SIP104", "Matematika Teknik I", 3),
+        ("SIP105", "Bahasa Inggris I", 2), ("SIP106", "Pendidikan Agama", 2),
+        ("SIP107", "Pancasila", 2), ("SIP108", "Fisika Dasar Sipil", 3), ("SIP109", "Geologi Teknik", 3),
+    ],
+    2: [
+        ("SIP201", "Mekanika Bahan", 4), ("SIP202", "Rekayasa Hidrologi", 3),
+        ("SIP203", "Ilmu Ukur Tanah", 3), ("SIP204", "Matematika Teknik II", 3),
+        ("SIP205", "Teknologi Bahan Konstruksi", 3), ("SIP206", "Kewarganegaraan", 2),
+        ("SIP207", "Bahan Perkerasan Jalan", 3), ("SIP208", "Statistika dan Probabilitas", 3),
+    ],
+    3: [
+        ("SIP301", "Analisa Struktur I", 3), ("SIP302", "Mekanika Tanah I", 3),
+        ("SIP303", "Rekayasa Lalu Lintas", 3), ("SIP304", "Hidrolika", 3),
+        ("SIP305", "Konstruksi Kayu", 2), ("SIP306", "Pemindahan Tanah Mekanis", 3),
+        ("SIP307", "Etika Profesi Sipil", 2), ("SIP308", "Survey Dasar", 2),
+    ],
+    4: [
+        ("SIP401", "Analisa Struktur II", 4), ("SIP402", "Mekanika Tanah II", 3),
+        ("SIP403", "Struktur Beton Bertulang I", 3), ("SIP404", "Rekayasa Penyehatan", 3),
+        ("SIP405", "Rekayasa Jalan Raya", 3), ("SIP406", "Hukum Pranata Pembangunan", 2),
+        ("SIP407", "Kewirausahaan Sipil", 3), ("SIP408", "Irigasi dan Bangunan Air", 3),
+    ],
+    5: [
+        ("SIP501", "Struktur Beton Bertulang II", 3), ("SIP502", "Struktur Baja I", 3),
+        ("SIP503", "Rekayasa Pondasi I", 3), ("SIP504", "Metode Numerik Sipil", 3),
+        ("SIP505", "Pelabuhan", 3), ("SIP506", "Lapangan Terbang", 3),
+        ("SIP507", "Bahasa Indonesia", 2), ("SIP508", "Manajemen Konstruksi I", 3),
+    ],
+    6: [
+        ("SIP601", "Struktur Baja II", 3), ("SIP602", "Rekayasa Pondasi II", 3),
+        ("SIP603", "Struktur Kayu Lanjut", 2), ("SIP604", "Drainase Perkotaan", 3),
+        ("SIP605", "Metode Pelaksanaan Konstruksi", 3), ("SIP606", "Estimasi Biaya", 3),
+        ("SIP607", "Metodologi Penelitian Sipil", 2), ("SIP608", "Analisa Dinamika Struktur", 3),
+    ],
+    7: [
+        ("SIP701", "Jembatan", 3), ("SIP702", "Perencanaan Transportasi", 3),
+        ("SIP703", "Ekonomi Teknik", 3), ("SIP704", "Proposal Skripsi", 3),
+        ("SIP705", "Magang Proyek", 4), ("SIP706", "Kuliah Kerja Nyata", 3),
+        ("SIP707", "Pilihan I", 3), ("SIP708", "Pilihan II", 3),
+    ],
+    8: [("SIP801", "Skripsi", 6)]
+}
+
+
+# --- [AUTO-PATCH] ENSURE 24 SKS PER SEMESTER ---
+ALL_DICTS = [
+    ("Manajemen", MATKUL_MANAJEMEN),
+    ("Akuntansi", MATKUL_AKUNTANSI),
+    ("Sastra Inggris", MATKUL_SASTRA_INGGRIS),
+    ("Sastra Jepang", MATKUL_SASTRA_JEPANG),
+    ("Ilmu Hukum", MATKUL_ILMU_HUKUM),
+    ("Informatika", MATKUL_INFORMATIKA),
+    ("Sistem Informasi", MATKUL_SISTEM_INFORMASI),
+    ("Teknik Elektro", MATKUL_TEKNIK_ELEKTRO),
+    ("Teknik Sipil", MATKUL_TEKNIK_SIPIL)
+]
+
+print("Patching SKS requirements (Ensuring >= 24 SKS)...")
+for prodi_name, kurikulum in ALL_DICTS:
+    for sem in range(1, 8): # Sem 1-7 check
+        if sem not in kurikulum: continue
+        
+        current_sks = sum(m[2] for m in kurikulum[sem])
+        if current_sks < 24:
+            # print(f"  - Patching {prodi_name} Sem {sem} (Current: {current_sks})")
+            while current_sks < 24:
+                idx = len([m for m in kurikulum[sem] if "Kapita Selekta" in m[1]]) + 1
+                sup_code = f"{prodi_name[:3].upper()}X{sem}{idx}"
+                if prodi_name == "Sistem Informasi": sup_code = f"SIX{sem}{idx}"
+                sup_name = f"Kapita Selekta {prodi_name} {idx}"
+                sup_sks = 3
+                
+                kurikulum[sem].append((sup_code, sup_name, sup_sks))
+                current_sks += sup_sks
+                # print(f"    [+] Added {sup_name} (3 SKS)")
+
 print("="*80)
 print(" "*20 + "COMPLETE DATABASE SEEDING")
 print("="*80)
 print("\nScript ini akan menambahkan:")
-print("- 3 Fakultas baru (Ekonomi, Sastra, Hukum)")
-print("- 5 Prodi baru (Manajemen, Akuntansi, Sastra Inggris, Sastra Jepang, Ilmu Hukum)")
-print("- ~300 Mata Kuliah baru")
-print("- ~150 Dosen baru")
-print("- ~50 Mahasiswa sample")
-print("- Assign semua dosen ke mata kuliah")
+print("- 4 Fakultas (Teknik, Ekonomi, Sastra, Hukum)")
+print("- 9 Prodi (Informatika, SI, Elektro, Sipil, Manajemen, Akuntansi, Inggris, Jepang, Hukum)")
+print("- ~500 Mata Kuliah baru")
+print("- ~500 Dosen baru")
+print("- ~90 Mahasiswa sample")
+print("- Assign semua dosen ke mata kuliah (berdasar Nama)")
 print("\nProses akan memakan waktu ~2-3 menit...")
 print("="*80)
 
@@ -555,8 +777,26 @@ print(f"  Total: {total_mk} mata kuliah ditambahkan")
 
 print("\n[2/6] Menambahkan Dosen Baru...")
 
-# Hitung berapa dosen yang dibutuhkan untuk mata kuliah baru
-cursor.execute("SELECT COUNT(*) FROM tbMatakuliah WHERE prodi IN ('Manajemen', 'Akuntansi', 'Sastra Inggris', 'Sastra Jepang', 'Ilmu Hukum')")
+# Fakultas Teknik
+PRODI_TEKNIK = [
+    ("Informatika", MATKUL_INFORMATIKA),
+    ("Sistem Informasi", MATKUL_SISTEM_INFORMASI),
+    ("Teknik Elektro", MATKUL_TEKNIK_ELEKTRO),
+    ("Teknik Sipil", MATKUL_TEKNIK_SIPIL)
+]
+for p_name, p_dict in PRODI_TEKNIK:
+    print(f"  - {p_name}...", end=" ")
+    for sem, mk_list in p_dict.items():
+        for kode, nama, sks in mk_list:
+            cursor.execute("""
+                INSERT OR IGNORE INTO tbMatakuliah (kode_matkul, nama_matkul, sks, semester, prodi)
+                VALUES (?, ?, ?, ?, ?)
+            """, (kode, nama, sks, sem, p_name))
+            total_mk += 1
+    print(f"{sum(len(l) for l in p_dict.values())} mk")
+
+# Hitung berapa dosen yang dibutuhkan
+cursor.execute("SELECT COUNT(*) FROM tbMatakuliah")
 mk_baru_count = cursor.fetchone()[0]
 
 dosen_needed = mk_baru_count  # 1 dosen per mata kuliah
@@ -609,7 +849,7 @@ for i, mk in enumerate(unassigned_mk):
             UPDATE tbDosen 
             SET matkul_ajar = ? 
             WHERE nip = ?
-        """, (mk['kode_matkul'], dosen['nip']))
+        """, (mk['nama_matkul'], dosen['nip']))
         assigned_count += 1
         
         if (assigned_count) % 50 == 0:
@@ -625,7 +865,11 @@ prodi_codes = {
     "Akuntansi": "12",
     "Sastra Inggris": "21",
     "Sastra Jepang": "22",
-    "Ilmu Hukum": "31"
+    "Ilmu Hukum": "31",
+    "Informatika": "41",
+    "Sistem Informasi": "42",
+    "Teknik Elektro": "43",
+    "Teknik Sipil": "44"
 }
 
 fakultas_map = {
@@ -633,7 +877,11 @@ fakultas_map = {
     "Akuntansi": "Fakultas Ekonomi",
     "Sastra Inggris": "Fakultas Sastra",
     "Sastra Jepang": "Fakultas Sastra",
-    "Ilmu Hukum": "Fakultas Hukum"
+    "Ilmu Hukum": "Fakultas Hukum",
+    "Informatika": "Fakultas Teknik",
+    "Sistem Informasi": "Fakultas Teknik",
+    "Teknik Elektro": "Fakultas Teknik",
+    "Teknik Sipil": "Fakultas Teknik"
 }
 
 total_mhs = 0
@@ -704,7 +952,7 @@ print(f"\n  Dosen: {total_dosen} total, {assigned_dosen} mengajar")
 # Cek mata kuliah tanpa dosen
 cursor.execute("""
     SELECT COUNT(*) FROM tbMatakuliah m
-    LEFT JOIN tbDosen d ON m.kode_matkul = d.matkul_ajar
+    LEFT JOIN tbDosen d ON m.nama_matkul = d.matkul_ajar
     WHERE d.nip IS NULL AND m.prodi != 'Umum'
 """)
 mk_no_dosen = cursor.fetchone()[0]

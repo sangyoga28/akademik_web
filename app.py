@@ -248,29 +248,35 @@ def daftar_dosen():
 
     conn = get_db()
     
-    # Ambil parameter halaman (page) dan pencarian (q) dari URL
+    # Ambil parameter halaman (page), pencarian (q), dan prodi dari URL
     page = request.args.get('page', 1, type=int)
     q = request.args.get('q', '')
+    prodi = request.args.get('prodi', '')
     
     # Hitung offset untuk database
     offset = (page - 1) * PER_PAGE
     
     # Ambil data dengan limit dan offset
-    data = repo.daftar_dosen(conn, search_term=q, limit=PER_PAGE, offset=offset)
+    data = repo.daftar_dosen(conn, search_term=q, prodi=prodi, limit=PER_PAGE, offset=offset)
     
     # Hitung total data dan total halaman
-    total_data = repo.hitung_jumlah_dosen(conn, search_term=q)
+    total_data = repo.hitung_jumlah_dosen(conn, search_term=q, prodi=prodi)
     total_pages = ceil(total_data / PER_PAGE)
     
+    # Ambil daftar prodi untuk dropdown filter
+    daftar_prodi = repo.ambil_daftar_prodi(conn)
+    
     # Jika hasil pencarian kosong, tampilkan notifikasi
-    if q and not data and total_data == 0:
-        flash(f"Tidak ada data Dosen yang ditemukan untuk pencarian '{q}'.", 'info')
+    if (q or prodi) and not data and total_data == 0:
+        flash(f"Tidak ada data Dosen yang ditemukan.", 'info')
 
     return render_template('dosen.html', 
                            data=data, 
                            page=page, 
                            total_pages=total_pages, 
                            q=q, 
+                           prodi=prodi,
+                           daftar_prodi=daftar_prodi,
                            total_data=total_data,
                            PER_PAGE=PER_PAGE) 
                            

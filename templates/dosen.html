@@ -10,15 +10,22 @@
         class="row g-3 mb-4 align-items-center bg-white p-3 rounded shadow-sm">
         <div class="col-md-5 col-lg-4 position-relative">
             <input type="text" name="q" class="form-control search-input pe-5"
-                placeholder="Cari berdasarkan NIP atau Nama" value="{{ request.args.get('q', '') }}"
-                oninput="toggleClear(this)">
-            <i class="bi bi-x-circle-fill position-absolute top-50 end-0 translate-middle-y me-3 text-secondary clear-icon"
-                style="cursor: pointer; display: none;" onclick="clearSearch(this)"></i>
+                placeholder="Cari berdasarkan NIP atau Nama" value="{{ q }}" oninput="toggleClear(this)">
+            <i class="bi bi-x-circle-fill position-absolute top-50 end-0 translate-middle-y me-3 text-secondary clear-icon {{ 'd-none' if not q else '' }}"
+                style="cursor: pointer;" onclick="clearSearch(this)"></i>
+        </div>
+        <div class="col-md-3">
+            <select name="prodi" class="form-select">
+                <option value="">Semua Program Studi</option>
+                {% for p in daftar_prodi %}
+                <option value="{{ p }}" {% if p==prodi %}selected{% endif %}>{{ p }}</option>
+                {% endfor %}
+            </select>
         </div>
         <div class="col-auto">
             <button type="submit" class="btn btn-primary"><i class="bi bi-search"></i> Cari Data</button>
         </div>
-        {% if request.args.get('q') %}
+        {% if q or prodi %}
         <div class="col-auto">
             <a href="{{ url_for('daftar_dosen') }}" class="btn btn-outline-secondary">Reset</a>
         </div>
@@ -39,7 +46,7 @@
         </div>
 
         <div class="table-responsive">
-            <table class="table table-striped table-hover">
+            <table class="table table-striped table-hover align-middle">
                 <thead class="table-dark">
                     <tr>
                         <th scope="col" style="width: 50px;"><input type="checkbox" id="selectAll"></th>
@@ -89,6 +96,7 @@
         const reportType = 'dosen';
         const storageKey = 'selected_ids_' + reportType;
         const form = document.querySelector('form[action="{{ url_for("preview_report") }}"]');
+
 
         function getSelection() {
             const stored = sessionStorage.getItem(storageKey);
@@ -189,31 +197,42 @@
 
     {% if total_pages > 1 %}
     <p class="text-center mt-3 text-secondary">
-        Menampilkan Halaman {{ page }} / {{ total_pages }} Total Halaman
+        Halaman {{ page }} / {{ total_pages }}
     </p>
 
     <nav aria-label="Page navigation" class="mb-4">
-        <ul class="pagination justify-content-center">
-
+        <ul class="pagination justify-content-center pagination-sm">
             <li class="page-item {% if page == 1 %}disabled{% endif %}">
-                <a class="page-link" href="{{ url_for('daftar_dosen', page=page-1, q=q) }}" aria-label="Previous">
-                    <span aria-hidden="true">&laquo; Sebelumnya</span>
-                </a>
+                <a class="page-link" href="{{ url_for('daftar_dosen', page=page-1, q=q, prodi=prodi) }}">Sebelumnya</a>
             </li>
 
-            {% for p in range(1, total_pages + 1) %}
+            {% set start = [1, page - 2]|max %}
+            {% set end = [total_pages, page + 2]|min %}
+
+            {% if start > 1 %}
+            <li class="page-item"><a class="page-link"
+                    href="{{ url_for('daftar_dosen', page=1, q=q, prodi=prodi) }}">1</a></li>
+            {% if start > 2 %}<li class="page-item disabled"><span class="page-link">...</span></li>{% endif %}
+            {% endif %}
+
+            {% for p in range(start, end + 1) %}
             <li class="page-item {% if p == page %}active{% endif %}">
-                <a class="page-link" href="{{ url_for('daftar_dosen', page=p, q=q) }}">
-                    {{ p }}
-                </a>
+                <a class="page-link" href="{{ url_for('daftar_dosen', page=p, q=q, prodi=prodi) }}">{{ p }}</a>
             </li>
             {% endfor %}
 
-            <li class="page-item {% if page == total_pages %}disabled{% endif %}">
-                <a class="page-link" href="{{ url_for('daftar_dosen', page=page+1, q=q) }}" aria-label="Next">
-                    Berikutnya &raquo;
-                </a>
-            </li>
+            {% if end < total_pages %} {% if end < total_pages - 1 %} <li class="page-item disabled"><span
+                    class="page-link">...</span></li>
+                {% endif %}
+                <li class="page-item"><a class="page-link"
+                        href="{{ url_for('daftar_dosen', page=total_pages, q=q, prodi=prodi) }}">{{ total_pages }}</a>
+                </li>
+                {% endif %}
+
+                <li class="page-item {% if page == total_pages %}disabled{% endif %}">
+                    <a class="page-link"
+                        href="{{ url_for('daftar_dosen', page=page+1, q=q, prodi=prodi) }}">Berikutnya</a>
+                </li>
         </ul>
     </nav>
     {% endif %}

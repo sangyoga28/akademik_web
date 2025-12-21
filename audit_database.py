@@ -70,7 +70,7 @@ print(f"Dosen tanpa mata kuliah: {total_dosen - dosen_with_matkul}")
 cursor.execute("""
     SELECT m.kode_matkul, m.nama_matkul, m.prodi, m.semester
     FROM tbMatakuliah m
-    LEFT JOIN tbDosen d ON m.kode_matkul = d.matkul_ajar
+    LEFT JOIN tbDosen d ON m.nama_matkul = d.matkul_ajar
     WHERE d.nip IS NULL AND m.prodi != 'Umum'
 """)
 matkul_no_dosen = cursor.fetchall()
@@ -148,8 +148,8 @@ issues = []
 if len(fakultas_list) < 4:
     issues.append(f"Fakultas kurang (ada {len(fakultas_list)}, seharusnya 4)")
 
-if len(prodi_list) < 4:
-    issues.append(f"Prodi kurang (ada {len(prodi_list)}, seharusnya minimal 4)")
+if len(prodi_list) < 9:
+    issues.append(f"Prodi kurang (ada {len(prodi_list)}, seharusnya 9)")
 
 if len(matkul_no_dosen) > 0:
     issues.append(f"{len(matkul_no_dosen)} mata kuliah tanpa dosen")

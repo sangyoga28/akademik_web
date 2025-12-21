@@ -176,16 +176,31 @@ def tambah_data_dosen(conn, nip, nama, matkul_ajar, telepon):
     conn.commit()
 
 # FUNGSI INI MENDUKUNG PAGINATION DAN SEARCH
-def daftar_dosen(conn, search_term=None, limit=None, offset=0):
+def daftar_dosen(conn, search_term=None, prodi=None, limit=None, offset=0):
     cursor = conn.cursor()
-    query = "SELECT * FROM tbDosen"
+    
+    # Base query
+    if prodi:
+        # Join dengan Matakuliah untuk filter berdasarkan prodi matkul yang diajar
+        query = """
+            SELECT d.* FROM tbDosen d
+            LEFT JOIN tbMatakuliah m ON d.matkul_ajar = m.nama_matkul
+            WHERE 1=1
+        """
+    else:
+        query = "SELECT * FROM tbDosen WHERE 1=1"
+        
     params = []
     
     if search_term:
-        query += " WHERE nip LIKE ? OR nama LIKE ?"
-        params = [f'%{search_term}%', f'%{search_term}%']
+        query += " AND (d.nip LIKE ? OR d.nama LIKE ?)" if prodi else " AND (nip LIKE ? OR nama LIKE ?)"
+        params.extend([f'%{search_term}%', f'%{search_term}%'])
         
-    query += " ORDER BY nip"
+    if prodi:
+        query += " AND m.prodi = ?"
+        params.append(prodi)
+        
+    query += " ORDER BY d.nip" if prodi else " ORDER BY nip"
     
     if limit is not None:
         query += " LIMIT ? OFFSET ?"
@@ -283,8 +298,28 @@ def hitung_jumlah_data(conn, nama_tabel, search_term=None):
 def hitung_jumlah_mahasiswa(conn, search_term=None):
     return hitung_jumlah_data(conn, 'tbMahasiswa', search_term)
 
-def hitung_jumlah_dosen(conn, search_term=None):
-    return hitung_jumlah_data(conn, 'tbDosen', search_term)
+def hitung_jumlah_dosen(conn, search_term=None, prodi=None):
+    cursor = conn.cursor()
+    if prodi:
+        query = """
+            SELECT COUNT(*) FROM tbDosen d
+            LEFT JOIN tbMatakuliah m ON d.matkul_ajar = m.nama_matkul
+            WHERE 1=1
+        """
+    else:
+        query = "SELECT COUNT(*) FROM tbDosen WHERE 1=1"
+    params = []
+    
+    if search_term:
+        query += " AND (d.nip LIKE ? OR d.nama LIKE ?)" if prodi else " AND (nip LIKE ? OR nama LIKE ?)"
+        params.extend([f'%{search_term}%', f'%{search_term}%'])
+        
+    if prodi:
+        query += " AND m.prodi = ?"
+        params.append(prodi)
+        
+    cursor.execute(query, params)
+    return cursor.fetchone()[0]
     
 def hitung_jumlah_matkul(conn, search_term=None):
     return hitung_jumlah_data(conn, 'tbMatakuliah', search_term)

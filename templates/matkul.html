@@ -12,8 +12,8 @@
             <input type="text" name="q" class="form-control search-input pe-5"
                 placeholder="Cari berdasarkan Kode atau Nama Matkul" value="{{ request.args.get('q', '') }}"
                 oninput="toggleClear(this)">
-            <i class="bi bi-x-circle-fill position-absolute top-50 end-0 translate-middle-y me-3 text-secondary clear-icon"
-                style="cursor: pointer; display: none;" onclick="clearSearch(this)"></i>
+            <i class="bi bi-x-circle-fill position-absolute top-50 end-0 translate-middle-y me-3 text-secondary clear-icon {{ 'd-none' if not request.args.get('q') else '' }}"
+                style="cursor: pointer;" onclick="clearSearch(this)"></i>
         </div>
         <div class="col-auto">
             <button type="submit" class="btn btn-primary"><i class="bi bi-search"></i> Cari Data</button>
@@ -192,31 +192,39 @@
 
     {% if total_pages > 1 %}
     <p class="text-center mt-3 text-secondary">
-        Menampilkan Halaman {{ page }} / {{ total_pages }} Total Halaman
+        Halaman {{ page }} / {{ total_pages }}
     </p>
 
     <nav aria-label="Page navigation" class="mb-4">
-        <ul class="pagination justify-content-center">
-
+        <ul class="pagination justify-content-center pagination-sm">
             <li class="page-item {% if page == 1 %}disabled{% endif %}">
-                <a class="page-link" href="{{ url_for('daftar_matkul', page=page-1, q=q) }}" aria-label="Previous">
-                    <span aria-hidden="true">&laquo; Sebelumnya</span>
-                </a>
+                <a class="page-link" href="{{ url_for('daftar_matkul', page=page-1, q=q) }}">Sebelumnya</a>
             </li>
 
-            {% for p in range(1, total_pages + 1) %}
+            {% set start = [1, page - 2]|max %}
+            {% set end = [total_pages, page + 2]|min %}
+
+            {% if start > 1 %}
+            <li class="page-item"><a class="page-link" href="{{ url_for('daftar_matkul', page=1, q=q) }}">1</a></li>
+            {% if start > 2 %}<li class="page-item disabled"><span class="page-link">...</span></li>{% endif %}
+            {% endif %}
+
+            {% for p in range(start, end + 1) %}
             <li class="page-item {% if p == page %}active{% endif %}">
-                <a class="page-link" href="{{ url_for('daftar_matkul', page=p, q=q) }}">
-                    {{ p }}
-                </a>
+                <a class="page-link" href="{{ url_for('daftar_matkul', page=p, q=q) }}">{{ p }}</a>
             </li>
             {% endfor %}
 
-            <li class="page-item {% if page == total_pages %}disabled{% endif %}">
-                <a class="page-link" href="{{ url_for('daftar_matkul', page=page+1, q=q) }}" aria-label="Next">
-                    Berikutnya &raquo;
-                </a>
-            </li>
+            {% if end < total_pages %} {% if end < total_pages - 1 %} <li class="page-item disabled"><span
+                    class="page-link">...</span></li>
+                {% endif %}
+                <li class="page-item"><a class="page-link"
+                        href="{{ url_for('daftar_matkul', page=total_pages, q=q) }}">{{ total_pages }}</a></li>
+                {% endif %}
+
+                <li class="page-item {% if page == total_pages %}disabled{% endif %}">
+                    <a class="page-link" href="{{ url_for('daftar_matkul', page=page+1, q=q) }}">Berikutnya</a>
+                </li>
         </ul>
     </nav>
     {% endif %}

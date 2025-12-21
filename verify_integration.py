@@ -124,7 +124,7 @@ def test_dosen_matkul_integration():
             cursor.execute("""
                 SELECT nama_matkul, prodi, semester 
                 FROM tbMatakuliah 
-                WHERE kode_matkul = ?
+                WHERE nama_matkul = ?
             """, (dosen['matkul_ajar'],))
             matkul = cursor.fetchone()
             

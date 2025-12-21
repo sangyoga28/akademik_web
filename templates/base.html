@@ -171,7 +171,11 @@
         function toggleClear(input) {
             const icon = input.nextElementSibling;
             if (icon && icon.classList.contains('clear-icon')) {
-                icon.style.display = input.value ? 'block' : 'none';
+                if (input.value) {
+                    icon.classList.remove('d-none');
+                } else {
+                    icon.classList.add('d-none');
+                }
             }
         }
 
@@ -179,7 +183,7 @@
             const input = icon.previousElementSibling;
             if (input) {
                 input.value = '';
-                toggleClear(input);
+                icon.classList.add('d-none');
                 input.focus();
             }
         }
