@@ -8,23 +8,42 @@
 
     <form method="GET" action="{{ url_for('daftar_mahasiswa') }}"
         class="row g-3 mb-4 align-items-center bg-white p-3 rounded shadow-sm">
-        <div class="col-md-5 col-lg-4 position-relative">
+        <div class="col-md-3 col-lg-3 position-relative">
             <input type="text" name="q" class="form-control search-input pe-5" placeholder="Cari Nama / NIM..."
                 value="{{ q }}" oninput="toggleClear(this)">
             <i class="bi bi-x-circle-fill position-absolute top-50 end-0 translate-middle-y me-3 text-secondary clear-icon {{ 'd-none' if not q else '' }}"
                 style="cursor: pointer;" onclick="clearSearch(this)"></i>
         </div>
+
+        <div class="col-md-3">
+            <select name="fakultas" class="form-select" onchange="this.form.submit()">
+                <option value="">-- Semua Fakultas --</option>
+                {% for f in daftar_fakultas %}
+                <option value="{{ f }}" {% if f==fakultas %}selected{% endif %}>{{ f }}</option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <div class="col-md-3">
+            <select name="prodi" class="form-select" onchange="this.form.submit()">
+                <option value="">-- Semua Prodi --</option>
+                {% for p in daftar_prodi %}
+                <option value="{{ p }}" {% if p==prodi %}selected{% endif %}>{{ p }}</option>
+                {% endfor %}
+            </select>
+        </div>
+
         <div class="col-auto">
             <button type="submit" class="btn btn-primary"><i class="bi bi-search"></i> Cari</button>
         </div>
 
-        {% if request.args.get('q') %}
+        {% if q or fakultas or prodi %}
         <div class="col-auto">
             <a href="{{ url_for('daftar_mahasiswa') }}" class="btn btn-outline-secondary">Reset</a>
         </div>
         {% endif %}
 
-        <div class="col-md-4 col-lg-5 ms-auto text-md-end">
+        <div class="col-md-auto ms-auto text-md-end">
             <a href="{{ url_for('tambah_mahasiswa') }}" class="btn btn-success">
                 <i class="bi bi-plus-circle"></i> Tambah Mahasiswa
             </a>
@@ -205,20 +224,23 @@
     <nav aria-label="Page navigation" class="mb-4">
         <ul class="pagination justify-content-center pagination-sm">
             <li class="page-item {% if page == 1 %}disabled{% endif %}">
-                <a class="page-link" href="{{ url_for('daftar_mahasiswa', page=page-1, q=q) }}">Sebelumnya</a>
+                <a class="page-link"
+                    href="{{ url_for('daftar_mahasiswa', page=page-1, q=q, fakultas=fakultas, prodi=prodi) }}">Sebelumnya</a>
             </li>
 
             {% set start = [1, page - 2]|max %}
             {% set end = [total_pages, page + 2]|min %}
 
             {% if start > 1 %}
-            <li class="page-item"><a class="page-link" href="{{ url_for('daftar_mahasiswa', page=1, q=q) }}">1</a></li>
+            <li class="page-item"><a class="page-link"
+                    href="{{ url_for('daftar_mahasiswa', page=1, q=q, fakultas=fakultas, prodi=prodi) }}">1</a></li>
             {% if start > 2 %}<li class="page-item disabled"><span class="page-link">...</span></li>{% endif %}
             {% endif %}
 
             {% for p in range(start, end + 1) %}
             <li class="page-item {% if p == page %}active{% endif %}">
-                <a class="page-link" href="{{ url_for('daftar_mahasiswa', page=p, q=q) }}">{{ p }}</a>
+                <a class="page-link"
+                    href="{{ url_for('daftar_mahasiswa', page=p, q=q, fakultas=fakultas, prodi=prodi) }}">{{ p }}</a>
             </li>
             {% endfor %}
 
@@ -226,11 +248,13 @@
                     class="page-link">...</span></li>
                 {% endif %}
                 <li class="page-item"><a class="page-link"
-                        href="{{ url_for('daftar_mahasiswa', page=total_pages, q=q) }}">{{ total_pages }}</a></li>
+                        href="{{ url_for('daftar_mahasiswa', page=total_pages, q=q, fakultas=fakultas, prodi=prodi) }}">{{
+                        total_pages }}</a></li>
                 {% endif %}
 
                 <li class="page-item {% if page == total_pages %}disabled{% endif %}">
-                    <a class="page-link" href="{{ url_for('daftar_mahasiswa', page=page+1, q=q) }}">Berikutnya</a>
+                    <a class="page-link"
+                        href="{{ url_for('daftar_mahasiswa', page=page+1, q=q, fakultas=fakultas, prodi=prodi) }}">Berikutnya</a>
                 </li>
         </ul>
     </nav>

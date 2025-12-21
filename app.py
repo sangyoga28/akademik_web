@@ -111,31 +111,41 @@ def daftar_mahasiswa():
 
     conn = get_db()
     
-    # Ambil parameter halaman (page) dan pencarian (q) dari URL
+    # Ambil parameter halaman (page), pencarian (q), fakultas, dan prodi
     page = request.args.get('page', 1, type=int)
     q = request.args.get('q', '')
+    fakultas = request.args.get('fakultas', '')
+    prodi = request.args.get('prodi', '')
     
     # Hitung offset untuk database
     offset = (page - 1) * PER_PAGE
     
     # Ambil data dengan limit dan offset
-    data = repo.daftar_mahasiswa(conn, search_term=q, limit=PER_PAGE, offset=offset)
+    data = repo.daftar_mahasiswa(conn, search_term=q, fakultas=fakultas, prodi=prodi, limit=PER_PAGE, offset=offset)
     
     # Hitung total data dan total halaman
-    total_data = repo.hitung_jumlah_mahasiswa(conn, search_term=q)
+    total_data = repo.hitung_jumlah_mahasiswa(conn, search_term=q, fakultas=fakultas, prodi=prodi)
     total_pages = ceil(total_data / PER_PAGE)
     
+    # Dropdown data
+    daftar_prodi = repo.ambil_daftar_prodi(conn)
+    daftar_fakultas = repo.ambil_daftar_fakultas(conn)
+    
     # Jika hasil pencarian kosong, tampilkan notifikasi
-    if q and not data and total_data == 0:
-        flash(f"Tidak ada data Mahasiswa yang ditemukan untuk pencarian '{q}'.", 'info')
+    if (q or fakultas or prodi) and not data and total_data == 0:
+        flash(f"Tidak ada data Mahasiswa yang ditemukan.", 'info')
 
     return render_template('mahasiswa.html', 
                            data=data, 
                            page=page, 
                            total_pages=total_pages, 
                            q=q, 
+                           fakultas=fakultas,
+                           prodi=prodi,
+                           daftar_prodi=daftar_prodi,
+                           daftar_fakultas=daftar_fakultas,
                            total_data=total_data,
-                           PER_PAGE=PER_PAGE) # Kirim PER_PAGE ke template
+                           PER_PAGE=PER_PAGE)
 
 @app.route('/mahasiswa/tambah', methods=['GET', 'POST'])
 def tambah_mahasiswa():
@@ -248,26 +258,28 @@ def daftar_dosen():
 
     conn = get_db()
     
-    # Ambil parameter halaman (page), pencarian (q), dan prodi dari URL
+    # Ambil parameter halaman (page), pencarian (q), prodi, dan fakultas
     page = request.args.get('page', 1, type=int)
     q = request.args.get('q', '')
     prodi = request.args.get('prodi', '')
+    fakultas = request.args.get('fakultas', '') # Added for consistency though join logic needs care
     
     # Hitung offset untuk database
     offset = (page - 1) * PER_PAGE
     
     # Ambil data dengan limit dan offset
-    data = repo.daftar_dosen(conn, search_term=q, prodi=prodi, limit=PER_PAGE, offset=offset)
+    data = repo.daftar_dosen(conn, search_term=q, fakultas=fakultas, prodi=prodi, limit=PER_PAGE, offset=offset)
     
     # Hitung total data dan total halaman
-    total_data = repo.hitung_jumlah_dosen(conn, search_term=q, prodi=prodi)
+    total_data = repo.hitung_jumlah_dosen(conn, search_term=q, fakultas=fakultas, prodi=prodi)
     total_pages = ceil(total_data / PER_PAGE)
     
-    # Ambil daftar prodi untuk dropdown filter
+    # Ambil daftar prodi & fakultas untuk dropdown filter
     daftar_prodi = repo.ambil_daftar_prodi(conn)
+    daftar_fakultas = repo.ambil_daftar_fakultas(conn)
     
     # Jika hasil pencarian kosong, tampilkan notifikasi
-    if (q or prodi) and not data and total_data == 0:
+    if (q or prodi or fakultas) and not data and total_data == 0:
         flash(f"Tidak ada data Dosen yang ditemukan.", 'info')
 
     return render_template('dosen.html', 
@@ -276,9 +288,11 @@ def daftar_dosen():
                            total_pages=total_pages, 
                            q=q, 
                            prodi=prodi,
+                           fakultas=fakultas,
                            daftar_prodi=daftar_prodi,
+                           daftar_fakultas=daftar_fakultas,
                            total_data=total_data,
-                           PER_PAGE=PER_PAGE) 
+                           PER_PAGE=PER_PAGE)
                            
 @app.route('/dosen/tambah', methods=['GET', 'POST'])
 def tambah_dosen():
@@ -398,10 +412,21 @@ def dosen_nilai_dashboard():
         # Admin / Lainnya bisa lihat semua
         daftar_matkul = repo.daftar_matkul(conn, limit=1000)
     
+    # Filter by prodi and semester
+    prodi_filter = request.args.get('prodi', '')
+    semester_filter = request.args.get('semester', '', type=str)
+    
+    # We may need a function to filter matkul_diampu by prodi/sem if Admin
+    # or just show the filtered list.
+    # For simplicity, we just pass the list to template and let it handle or refine repo function.
+    
     return render_template('dosen_nilai_dashboard.html', 
                            matkul_list=daftar_matkul,
                            semester=semester,
-                           tahun_ajaran=tahun_ajaran)
+                           tahun_ajaran=tahun_ajaran,
+                           prodi_filter=prodi_filter,
+                           semester_filter=semester_filter,
+                           daftar_prodi=repo.ambil_daftar_prodi(conn))
 
 @app.route('/dosen/nilai/input/<kode_matkul>', methods=['GET', 'POST'])
 def input_nilai(kode_matkul):
@@ -450,6 +475,29 @@ def input_nilai(kode_matkul):
                            semester=semester,
                            tahun_ajaran=tahun_ajaran)
 
+@app.route('/mahasiswa/krs/tambah_bulk', methods=['POST'])
+def tambah_krs_bulk():
+    if not session.get('logged_in') or session.get('role') != 'Mahasiswa':
+        return redirect(url_for('login'))
+        
+    nim = session.get('username')
+    semester = request.form.get('semester', type=int)
+    tahun_ajaran = request.form.get('tahun_ajaran')
+    
+    if not semester or not tahun_ajaran:
+        flash('Semester dan Tahun Ajaran tidak valid.', 'danger')
+        return redirect(url_for('manage_krs', nim=nim))
+        
+    conn = get_db()
+    success, message = repo.tambah_krs_bulk(conn, nim, semester, tahun_ajaran)
+    
+    if success:
+        flash(message, 'success')
+    else:
+        flash(message, 'danger')
+        
+    return redirect(url_for('manage_krs', nim=nim, semester=semester, tahun_ajaran=tahun_ajaran))
+
 @app.route('/matkul')
 def daftar_matkul():
     # PROTEKSI ROUTE
@@ -459,29 +507,37 @@ def daftar_matkul():
         
     conn = get_db()
 
-    # Ambil parameter halaman (page) dan pencarian (q) dari URL
+    # Ambil parameter halaman (page), pencarian (q), prodi, dan semester dari URL
     page = request.args.get('page', 1, type=int)
     q = request.args.get('q', '')
+    prodi = request.args.get('prodi', '')
+    semester = request.args.get('semester', '', type=str)
 
     # Hitung offset untuk database
     offset = (page - 1) * PER_PAGE
     
     # Ambil data dengan limit dan offset
-    data = repo.daftar_matkul(conn, search_term=q, limit=PER_PAGE, offset=offset)
-
+    data = repo.daftar_matkul(conn, search_term=q, prodi=prodi, semester=semester, limit=PER_PAGE, offset=offset)
+    
     # Hitung total data dan total halaman
-    total_data = repo.hitung_jumlah_matkul(conn, search_term=q)
+    total_data = repo.hitung_jumlah_matkul(conn, search_term=q, prodi=prodi, semester=semester)
     total_pages = ceil(total_data / PER_PAGE)
     
+    # Daftar prodi untuk dropdown filter
+    daftar_prodi = repo.ambil_daftar_prodi(conn)
+    
     # Jika hasil pencarian kosong, tampilkan notifikasi
-    if q and not data and total_data == 0:
-        flash(f"Tidak ada data Mata Kuliah yang ditemukan untuk pencarian '{q}'.", 'info')
-        
+    if (q or prodi or semester) and not data and total_data == 0:
+        flash(f"Tidak ada data Mata Kuliah yang ditemukan.", 'info')
+
     return render_template('matkul.html', 
                            data=data, 
                            page=page, 
                            total_pages=total_pages, 
-                           q=q,
+                           q=q, 
+                           prodi=prodi,
+                           semester=semester,
+                           daftar_prodi=daftar_prodi,
                            total_data=total_data,
                            PER_PAGE=PER_PAGE)
                            

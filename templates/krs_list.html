@@ -6,15 +6,36 @@
 <!-- Search & Print Form -->
 <form action="{{ url_for('daftar_krs_mahasiswa') }}" method="get"
     class="row g-3 mb-4 align-items-center bg-white p-3 rounded shadow-sm">
-    <div class="col-md-5 col-lg-4 position-relative">
+    <div class="col-md-3 position-relative">
         <input type="text" name="q" class="form-control search-input pe-5" placeholder="Cari Nama / NIM..."
             value="{{ q }}" oninput="toggleClear(this)">
-        <i class="bi bi-x-circle-fill position-absolute top-50 end-0 translate-middle-y me-3 text-secondary clear-icon"
-            style="cursor: pointer; display: none;" onclick="clearSearch(this)"></i>
+        <i class="bi bi-x-circle-fill position-absolute top-50 end-0 translate-middle-y me-3 text-secondary clear-icon {{ 'd-none' if not q else '' }}"
+            style="cursor: pointer;" onclick="clearSearch(this)"></i>
+    </div>
+    <div class="col-md-3">
+        <select name="fakultas" class="form-select" onchange="this.form.submit()">
+            <option value="">-- Semua Fakultas --</option>
+            {% for f in daftar_fakultas %}
+            <option value="{{ f }}" {% if f==fakultas %}selected{% endif %}>{{ f }}</option>
+            {% endfor %}
+        </select>
+    </div>
+    <div class="col-md-3">
+        <select name="prodi" class="form-select" onchange="this.form.submit()">
+            <option value="">-- Semua Prodi --</option>
+            {% for p in daftar_prodi %}
+            <option value="{{ p }}" {% if p==prodi %}selected{% endif %}>{{ p }}</option>
+            {% endfor %}
+        </select>
     </div>
     <div class="col-auto">
         <button type="submit" class="btn btn-primary"><i class="bi bi-search"></i> Cari</button>
     </div>
+    {% if q or fakultas or prodi %}
+    <div class="col-auto">
+        <a href="{{ url_for('daftar_krs_mahasiswa') }}" class="btn btn-outline-secondary">Reset</a>
+    </div>
+    {% endif %}
 </form>
 
 <form action="{{ url_for('preview_report') }}" method="post" target="_blank">
@@ -61,19 +82,43 @@
 
 <!-- Pagination -->
 {% if total_pages > 1 %}
-<nav aria-label="Page navigation example">
-    <ul class="pagination justify-content-center">
+<p class="text-center mt-3 text-secondary">
+    Halaman {{ page }} / {{ total_pages }}
+</p>
+<nav aria-label="Page navigation">
+    <ul class="pagination justify-content-center pagination-sm">
         <li class="page-item {% if page == 1 %}disabled{% endif %}">
-            <a class="page-link" href="{{ url_for('daftar_krs_mahasiswa', page=page-1, q=q) }}">Sebelumnya</a>
+            <a class="page-link"
+                href="{{ url_for('daftar_krs_mahasiswa', page=page-1, q=q, fakultas=fakultas, prodi=prodi) }}">Sebelumnya</a>
         </li>
-        {% for p in range(1, total_pages + 1) %}
+
+        {% set start = [1, page - 2]|max %}
+        {% set end = [total_pages, page + 2]|min %}
+
+        {% if start > 1 %}
+        <li class="page-item"><a class="page-link"
+                href="{{ url_for('daftar_krs_mahasiswa', page=1, q=q, fakultas=fakultas, prodi=prodi) }}">1</a></li>
+        {% if start > 2 %}<li class="page-item disabled"><span class="page-link">...</span></li>{% endif %}
+        {% endif %}
+
+        {% for p in range(start, end + 1) %}
         <li class="page-item {% if p == page %}active{% endif %}">
-            <a class="page-link" href="{{ url_for('daftar_krs_mahasiswa', page=p, q=q) }}">{{ p }}</a>
+            <a class="page-link"
+                href="{{ url_for('daftar_krs_mahasiswa', page=p, q=q, fakultas=fakultas, prodi=prodi) }}">{{ p }}</a>
         </li>
         {% endfor %}
-        <li class="page-item {% if page == total_pages %}disabled{% endif %}">
-            <a class="page-link" href="{{ url_for('daftar_krs_mahasiswa', page=page+1, q=q) }}">Selanjutnya</a>
-        </li>
+
+        {% if end < total_pages %} {% if end < total_pages - 1 %}<li class="page-item disabled"><span
+                class="page-link">...</span></li>{% endif %}
+            <li class="page-item"><a class="page-link"
+                    href="{{ url_for('daftar_krs_mahasiswa', page=total_pages, q=q, fakultas=fakultas, prodi=prodi) }}">{{
+                    total_pages }}</a></li>
+            {% endif %}
+
+            <li class="page-item {% if page == total_pages %}disabled{% endif %}">
+                <a class="page-link"
+                    href="{{ url_for('daftar_krs_mahasiswa', page=page+1, q=q, fakultas=fakultas, prodi=prodi) }}">Selanjutnya</a>
+            </li>
     </ul>
 </nav>
 {% endif %}

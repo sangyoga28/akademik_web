@@ -100,15 +100,22 @@
                         {% endif %}
                     </div>
 
-                    <button type="submit" class="btn btn-success w-100" {% if total_sks>= 24 or (status_pembayaran and
+                    <button type="submit" class="btn btn-success w-100 mb-2" {% if total_sks>= 24 or (status_pembayaran
+                        and
                         status_pembayaran['status'] == 'Lunas') %}disabled{% endif %}>
                         <i class="bi bi-plus-circle"></i> Tambahkan
                     </button>
-                    {% if total_sks >= 24 %}
-                    <div class="alert alert-warning mt-2 fs-6 p-2">
-                        <small>Batas SKS tercapai (Maks 24).</small>
-                    </div>
-                    {% endif %}
+
+                    <button type="submit" form="bulkAddForm" class="btn btn-outline-success w-100" {% if total_sks>= 24
+                        or (status_pembayaran and
+                        status_pembayaran['status'] == 'Lunas') or not semua_matkul %}disabled{% endif %}>
+                        <i class="bi bi-collection-plus"></i> Ambil Semua Matkul Sem {{ semester_aktif }}
+                    </button>
+
+                    <form id="bulkAddForm" action="{{ url_for('tambah_krs_bulk') }}" method="post">
+                        <input type="hidden" name="semester" value="{{ semester_aktif }}">
+                        <input type="hidden" name="tahun_ajaran" value="{{ tahun_ajaran_aktif }}">
+                    </form>
                 </form>
             </div>
         </div>

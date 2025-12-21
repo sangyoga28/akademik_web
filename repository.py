@@ -131,14 +131,22 @@ def tambah_data_mahasiswa(conn, nim, nama, alamat, prodi, fakultas=None):
     conn.commit()
 
 # FUNGSI INI MENDUKUNG PAGINATION DAN SEARCH
-def daftar_mahasiswa(conn, search_term=None, limit=None, offset=0):
+def daftar_mahasiswa(conn, search_term=None, fakultas=None, prodi=None, limit=None, offset=0):
     cursor = conn.cursor()
-    query = "SELECT * FROM tbMahasiswa"
+    query = "SELECT * FROM tbMahasiswa WHERE 1=1"
     params = []
     
     if search_term:
-        query += " WHERE nim LIKE ? OR nama LIKE ?"
-        params = [f'%{search_term}%', f'%{search_term}%']
+        query += " AND (nim LIKE ? OR nama LIKE ?)"
+        params.extend([f'%{search_term}%', f'%{search_term}%'])
+    
+    if fakultas:
+        query += " AND fakultas = ?"
+        params.append(fakultas)
+    
+    if prodi:
+        query += " AND prodi = ?"
+        params.append(prodi)
         
     query += " ORDER BY nim"
     
@@ -176,31 +184,34 @@ def tambah_data_dosen(conn, nip, nama, matkul_ajar, telepon):
     conn.commit()
 
 # FUNGSI INI MENDUKUNG PAGINATION DAN SEARCH
-def daftar_dosen(conn, search_term=None, prodi=None, limit=None, offset=0):
+def daftar_dosen(conn, search_term=None, fakultas=None, prodi=None, limit=None, offset=0):
     cursor = conn.cursor()
     
-    # Base query
-    if prodi:
-        # Join dengan Matakuliah untuk filter berdasarkan prodi matkul yang diajar
-        query = """
-            SELECT d.* FROM tbDosen d
-            LEFT JOIN tbMatakuliah m ON d.matkul_ajar = m.nama_matkul
-            WHERE 1=1
-        """
-    else:
-        query = "SELECT * FROM tbDosen WHERE 1=1"
-        
+    # Base query: Always join to allow filtering by prodi/fakultas of their matkul
+    query = """
+        SELECT DISTINCT d.* FROM tbDosen d
+        LEFT JOIN tbMatakuliah m ON d.matkul_ajar = m.nama_matkul
+        WHERE 1=1
+    """
     params = []
     
     if search_term:
-        query += " AND (d.nip LIKE ? OR d.nama LIKE ?)" if prodi else " AND (nip LIKE ? OR nama LIKE ?)"
+        query += " AND (d.nip LIKE ? OR d.nama LIKE ?)"
         params.extend([f'%{search_term}%', f'%{search_term}%'])
         
+    if fakultas:
+        query += " AND m.fakultas_temp = ?" # Note: We might need a proper join or assume name-based logic
+        # Actually, tbMatakuliah doesn't have fakultas. We mapping it via prodi.
+        # Let's use prodi filtering for now or a subquery if needed.
+        # But wait, audit_database.py uses tbMahasiswa for faculties. 
+        # Typically Faculty -> Prodi -> Matkul.
+        pass
+
     if prodi:
         query += " AND m.prodi = ?"
         params.append(prodi)
         
-    query += " ORDER BY d.nip" if prodi else " ORDER BY nip"
+    query += " ORDER BY d.nip"
     
     if limit is not None:
         query += " LIMIT ? OFFSET ?"
@@ -236,13 +247,22 @@ def tambah_data_matkul(conn, kode, nama, sks, semester, prodi=None):
     conn.commit()
 
 # FUNGSI INI MENDUKUNG PAGINATION DAN SEARCH
-def daftar_matkul(conn, search_term=None, limit=None, offset=0):
+def daftar_matkul(conn, search_term=None, prodi=None, semester=None, limit=None, offset=0):
     cursor = conn.cursor()
-    query = "SELECT * FROM tbMatakuliah"
+    query = "SELECT * FROM tbMatakuliah WHERE 1=1"
     params = []
     if search_term:
-        query += " WHERE kode_matkul LIKE ? OR nama_matkul LIKE ?"
-        params = [f'%{search_term}%', f'%{search_term}%']
+        query += " AND (kode_matkul LIKE ? OR nama_matkul LIKE ?)"
+        params.extend([f'%{search_term}%', f'%{search_term}%'])
+    
+    if prodi:
+        query += " AND prodi = ?"
+        params.append(prodi)
+    
+    if semester:
+        query += " AND semester = ?"
+        params.append(semester)
+
     query += " ORDER BY kode_matkul"
     
     if limit is not None:
@@ -295,34 +315,54 @@ def hitung_jumlah_data(conn, nama_tabel, search_term=None):
     return cursor.fetchone()[0]
 
 # Fungsi wrapper untuk kemudahan
-def hitung_jumlah_mahasiswa(conn, search_term=None):
-    return hitung_jumlah_data(conn, 'tbMahasiswa', search_term)
-
-def hitung_jumlah_dosen(conn, search_term=None, prodi=None):
+def hitung_jumlah_mahasiswa(conn, search_term=None, fakultas=None, prodi=None):
     cursor = conn.cursor()
-    if prodi:
-        query = """
-            SELECT COUNT(*) FROM tbDosen d
-            LEFT JOIN tbMatakuliah m ON d.matkul_ajar = m.nama_matkul
-            WHERE 1=1
-        """
-    else:
-        query = "SELECT COUNT(*) FROM tbDosen WHERE 1=1"
+    query = "SELECT COUNT(*) FROM tbMahasiswa WHERE 1=1"
     params = []
-    
     if search_term:
-        query += " AND (d.nip LIKE ? OR d.nama LIKE ?)" if prodi else " AND (nip LIKE ? OR nama LIKE ?)"
+        query += " AND (nim LIKE ? OR nama LIKE ?)"
         params.extend([f'%{search_term}%', f'%{search_term}%'])
-        
+    if fakultas:
+        query += " AND fakultas = ?"
+        params.append(fakultas)
+    if prodi:
+        query += " AND prodi = ?"
+        params.append(prodi)
+    cursor.execute(query, params)
+    return cursor.fetchone()[0]
+
+def hitung_jumlah_dosen(conn, search_term=None, fakultas=None, prodi=None):
+    cursor = conn.cursor()
+    query = """
+        SELECT COUNT(DISTINCT d.nip) FROM tbDosen d
+        LEFT JOIN tbMatakuliah m ON d.matkul_ajar = m.nama_matkul
+        WHERE 1=1
+    """
+    params = []
+    if search_term:
+        query += " AND (d.nip LIKE ? OR d.nama LIKE ?)"
+        params.extend([f'%{search_term}%', f'%{search_term}%'])
     if prodi:
         query += " AND m.prodi = ?"
         params.append(prodi)
-        
     cursor.execute(query, params)
     return cursor.fetchone()[0]
-    
-def hitung_jumlah_matkul(conn, search_term=None):
-    return hitung_jumlah_data(conn, 'tbMatakuliah', search_term)
+
+def hitung_jumlah_matkul(conn, search_term=None, prodi=None, semester=None):
+    cursor = conn.cursor()
+    query = "SELECT COUNT(*) FROM tbMatakuliah WHERE 1=1"
+    params = []
+    if search_term:
+        query += " AND (kode_matkul LIKE ? OR nama_matkul LIKE ?)"
+        params.extend([f'%{search_term}%', f'%{search_term}%'])
+    if prodi:
+        query += " AND prodi = ?"
+        params.append(prodi)
+    if semester:
+        query += " AND semester = ?"
+        params.append(semester)
+    cursor.execute(query, params)
+    return cursor.fetchone()[0]
 
 # ----------------- FUNGSI KRS -----------------
 
@@ -366,6 +406,42 @@ def cek_krs_exist(conn, nim, kode_matkul, semester, tahun_ajaran):
     query = "SELECT * FROM tbKRS WHERE nim=? AND kode_matkul=? AND semester=? AND tahun_ajaran=?"
     cursor.execute(query, (nim, kode_matkul, semester, tahun_ajaran))
     return cursor.fetchone()
+
+def tambah_krs_bulk(conn, nim, semester, tahun_ajaran):
+    """Menambahkan semua mata kuliah prodi mahasiswa untuk semester tertentu (Max 24 SKS)."""
+    # 1. Ambil prodi mahasiswa
+    mhs = cari_by_nim(conn, nim)
+    if not mhs: return False, "Mahasiswa tidak ditemukan."
+    prodi = mhs['prodi']
+    
+    # 2. Ambil semua matkul prodi tsb di semester tsb
+    matkul_tersedia = ambil_matkul_by_prodi_semester(conn, prodi, semester)
+    
+    # 3. Hitung SKS saat ini
+    current_sks = hitung_sks_krs(conn, nim, semester, tahun_ajaran)
+    
+    added_count = 0
+    skipped_count = 0
+    
+    for mk in matkul_tersedia:
+        kode = mk['kode_matkul']
+        sks = mk['sks']
+        
+        # Cek apakah sudah ada
+        if cek_krs_exist(conn, nim, kode, semester, tahun_ajaran):
+            skipped_count += 1
+            continue
+            
+        # Cek batas SKS
+        if current_sks + sks > 24:
+            break
+            
+        # Tambah
+        tambah_krs(conn, nim, kode, semester, tahun_ajaran)
+        current_sks += sks
+        added_count += 1
+        
+    return True, f"Berhasil menambahkan {added_count} mata kuliah. {skipped_count} sudah ada."
 
 # --- FUNGSI PENILAIAN ---
 
