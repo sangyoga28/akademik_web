@@ -36,7 +36,8 @@ def buat_tabel(conn):
             nama TEXT NOT NULL, 
             alamat TEXT,
             prodi TEXT,
-            fakultas TEXT
+            fakultas TEXT,
+            telepon TEXT
         );
     """)
     
@@ -140,12 +141,18 @@ def hapus_user(conn, username):
     cursor.execute("DELETE FROM tbUser WHERE username=?", (username,))
     conn.commit()
 
+def update_user_password(conn, username, password_hash):
+    cursor = conn.cursor()
+    cursor.execute("UPDATE tbUser SET password_hash=? WHERE username=?", (password_hash, username))
+    conn.commit()
+    return cursor.rowcount > 0
+
 # ----------------- FUNGSI MAHASISWA -----------------
 
-def tambah_data_mahasiswa(conn, nim, nama, alamat, prodi, fakultas=None):
+def tambah_data_mahasiswa(conn, nim, nama, alamat, prodi, fakultas=None, telepon=None):
     cursor = conn.cursor()
-    cursor.execute("INSERT INTO tbMahasiswa (nim, nama, alamat, prodi, fakultas) VALUES (?, ?, ?, ?, ?)", 
-                   (nim, nama, alamat, prodi, fakultas))
+    cursor.execute("INSERT INTO tbMahasiswa (nim, nama, alamat, prodi, fakultas, telepon) VALUES (?, ?, ?, ?, ?, ?)", 
+                   (nim, nama, alamat, prodi, fakultas, telepon))
     conn.commit()
 
 # FUNGSI INI MENDUKUNG PAGINATION DAN SEARCH
@@ -180,10 +187,10 @@ def cari_by_nim(conn, nim):
     cursor.execute("SELECT * FROM tbMahasiswa WHERE nim=?", (nim,))
     return cursor.fetchone()
 
-def ubah_data_mahasiswa(conn, nim, nama, alamat, prodi, fakultas=None):
+def ubah_data_mahasiswa(conn, nim, nama, alamat, prodi, fakultas=None, telepon=None):
     cursor = conn.cursor()
-    cursor.execute("UPDATE tbMahasiswa SET nama=?, alamat=?, prodi=?, fakultas=? WHERE nim=?", 
-                   (nama, alamat, prodi, fakultas, nim))
+    cursor.execute("UPDATE tbMahasiswa SET nama=?, alamat=?, prodi=?, fakultas=?, telepon=? WHERE nim=?", 
+                   (nama, alamat, prodi, fakultas, telepon, nim))
     conn.commit()
     return cursor.rowcount > 0
 
@@ -661,6 +668,32 @@ def cek_status_pendaftaran_user(conn, nama, telepon):
     return cursor.fetchone()
 
 def ambil_prodi_by_fakultas(conn, fakultas):
+    """Mengambil daftar prodi yang berasosiasi dengan fakultas tertentu."""
+    mapping = {
+        'Fakultas Teknik': ['Informatika', 'Sistem Informasi', 'Teknik Elektro', 'Teknik Sipil'],
+        'Fakultas Ekonomi': ['Manajemen', 'Akuntansi'],
+        'Fakultas Sastra': ['Sastra Inggris', 'Sastra Jepang'],
+        'Fakultas Hukum': ['Ilmu Hukum']
+    }
+    return mapping.get(fakultas, [])
+
+# ----------------- FUNGSI VERIFIKASI IDENTITAS -----------------
+
+def verifikasi_identitas_user(conn, username, telepon):
+    """Memverifikasi identitas user (Mahasiswa atau Dosen) berdasarkan username dan nomor telepon."""
+    cursor = conn.cursor()
+    
+    # Cek di Tabel Mahasiswa
+    cursor.execute("SELECT * FROM tbMahasiswa WHERE nim=? AND telepon=?", (username, telepon))
+    mhs = cursor.fetchone()
+    if mhs: return True, 'Mahasiswa'
+    
+    # Cek di Tabel Dosen
+    cursor.execute("SELECT * FROM tbDosen WHERE nip=? AND telepon=?", (username, telepon))
+    dsn = cursor.fetchone()
+    if dsn: return True, 'Dosen'
+    
+    return False, None
     """Mengambil daftar prodi yang berasosiasi dengan fakultas tertentu."""
     mapping = {
         'Fakultas Teknik': ['Informatika', 'Sistem Informasi', 'Teknik Elektro', 'Teknik Sipil'],

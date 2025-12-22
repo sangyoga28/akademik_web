@@ -94,21 +94,22 @@
                     </div>
                 </form>
             </div>
-            <div class="card-footer bg-light border-0 text-center py-3">
-                <div class="mb-2">
-                    <span class="small text-muted">Belum punya akun?</span>
-                    <a href="{{ url_for('register') }}"
-                        class="small fw-bold text-primary text-decoration-none ms-1">Daftar Sekarang</a>
+            <div class="card-footer bg-light border-0 px-4 py-4">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <a href="{{ url_for('register') }}" class="small fw-bold text-primary text-decoration-none">
+                        <i class="bi bi-person-plus me-1"></i> Daftar Akun
+                    </a>
+                    <a href="{{ url_for('pendaftaran_status') }}" class="small fw-bold text-dark text-decoration-none">
+                        Cek Status <i class="bi bi-search ms-1"></i>
+                    </a>
                 </div>
-                <div class="mb-2">
-                    <a href="{{ url_for('pendaftaran_status') }}"
-                        class="small fw-bold text-dark text-decoration-none">Cek Status Pendaftaran <i
-                            class="bi bi-search ms-1"></i></a>
+                <div class="text-center">
+                    <hr class="my-3 opacity-10">
+                    <a href="{{ url_for('reset_password') }}"
+                        class="small text-muted text-decoration-none hover-primary">
+                        <i class="bi bi-question-circle me-1"></i> Lupa Kata Sandi?
+                    </a>
                 </div>
-                <hr class="my-2 opacity-10">
-                <a href="{{ url_for('index') }}" class="text-decoration-none small text-muted">
-                    <i class="bi bi-arrow-left me-1"></i> Kembali ke Beranda
-                </a>
             </div>
         </div>
 

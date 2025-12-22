@@ -30,73 +30,133 @@
                     </button>
                 </form>
                 {% else %}
-                <div class="text-center mb-0">
-                    <h5 class="text-muted mb-3 small text-uppercase fw-bold">Hasil Penelusuran</h5>
+                {% else %}
+                <div class="text-center mb-0 mt-2">
+                    <h6 class="text-primary fw-bold text-uppercase mb-4" style="letter-spacing: 2px;">Hasil Penelusuran
+                    </h6>
 
                     {% if status_data['status'] == 'Approved' %}
-                    <!-- Approved Card View -->
-                    <div
-                        class="p-4 rounded-4 border border-success border-2 bg-success bg-opacity-10 mb-4 animate__animated animate__pulse">
-                        <div class="mb-3">
-                            <i class="bi bi-patch-check-fill text-success" style="font-size: 3.5rem;"></i>
-                            <h4 class="fw-bold text-success mt-2">PENDAFTARAN DISETUJUI</h4>
-                            <p class="text-muted small">Selamat! Akun Anda telah aktif.</p>
+                    <div class="result-card approved animate__animated animate__zoomIn">
+                        <div class="status-icon-wrapper mb-3">
+                            <i class="bi bi-check-circle-fill text-success"></i>
+                        </div>
+                        <h4 class="fw-bold text-success mb-1">Pendaftaran Disetujui</h4>
+                        <p class="text-muted small mb-4">Selamat! Akun Anda telah diaktifkan oleh Admin.</p>
+
+                        <div class="info-glass p-3 text-start mb-4">
+                            <div
+                                class="d-flex justify-content-between mb-2 pb-2 border-bottom border-white border-opacity-25">
+                                <span class="text-muted small">Username / NIM</span>
+                                <span class="fw-bold font-monospace text-primary">{{ status_data['nim_nip'] }}</span>
+                            </div>
+                            <div class="d-flex justify-content-between mb-2">
+                                <span class="text-muted small">Jenis Akun</span>
+                                <span class="fw-bold">{{ status_data['role'] }}</span>
+                            </div>
+                            <div class="d-flex justify-content-between">
+                                <span class="text-muted small">Password</span>
+                                <span class="small italic text-muted">Sesuai pendaftaran</span>
+                            </div>
                         </div>
 
-                        <div class="bg-white rounded-3 p-3 shadow-sm border border-light text-start">
-                            <div class="row align-items-center mb-3">
-                                <div class="col-4 text-muted small">Username</div>
-                                <div class="col-8 h5 mb-0 fw-bold text-primary font-monospace">{{ status_data['nim_nip']
-                                    }}</div>
-                            </div>
-                            <div class="row align-items-center mb-3">
-                                <div class="col-4 text-muted small">Role</div>
-                                <div class="col-8 fw-bold">{{ status_data['role'] }}</div>
-                            </div>
-                            <div class="row align-items-center">
-                                <div class="col-4 text-muted small">Password</div>
-                                <div class="col-8 small text-truncate"><em>Gunakan password saat mendaftar</em></div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="alert alert-info border-0 shadow-sm small py-2 mb-4">
-                        <i class="bi bi-info-circle me-1"></i> Silakan gunakan username di atas untuk <a
-                            href="{{ url_for('login') }}" class="fw-bold">Login</a>.
+                        <a href="{{ url_for('login') }}" class="btn btn-success w-100 rounded-3 py-2 fw-bold shadow-sm">
+                            Masuk Sekarang <i class="bi bi-box-arrow-in-right ms-2"></i>
+                        </a>
                     </div>
 
                     {% elif status_data['status'] == 'Rejected' %}
-                    <!-- Rejected Card View -->
-                    <div class="p-4 rounded-4 border border-danger border-2 bg-danger bg-opacity-10 mb-4">
-                        <i class="bi bi-x-circle-fill text-danger" style="font-size: 3.5rem;"></i>
-                        <h4 class="fw-bold text-danger mt-2">PENDAFTARAN DITOLAK</h4>
-                        <p class="text-muted mt-3">Mohon maaf, berkas pendaftaran Anda belum memenuhi kriteria
+                    <div class="result-card rejected animate__animated animate__shakeX">
+                        <div class="status-icon-wrapper mb-3 border-danger">
+                            <i class="bi bi-x-circle-fill text-danger"></i>
+                        </div>
+                        <h4 class="fw-bold text-danger mb-2">Pendaftaran Ditolak</h4>
+                        <p class="text-muted small">Mohon maaf, berkas pendaftaran Anda belum memenuhi kriteria
                             kualifikasi kami saat ini.</p>
+                        <hr class="my-4 opacity-5">
+                        <a href="{{ url_for('register') }}" class="btn btn-outline-danger btn-sm rounded-pill px-4">
+                            Daftar Ulang
+                        </a>
                     </div>
 
                     {% else %}
-                    <!-- Pending Card View -->
-                    <div class="p-4 rounded-4 border border-warning border-2 bg-warning bg-opacity-10 mb-4">
-                        <div class="spinner-border text-warning mb-3" role="status" style="width: 3rem; height: 3rem;">
-                            <span class="visually-hidden">Loading...</span>
+                    <div class="result-card pending animate__animated animate__fadeIn">
+                        <div class="status-icon-wrapper mb-3 border-warning">
+                            <div class="spinner-border text-warning" role="status"
+                                style="width: 2rem; height: 2rem; border-width: 0.2em;"></div>
                         </div>
-                        <h4 class="fw-bold text-warning mt-2">SEDANG DIPROSES</h4>
-                        <p class="text-muted mt-3">Sabar ya! Admin sedang meninjau dokumen pendaftaran Anda. Cek kembali
-                            dalam 1x24 jam.</p>
+                        <h4 class="fw-bold text-warning mb-2">Sedang Diproses</h4>
+                        <p class="text-muted small">Sabar ya! Admin sedang meninjau dokumen pendaftaran Anda. Silakan
+                            cek kembali dalam 24 jam.</p>
                     </div>
                     {% endif %}
                 </div>
-                <div class="text-center">
+
+                <div class="text-center mt-4 pt-3 border-top border-light">
                     <a href="{{ url_for('pendaftaran_status') }}"
-                        class="btn btn-outline-secondary btn-sm rounded-pill px-4">
+                        class="text-decoration-none small text-muted hover-primary">
                         <i class="bi bi-arrow-left me-1"></i> Cek Nama Lain
                     </a>
                 </div>
                 {% endif %}
             </div>
             <div class="card-footer bg-light border-0 text-center py-3">
-                <a href="{{ url_for('login') }}" class="text-decoration-none small text-muted"> kembali ke login</a>
+                <a href="{{ url_for('login') }}" class="text-decoration-none small text-muted">
+                    <i class="bi bi-box-arrow-left me-1"></i> Kembali ke Login
+                </a>
             </div>
         </div>
     </div>
 </div>
+
+<style>
+    .result-card {
+        padding: 2rem 1.5rem;
+        border-radius: 1.5rem;
+        background: #fff;
+        transition: all 0.3s ease;
+    }
+
+    .result-card.approved {
+        border: 2px solid #198754;
+        background: linear-gradient(to bottom, #f8fffb, #fff);
+    }
+
+    .result-card.rejected {
+        border: 2px solid #dc3545;
+        background: linear-gradient(to bottom, #fff8f8, #fff);
+    }
+
+    .result-card.pending {
+        border: 2px solid #ffc107;
+        background: linear-gradient(to bottom, #fffdf8, #fff);
+    }
+
+    .status-icon-wrapper {
+        width: 70px;
+        height: 70px;
+        background: white;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto;
+        font-size: 2.5rem;
+        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.05);
+        border: 2px solid #eee;
+    }
+
+    .approved .status-icon-wrapper {
+        border-color: #198754;
+    }
+
+    .info-glass {
+        background: rgba(0, 0, 0, 0.02);
+        border-radius: 12px;
+        border: 1px solid rgba(0, 0, 0, 0.05);
+    }
+
+    .hover-primary:hover {
+        color: var(--bs-primary) !important;
+    }
+</style>
 {% endblock %}

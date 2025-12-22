@@ -28,6 +28,12 @@
                     </div>
 
                     <div class="mb-3">
+                        <label class="form-label fw-bold">Nomor Telepon</label>
+                        <input type="text" name="telepon" class="form-control" value="{{ mhs['telepon'] or '' }}"
+                            required>
+                    </div>
+
+                    <div class="mb-3">
                         <label class="form-label fw-bold">Fakultas</label>
                         <select name="fakultas" id="fakultas" class="form-select" required onchange="updateProdi()">
                             {% for fakultas in daftar_fakultas %}

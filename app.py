@@ -115,6 +115,8 @@ def register():
                            daftar_fakultas=daftar_fakultas,
                            matkul_list=matkul_list)
 
+    return render_template('pendaftaran_status.html', status_data=status_data)
+
 @app.route('/pendaftaran/status', methods=['GET', 'POST'])
 def pendaftaran_status():
     status_data = None
@@ -127,6 +129,50 @@ def pendaftaran_status():
             flash('Data pendaftaran tidak ditemukan. Pastikan Nama dan No. Telepon sesuai.', 'warning')
             
     return render_template('pendaftaran_status.html', status_data=status_data)
+
+@app.route('/reset_password', methods=['GET', 'POST'])
+def reset_password():
+    if session.get('logged_in'):
+        return redirect(url_for('index'))
+        
+    verified = False
+    verified_username = None
+    
+    if request.method == 'POST':
+        step = request.form.get('step')
+        
+        if step == 'verify':
+            username = request.form.get('username')
+            telepon = request.form.get('telepon')
+            
+            conn = get_db()
+            is_valid, role = repo.verifikasi_identitas_user(conn, username, telepon)
+            
+            if is_valid:
+                verified = True
+                verified_username = username
+                flash(f'Identitas {role} berhasil diverifikasi. Silakan masukkan kata sandi baru.', 'success')
+            else:
+                flash('Verifikasi gagal. Username atau Nomor Telepon tidak cocok.', 'danger')
+                
+        elif step == 'reset':
+            username = request.form.get('username')
+            new_password = request.form.get('new_password')
+            confirm_password = request.form.get('confirm_password')
+            
+            if new_password != confirm_password:
+                flash('Konfirmasi kata sandi tidak cocok!', 'danger')
+                return render_template('reset_password.html', verified=True, verified_username=username)
+                
+            conn = get_db()
+            hashed_pw = generate_password_hash(new_password, method='pbkdf2:sha256')
+            if repo.update_user_password(conn, username, hashed_pw):
+                flash('Kata sandi berhasil diperbarui! Silakan login dengan kata sandi baru.', 'success')
+                return redirect(url_for('login'))
+            else:
+                flash('Gagal memperbarui kata sandi.', 'danger')
+                
+    return render_template('reset_password.html', verified=verified, verified_username=verified_username)
 
 @app.route('/api/prodi/<fakultas>')
 def api_prodi(fakultas):
@@ -232,6 +278,7 @@ def tambah_mahasiswa():
         alamat = request.form['alamat']
         prodi = request.form['prodi']
         fakultas = request.form['fakultas']
+        telepon = request.form['telepon']
         
         if not nim or not nama:
             flash('NIM dan Nama wajib diisi!', 'danger')
@@ -243,7 +290,7 @@ def tambah_mahasiswa():
             
         try:
             # 1. Tambah Biodata
-            repo.tambah_data_mahasiswa(conn, nim, nama, alamat, prodi, fakultas)
+            repo.tambah_data_mahasiswa(conn, nim, nama, alamat, prodi, fakultas, telepon)
             
             # 2. Buat Akun Login Otomatis (Default Pass: NIM)
             if repo.cari_user_by_username(conn, nim) is None:
@@ -280,13 +327,14 @@ def edit_mahasiswa(nim):
         alamat_baru = request.form['alamat']
         prodi_baru = request.form['prodi']
         fakultas_baru = request.form['fakultas']
+        telepon_baru = request.form['telepon']
 
         if not nama_baru:
             flash('Nama wajib diisi!', 'danger')
             return redirect(url_for('edit_mahasiswa', nim=nim))
             
         try:
-            repo.ubah_data_mahasiswa(conn, nim, nama_baru, alamat_baru, prodi_baru, fakultas_baru)
+            repo.ubah_data_mahasiswa(conn, nim, nama_baru, alamat_baru, prodi_baru, fakultas_baru, telepon_baru)
             flash(f'Data Mahasiswa {nim} berhasil diubah!', 'success')
         except Exception as e:
             flash(f'Gagal mengubah data: {e}', 'danger')
@@ -1041,7 +1089,8 @@ def approve_pendaftaran(id_pendaftaran):
     try:
         if p['role'] == 'Mahasiswa':
             new_id = repo.generate_nim_baru(conn)
-            repo.tambah_data_mahasiswa(conn, new_id, p['nama'], p['alamat'], p['prodi'], p['fakultas'])
+            # Pass telepon from pendaftaran
+            repo.tambah_data_mahasiswa(conn, new_id, p['nama'], p['alamat'], p['prodi'], p['fakultas'], p['telepon'])
             repo.tambah_user(conn, new_id, p['password_hash'], role='Mahasiswa')
             msg = f"Pendaftaran {p['nama']} disetujui. NIM: {new_id}"
         else:
