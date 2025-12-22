@@ -30,38 +30,59 @@
                     </button>
                 </form>
                 {% else %}
-                <div class="text-center mb-4">
-                    <h5 class="text-muted mb-1">Status Pendaftaran:</h5>
+                <div class="text-center mb-0">
+                    <h5 class="text-muted mb-3 small text-uppercase fw-bold">Hasil Penelusuran</h5>
+
                     {% if status_data['status'] == 'Approved' %}
-                    <div class="badge bg-success fs-5 px-4 py-2 rounded-pill shadow-sm mb-3">
-                        <i class="bi bi-check-circle-fill me-2"></i> DISETUJUI
-                    </div>
-                    <div class="alert alert-success border-0 shadow-sm text-start">
-                        <h6 class="fw-bold border-bottom pb-2 mb-3">Detail Akun Anda:</h6>
-                        <div class="d-flex justify-content-between mb-2">
-                            <span class="text-muted">Username ({{ status_data['role'] }}):</span>
-                            <span class="fw-bold font-monospace fs-5 text-primary">{{ status_data['nim_nip'] }}</span>
+                    <!-- Approved Card View -->
+                    <div
+                        class="p-4 rounded-4 border border-success border-2 bg-success bg-opacity-10 mb-4 animate__animated animate__pulse">
+                        <div class="mb-3">
+                            <i class="bi bi-patch-check-fill text-success" style="font-size: 3.5rem;"></i>
+                            <h4 class="fw-bold text-success mt-2">PENDAFTARAN DISETUJUI</h4>
+                            <p class="text-muted small">Selamat! Akun Anda telah aktif.</p>
                         </div>
-                        <div class="d-flex justify-content-between mb-2">
-                            <span class="text-muted small">Kata Sandi:</span>
-                            <span class="fw-bold small"><em>Sesuai saat mendaftar</em></span>
+
+                        <div class="bg-white rounded-3 p-3 shadow-sm border border-light text-start">
+                            <div class="row align-items-center mb-3">
+                                <div class="col-4 text-muted small">Username</div>
+                                <div class="col-8 h5 mb-0 fw-bold text-primary font-monospace">{{ status_data['nim_nip']
+                                    }}</div>
+                            </div>
+                            <div class="row align-items-center mb-3">
+                                <div class="col-4 text-muted small">Role</div>
+                                <div class="col-8 fw-bold">{{ status_data['role'] }}</div>
+                            </div>
+                            <div class="row align-items-center">
+                                <div class="col-4 text-muted small">Password</div>
+                                <div class="col-8 small text-truncate"><em>Gunakan password saat mendaftar</em></div>
+                            </div>
                         </div>
-                        <hr>
-                        <p class="small mb-0 text-center">Silakan gunakan username di atas untuk <a
-                                href="{{ url_for('login') }}" class="fw-bold">Login</a>.</p>
                     </div>
+                    <div class="alert alert-info border-0 shadow-sm small py-2 mb-4">
+                        <i class="bi bi-info-circle me-1"></i> Silakan gunakan username di atas untuk <a
+                            href="{{ url_for('login') }}" class="fw-bold">Login</a>.
+                    </div>
+
                     {% elif status_data['status'] == 'Rejected' %}
-                    <div class="badge bg-danger fs-5 px-4 py-2 rounded-pill shadow-sm mb-3">
-                        <i class="bi bi-x-circle-fill me-2"></i> DITOLAK
+                    <!-- Rejected Card View -->
+                    <div class="p-4 rounded-4 border border-danger border-2 bg-danger bg-opacity-10 mb-4">
+                        <i class="bi bi-x-circle-fill text-danger" style="font-size: 3.5rem;"></i>
+                        <h4 class="fw-bold text-danger mt-2">PENDAFTARAN DITOLAK</h4>
+                        <p class="text-muted mt-3">Mohon maaf, berkas pendaftaran Anda belum memenuhi kriteria
+                            kualifikasi kami saat ini.</p>
                     </div>
-                    <p class="text-muted mt-3">Mohon maaf, pendaftaran Anda belum dapat kami setujui saat ini. Silakan
-                        hubungi bagian administrasi untuk informasi lebih lanjut.</p>
+
                     {% else %}
-                    <div class="badge bg-warning text-dark fs-5 px-4 py-2 rounded-pill shadow-sm mb-3">
-                        <i class="bi bi-clock-history me-2"></i> MENUNGGU
+                    <!-- Pending Card View -->
+                    <div class="p-4 rounded-4 border border-warning border-2 bg-warning bg-opacity-10 mb-4">
+                        <div class="spinner-border text-warning mb-3" role="status" style="width: 3rem; height: 3rem;">
+                            <span class="visually-hidden">Loading...</span>
+                        </div>
+                        <h4 class="fw-bold text-warning mt-2">SEDANG DIPROSES</h4>
+                        <p class="text-muted mt-3">Sabar ya! Admin sedang meninjau dokumen pendaftaran Anda. Cek kembali
+                            dalam 1x24 jam.</p>
                     </div>
-                    <p class="text-muted mt-3">Pendaftaran Anda sedang dalam tahap review oleh admin. Silakan cek
-                        kembali beberapa saat lagi.</p>
                     {% endif %}
                 </div>
                 <div class="text-center">
