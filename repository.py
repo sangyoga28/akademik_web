@@ -114,6 +114,7 @@ def buat_tabel(conn):
             matkul_ajar TEXT,   
             password_hash TEXT NOT NULL,
             status TEXT DEFAULT 'Pending',
+            nim_nip TEXT,
             tanggal_daftar TIMESTAMP DEFAULT CURRENT_TIMESTAMP
         );
     """)
@@ -609,6 +610,11 @@ def update_status_pendaftaran(conn, id_pendaftaran, status):
     cursor.execute("UPDATE tbPendaftaran SET status=? WHERE id=?", (status, id_pendaftaran))
     conn.commit()
 
+def update_nim_nip_pendaftaran(conn, id_pendaftaran, nim_nip):
+    cursor = conn.cursor()
+    cursor.execute("UPDATE tbPendaftaran SET nim_nip=? WHERE id=?", (nim_nip, id_pendaftaran))
+    conn.commit()
+
 def generate_nim_baru(conn):
     import datetime
     tahun = datetime.datetime.now().year
@@ -639,3 +645,23 @@ def hitung_pendaftaran_pending(conn):
     cursor = conn.cursor()
     cursor.execute("SELECT COUNT(*) FROM tbPendaftaran WHERE status='Pending'")
     return cursor.fetchone()[0]
+
+def cek_status_pendaftaran_user(conn, nama, telepon):
+    """Mencari status pendaftaran berdasarkan nama dan telepon."""
+    cursor = conn.cursor()
+    cursor.execute("""
+        SELECT * FROM tbPendaftaran 
+        WHERE nama = ? AND telepon = ? 
+        ORDER BY id DESC LIMIT 1
+    """, (nama, telepon))
+    return cursor.fetchone()
+
+def ambil_prodi_by_fakultas(conn, fakultas):
+    """Mengambil daftar prodi yang berasosiasi dengan fakultas tertentu."""
+    mapping = {
+        'Fakultas Teknik': ['Informatika', 'Sistem Informasi', 'Teknik Elektro', 'Teknik Sipil'],
+        'Fakultas Ekonomi': ['Manajemen', 'Akuntansi'],
+        'Fakultas Sastra': ['Sastra Inggris', 'Sastra Jepang'],
+        'Fakultas Hukum': ['Ilmu Hukum']
+    }
+    return mapping.get(fakultas, [])

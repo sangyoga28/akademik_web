@@ -95,8 +95,10 @@
                     </button>
 
                     <div class="text-center">
-                        <p class="mb-0 text-muted small">Sudah punya akun? <a href="{{ url_for('login') }}"
+                        <p class="mb-2 text-muted small">Sudah punya akun? <a href="{{ url_for('login') }}"
                                 class="text-primary fw-bold text-decoration-none">Login di sini</a></p>
+                        <p class="mb-0 text-muted small">Sudah daftar? <a href="{{ url_for('pendaftaran_status') }}"
+                                class="text-dark fw-bold text-decoration-none">Cek Status & NIM/NIP</a></p>
                     </div>
                 </form>
             </div>
@@ -105,14 +107,43 @@
 </div>
 
 <script>
-    document.querySelectorAll('input[name="role"]').forEach(radio => {
+    const fakultasSelect = document.getElementById('fakultas');
+    const prodiSelect = document.getElementById('prodi');
+    const roleRadios = document.querySelectorAll('input[name="role"]');
+
+    // Filter Prodi berdasarkan Fakultas
+    fakultasSelect.addEventListener('change', function () {
+        const selectedFakultas = this.value;
+        if (!selectedFakultas) {
+            prodiSelect.innerHTML = '<option value="">Pilih Program Studi</option>';
+            return;
+        }
+
+        fetch(`/api/prodi/${selectedFakultas}`)
+            .then(response => response.json())
+            .then(data => {
+                prodiSelect.innerHTML = '<option value="">Pilih Program Studi</option>';
+                data.prodi.forEach(prodi => {
+                    const option = document.createElement('option');
+                    option.value = prodi;
+                    option.textContent = prodi;
+                    prodiSelect.appendChild(option);
+                });
+            });
+    });
+
+    roleRadios.forEach(radio => {
         radio.addEventListener('change', function () {
             if (this.value === 'Mahasiswa') {
                 document.getElementById('mhsFields').style.display = 'block';
                 document.getElementById('dosenFields').style.display = 'none';
+                document.getElementById('nama').placeholder = 'Nama Lengkap';
+                document.querySelector('label[for="nama"]').textContent = 'Nama Lengkap Mahasiswa';
             } else {
                 document.getElementById('mhsFields').style.display = 'none';
                 document.getElementById('dosenFields').style.display = 'block';
+                document.getElementById('nama').placeholder = 'Nama Lengkap Dosen';
+                document.querySelector('label[for="nama"]').textContent = 'Nama Lengkap Dosen';
             }
         });
     });

@@ -1,0 +1,81 @@
+{% extends "base.html" %}
+
+{% block title %}Cek Status Pendaftaran - Sistem Akademik{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center align-items-center" style="min-height: 70vh;">
+    <div class="col-md-6 col-lg-5">
+        <div class="card border-0 shadow-lg overflow-hidden animate__animated animate__fadeIn"
+            style="border-radius: 20px;">
+            <div class="card-header bg-dark text-white text-center py-4 border-0">
+                <i class="bi bi-search mb-2" style="font-size: 2.5rem;"></i>
+                <h3 class="fw-bold mb-0">Cek Status</h3>
+                <p class="small opacity-75 mb-0">Gunakan Nama & No. Telepon saat mendaftar</p>
+            </div>
+            <div class="card-body p-4 p-md-5">
+                {% if not status_data %}
+                <form action="{{ url_for('pendaftaran_status') }}" method="POST">
+                    <div class="form-floating mb-3">
+                        <input type="text" class="form-control" name="nama" id="nama" placeholder="Nama Lengkap"
+                            required>
+                        <label for="nama">Nama Lengkap</label>
+                    </div>
+                    <div class="form-floating mb-4">
+                        <input type="text" class="form-control" name="telepon" id="telepon" placeholder="No. Telepon"
+                            required>
+                        <label for="telepon">No. Telepon</label>
+                    </div>
+                    <button type="submit" class="btn btn-primary w-100 py-3 rounded-3 fw-bold shadow">
+                        Cek Sekarang <i class="bi bi-arrow-right ms-2"></i>
+                    </button>
+                </form>
+                {% else %}
+                <div class="text-center mb-4">
+                    <h5 class="text-muted mb-1">Status Pendaftaran:</h5>
+                    {% if status_data['status'] == 'Approved' %}
+                    <div class="badge bg-success fs-5 px-4 py-2 rounded-pill shadow-sm mb-3">
+                        <i class="bi bi-check-circle-fill me-2"></i> DISETUJUI
+                    </div>
+                    <div class="alert alert-success border-0 shadow-sm text-start">
+                        <h6 class="fw-bold border-bottom pb-2 mb-3">Detail Akun Anda:</h6>
+                        <div class="d-flex justify-content-between mb-2">
+                            <span class="text-muted">Username ({{ status_data['role'] }}):</span>
+                            <span class="fw-bold font-monospace fs-5 text-primary">{{ status_data['nim_nip'] }}</span>
+                        </div>
+                        <div class="d-flex justify-content-between mb-2">
+                            <span class="text-muted small">Kata Sandi:</span>
+                            <span class="fw-bold small"><em>Sesuai saat mendaftar</em></span>
+                        </div>
+                        <hr>
+                        <p class="small mb-0 text-center">Silakan gunakan username di atas untuk <a
+                                href="{{ url_for('login') }}" class="fw-bold">Login</a>.</p>
+                    </div>
+                    {% elif status_data['status'] == 'Rejected' %}
+                    <div class="badge bg-danger fs-5 px-4 py-2 rounded-pill shadow-sm mb-3">
+                        <i class="bi bi-x-circle-fill me-2"></i> DITOLAK
+                    </div>
+                    <p class="text-muted mt-3">Mohon maaf, pendaftaran Anda belum dapat kami setujui saat ini. Silakan
+                        hubungi bagian administrasi untuk informasi lebih lanjut.</p>
+                    {% else %}
+                    <div class="badge bg-warning text-dark fs-5 px-4 py-2 rounded-pill shadow-sm mb-3">
+                        <i class="bi bi-clock-history me-2"></i> MENUNGGU
+                    </div>
+                    <p class="text-muted mt-3">Pendaftaran Anda sedang dalam tahap review oleh admin. Silakan cek
+                        kembali beberapa saat lagi.</p>
+                    {% endif %}
+                </div>
+                <div class="text-center">
+                    <a href="{{ url_for('pendaftaran_status') }}"
+                        class="btn btn-outline-secondary btn-sm rounded-pill px-4">
+                        <i class="bi bi-arrow-left me-1"></i> Cek Nama Lain
+                    </a>
+                </div>
+                {% endif %}
+            </div>
+            <div class="card-footer bg-light border-0 text-center py-3">
+                <a href="{{ url_for('login') }}" class="text-decoration-none small text-muted"> kembali ke login</a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

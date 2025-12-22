@@ -115,6 +115,25 @@ def register():
                            daftar_fakultas=daftar_fakultas,
                            matkul_list=matkul_list)
 
+@app.route('/pendaftaran/status', methods=['GET', 'POST'])
+def pendaftaran_status():
+    status_data = None
+    if request.method == 'POST':
+        nama = request.form.get('nama')
+        telepon = request.form.get('telepon')
+        conn = get_db()
+        status_data = repo.cek_status_pendaftaran_user(conn, nama, telepon)
+        if not status_data:
+            flash('Data pendaftaran tidak ditemukan. Pastikan Nama dan No. Telepon sesuai.', 'warning')
+            
+    return render_template('pendaftaran_status.html', status_data=status_data)
+
+@app.route('/api/prodi/<fakultas>')
+def api_prodi(fakultas):
+    conn = get_db()
+    prodi_list = repo.ambil_prodi_by_fakultas(conn, fakultas)
+    return {"prodi": prodi_list}
+
 # ----------------- ROUTE UTAMA -----------------
 
 @app.route('/')
@@ -1032,6 +1051,7 @@ def approve_pendaftaran(id_pendaftaran):
             msg = f"Pendaftaran {p['nama']} disetujui. NIP: {new_id}"
             
         repo.update_status_pendaftaran(conn, id_pendaftaran, 'Approved')
+        repo.update_nim_nip_pendaftaran(conn, id_pendaftaran, new_id)
         flash(msg, 'success')
     except Exception as e:
         flash(f'Gagal menyetujui: {str(e)}', 'danger')
