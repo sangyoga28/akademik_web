@@ -602,9 +602,21 @@ def tambah_pendaftaran(conn, nama, role, alamat, prodi, fakultas, telepon, matku
     """, (nama, role, alamat, prodi, fakultas, telepon, matkul_ajar, password_hash))
     conn.commit()
 
-def ambil_pendaftaran_pending(conn):
+def ambil_pendaftaran_pending(conn, role=None, prodi=None):
     cursor = conn.cursor()
-    cursor.execute("SELECT * FROM tbPendaftaran WHERE status='Pending' ORDER BY id DESC")
+    query = "SELECT * FROM tbPendaftaran WHERE status='Pending'"
+    params = []
+    
+    if role:
+        query += " AND role = ?"
+        params.append(role)
+        
+    if prodi:
+        query += " AND prodi = ?"
+        params.append(prodi)
+        
+    query += " ORDER BY id DESC"
+    cursor.execute(query, params)
     return cursor.fetchall()
 
 def ambil_pendaftaran_by_id(conn, id_pendaftaran):
@@ -620,6 +632,13 @@ def update_status_pendaftaran(conn, id_pendaftaran, status):
 def update_nim_nip_pendaftaran(conn, id_pendaftaran, nim_nip):
     cursor = conn.cursor()
     cursor.execute("UPDATE tbPendaftaran SET nim_nip=? WHERE id=?", (nim_nip, id_pendaftaran))
+    conn.commit()
+
+def hapus_pendaftaran_by_nim_nip(conn, nim_nip):
+    """Menghapus data pendaftaran berdasarkan NIM/NIP yang sudah diterbitkan.
+       Berguna agar saat user dihapus, rekam jejak pendaftaran 'Approved' juga hilang."""
+    cursor = conn.cursor()
+    cursor.execute("DELETE FROM tbPendaftaran WHERE nim_nip=?", (nim_nip,))
     conn.commit()
 
 def generate_nim_baru(conn):

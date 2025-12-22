@@ -362,7 +362,9 @@ def hapus_mahasiswa(nim):
     if success:
         # --- HAPUS JUGA AKUN LOGIN ---
         repo.hapus_user(conn, username=nim)
-        flash(f'Data Mahasiswa {nim} dan akun loginnya berhasil dihapus!', 'danger')
+        # --- HAPUS DATA PENDAFTARAN (CLEAN TRACE) ---
+        repo.hapus_pendaftaran_by_nim_nip(conn, nim)
+        flash(f'Data Mahasiswa {nim}, akun login, dan riwayat pendaftaran berhasil dihapus!', 'danger')
     else:
         flash(f'Gagal menghapus data Mahasiswa {nim}.', 'danger')
         
@@ -490,7 +492,9 @@ def hapus_dosen(nip):
     if success:
         # --- HAPUS JUGA AKUN LOGIN ---
         repo.hapus_user(conn, username=nip)
-        flash(f'Data Dosen {nip} dan akun loginnya berhasil dihapus!', 'danger')
+        # --- HAPUS DATA PENDAFTARAN (CLEAN TRACE) ---
+        repo.hapus_pendaftaran_by_nim_nip(conn, nip)
+        flash(f'Data Dosen {nip}, akun login, dan riwayat pendaftaran berhasil dihapus!', 'danger')
     else:
         flash(f'Gagal menghapus data Dosen {nip}.', 'danger')
         
@@ -506,6 +510,72 @@ def konversi_nilai(angka):
     elif angka >= 60: return 'C'
     elif angka >= 50: return 'D'
     else: return 'E'
+
+# --- NEW: INPUT NILAI PER MAHASISWA (ADMIN) ---
+@app.route('/admin/nilai/mahasiswa')
+def admin_nilai_mahasiswa_list():
+    if not session.get('logged_in') or session.get('role') != 'Admin Sistem':
+        return redirect(url_for('login'))
+        
+    conn = get_db()
+    
+    # Filter Params
+    semester = request.args.get('semester', 1, type=int)
+    tahun_ajaran = request.args.get('tahun_ajaran', '2023/2024')
+    prodi = request.args.get('prodi', '')
+    
+    # Get Students
+    mahasiswa_list = repo.daftar_mahasiswa(conn, prodi=prodi, limit=1000)
+    daftar_prodi = repo.ambil_daftar_prodi(conn)
+    
+    return render_template('admin_nilai_mahasiswa_list.html',
+                           mahasiswa_list=mahasiswa_list,
+                           semester=semester,
+                           tahun_ajaran=tahun_ajaran,
+                           prodi=prodi,
+                           daftar_prodi=daftar_prodi)
+
+@app.route('/admin/nilai/input/mahasiswa/<nim>', methods=['GET', 'POST'])
+def input_nilai_mahasiswa(nim):
+    if not session.get('logged_in') or session.get('role') != 'Admin Sistem':
+        return redirect(url_for('login'))
+        
+    conn = get_db()
+    semester = request.args.get('semester', 1, type=int)
+    tahun_ajaran = request.args.get('tahun_ajaran', '2023/2024')
+    
+    mahasiswa = repo.cari_by_nim(conn, nim)
+    if not mahasiswa:
+        flash('Mahasiswa tidak ditemukan', 'danger')
+        return redirect(url_for('admin_nilai_mahasiswa_list'))
+        
+    if request.method == 'POST':
+        # Loop form items starting with nilai_angka_{id_krs}
+        count = 0
+        for key, val in request.form.items():
+            if key.startswith('nilai_angka_'):
+                id_krs = key.split('_')[2]
+                try:
+                    if val and val.strip() != "":
+                        nilai_angka = float(val)
+                        nilai_huruf = konversi_nilai(nilai_angka)
+                        repo.simpan_nilai(conn, id_krs, nilai_angka, nilai_huruf)
+                        count += 1
+                except ValueError:
+                    pass
+        
+        flash(f'Berhasil menyimpan {count} nilai untuk {mahasiswa["nama"]}.', 'success')
+        return redirect(url_for('input_nilai_mahasiswa', nim=nim, semester=semester, tahun_ajaran=tahun_ajaran))
+    
+    # Get KRS data which includes courses taken by this student
+    # Note: repo.ambil_krs_mahasiswa returns joined data including nilai_angka
+    krs_data = repo.ambil_krs_mahasiswa(conn, nim, semester, tahun_ajaran)
+    
+    return render_template('admin_input_nilai_mahasiswa.html',
+                           mahasiswa=mahasiswa,
+                           krs_data=krs_data,
+                           semester=semester,
+                           tahun_ajaran=tahun_ajaran)
 
 @app.route('/dosen/nilai', methods=['GET', 'POST'])
 def dosen_nilai_dashboard():
@@ -619,6 +689,41 @@ def tambah_krs_bulk():
         flash(message, 'danger')
         
     return redirect(url_for('manage_krs', nim=nim, semester=semester, tahun_ajaran=tahun_ajaran))
+
+@app.route('/mahasiswa/krs/cetak')
+def cetak_krs():
+    if not session.get('logged_in'): return redirect(url_for('login'))
+    
+    conn = get_db()
+    nim = request.args.get('nim') or session.get('username')
+    semester = request.args.get('semester', 1, type=int)
+    tahun_ajaran = request.args.get('tahun_ajaran', '2023/2024')
+    
+    # Security check for Students
+    if session.get('role') == 'Mahasiswa' and session.get('username') != nim:
+        return redirect(url_for('index'))
+        
+    mahasiswa = repo.cari_by_nim(conn, nim)
+    krs_data = repo.ambil_krs_mahasiswa(conn, nim, semester, tahun_ajaran)
+    total_sks = repo.hitung_sks_krs(conn, nim, semester, tahun_ajaran)
+    
+    import datetime
+    # Format: 22 Desember 2025
+    bulan_indo = {
+        1: 'Januari', 2: 'Februari', 3: 'Maret', 4: 'April', 5: 'Mei', 6: 'Juni',
+        7: 'Juli', 8: 'Agustus', 9: 'September', 10: 'Oktober', 11: 'November', 12: 'Desember'
+    }
+    today = datetime.date.today()
+    current_date = f"{today.day} {bulan_indo[today.month]} {today.year}"
+    
+    return render_template('cetak_krs.html',
+                           mahasiswa=mahasiswa,
+                           krs_data=krs_data,
+                           semester=semester,
+                           tahun_ajaran=tahun_ajaran,
+                           total_sks=total_sks,
+                           current_date=current_date,
+                           auto_print=True)
 
 @app.route('/matkul')
 def daftar_matkul():
@@ -1071,8 +1176,19 @@ def admin_pendaftaran():
         return redirect(url_for('login'))
         
     conn = get_db()
-    data = repo.ambil_pendaftaran_pending(conn)
-    return render_template('admin_pendaftaran.html', data=data)
+    
+    # Filters
+    role_filter = request.args.get('role', '')
+    prodi_filter = request.args.get('prodi', '')
+    
+    data = repo.ambil_pendaftaran_pending(conn, role=role_filter, prodi=prodi_filter)
+    daftar_prodi = repo.ambil_daftar_prodi(conn)
+    
+    return render_template('admin_pendaftaran.html', 
+                           data=data,
+                           role_filter=role_filter,
+                           prodi_filter=prodi_filter,
+                           daftar_prodi=daftar_prodi)
 
 @app.route('/admin/pendaftaran/approve/<int:id_pendaftaran>')
 def approve_pendaftaran(id_pendaftaran):

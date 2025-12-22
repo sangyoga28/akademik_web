@@ -1,0 +1,93 @@
+{% extends "base.html" %}
+
+{% block title %}Input Nilai: {{ mahasiswa['nama'] }}{% endblock %}
+
+{% block content %}
+<div class="row mb-4">
+    <div class="col-md-12">
+        <a href="{{ url_for('admin_nilai_mahasiswa_list', semester=semester, tahun_ajaran=tahun_ajaran) }}"
+            class="text-decoration-none text-muted small fw-bold">
+            <i class="bi bi-arrow-left"></i> KEMBALI KE DAFTAR
+        </a>
+        <h2 class="fw-bold text-primary mt-2">Input Nilai Mahasiswa</h2>
+        <div class="d-flex align-items-center gap-3 mt-3 p-3 bg-white rounded-3 shadow-sm border">
+            <div class="d-flex align-items-center gap-2">
+                <i class="bi bi-person-circle fs-3 text-secondary"></i>
+                <div>
+                    <div class="fw-bold">{{ mahasiswa['nama'] }}</div>
+                    <div class="small text-muted font-monospace">{{ mahasiswa['nim'] }}</div>
+                </div>
+            </div>
+            <div class="vr mx-2"></div>
+            <div>
+                <span class="badge bg-light text-dark border me-1">Semester {{ semester }}</span>
+                <span class="badge bg-light text-dark border">{{ tahun_ajaran }}</span>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% if not krs_data %}
+<div class="alert alert-warning shadow-sm rounded-3">
+    <i class="bi bi-exclamation-triangle-fill me-2"></i>
+    <strong>Belum ada KRS!</strong> Mahasiswa ini belum mengambil mata kuliah (KRS) untuk Semester {{ semester }} {{
+    tahun_ajaran }}.
+    <br>Silakan arahkan mahasiswa untuk mengisi KRS terlebih dahulu, atau Admin dapat membantu pengisian KRS.
+</div>
+{% else %}
+<div class="card border-0 shadow-lg rounded-4 overflow-hidden">
+    <div class="card-header bg-primary text-white py-3">
+        <h5 class="mb-0 fw-bold"><i class="bi bi-pencil-square me-2"></i> Form Input Nilai</h5>
+    </div>
+    <div class="card-body p-4">
+        <form method="POST">
+            <div class="table-responsive">
+                <table class="table table-hover align-middle">
+                    <thead class="table-light">
+                        <tr>
+                            <th width="5%" class="text-center">No</th>
+                            <th width="15%">Kode MK</th>
+                            <th width="40%">Mata Kuliah</th>
+                            <th width="10%" class="text-center">SKS</th>
+                            <th width="15%">Nilai Saat Ini</th>
+                            <th width="15%">Input Nilai (0-100)</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for item in krs_data %}
+                        <tr>
+                            <td class="text-center">{{ loop.index }}</td>
+                            <td><span class="badge bg-light text-dark border">{{ item['kode_matkul'] }}</span></td>
+                            <td class="fw-bold">{{ item['nama_matkul'] }}</td>
+                            <td class="text-center">{{ item['sks'] }}</td>
+                            <td>
+                                {% if item['nilai_huruf'] %}
+                                <span class="badge bg-success">{{ item['nilai_angka'] }} ({{ item['nilai_huruf']
+                                    }})</span>
+                                {% else %}
+                                <span class="badge bg-secondary opacity-50">Belum dinilai</span>
+                                {% endif %}
+                            </td>
+                            <td>
+                                <input type="number" step="0.01" min="0" max="100" class="form-control"
+                                    name="nilai_angka_{{ item['id'] }}"
+                                    value="{{ item['nilai_angka'] if item['nilai_angka'] is not none else '' }}"
+                                    placeholder="0-100">
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="d-flex justify-content-end mt-4 pt-3 border-top">
+                <button type="submit" class="btn btn-success btn-lg px-5 fw-bold shadow">
+                    <i class="bi bi-save me-2"></i> Simpan Semua Nilai
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endif %}
+
+{% endblock %}
