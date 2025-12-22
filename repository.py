@@ -623,7 +623,9 @@ def generate_nim_baru(conn):
     cursor.execute("SELECT nim FROM tbMahasiswa WHERE nim LIKE ? ORDER BY nim DESC LIMIT 1", (f"{prefix}%",))
     last = cursor.fetchone()
     if last:
-        new_seq = str(int(last[0][6:]) + 1).zfill(4)
+        # Menggunakan key ['nim'] agar lebih aman daripada index [0]
+        last_id = last['nim']
+        new_seq = str(int(last_id[6:]) + 1).zfill(4)
     else:
         new_seq = "0001"
     return f"{prefix}{new_seq}"
@@ -636,7 +638,9 @@ def generate_nip_baru(conn):
     cursor.execute("SELECT nip FROM tbDosen WHERE nip LIKE ? ORDER BY nip DESC LIMIT 1", (f"{prefix}%",))
     last = cursor.fetchone()
     if last:
-        new_seq = str(int(last[0][6:]) + 1).zfill(4)
+        # Menggunakan key ['nip'] agar lebih aman
+        last_id = last['nip']
+        new_seq = str(int(last_id[6:]) + 1).zfill(4)
     else:
         new_seq = "0001"
     return f"{prefix}{new_seq}"
