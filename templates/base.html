@@ -63,6 +63,10 @@
                         <a class="nav-link px-3 d-flex align-items-center gap-2"
                             href="{{ url_for('admin_pendaftaran') }}">
                             <i class="bi bi-person-plus"></i> Pendaftaran
+                            {% if nav_total_pending > 0 %}
+                            <span class="badge rounded-pill bg-danger" style="font-size: 0.6rem;">{{ nav_total_pending
+                                }}</span>
+                            {% endif %}
                         </a>
                     </li>
                     {% endif %}

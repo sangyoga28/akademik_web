@@ -11,7 +11,6 @@ import repository as repo
 # Konfigurasi Aplikasi
 app = Flask(__name__)
 app.secret_key = 'kunci_rahasia_akademik_anda_yang_sangat_panjang_dan_aman' 
-app.secret_key = 'kunci_rahasia_akademik_anda_yang_sangat_panjang_dan_aman' 
 PER_PAGE = 10 # Konstanta jumlah data per halaman
 HARGA_PER_SKS = 150000 # Harga per SKS
 
@@ -19,6 +18,17 @@ HARGA_PER_SKS = 150000 # Harga per SKS
 
 def get_db():
     return repo.get_db()
+
+@app.context_processor
+def inject_totals():
+    if session.get('logged_in') and session.get('role') == 'Admin Sistem':
+        try:
+            conn = get_db()
+            count = repo.hitung_pendaftaran_pending(conn)
+            return dict(nav_total_pending=count)
+        except:
+            pass
+    return dict(nav_total_pending=0)
 
 @app.teardown_appcontext
 def close_connection(exception):
@@ -104,8 +114,6 @@ def register():
                            daftar_prodi=daftar_prodi,
                            daftar_fakultas=daftar_fakultas,
                            matkul_list=matkul_list)
-
-# ----------------- ROUTE UTAMA -----------------
 
 # ----------------- ROUTE UTAMA -----------------
 
