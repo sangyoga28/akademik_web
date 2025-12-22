@@ -44,17 +44,14 @@
                         <label for="password">Password (untuk login nanti)</label>
                     </div>
 
+                    <div class="form-floating mb-3">
+                        <input type="text" class="form-control" name="telepon" id="telepon" placeholder="Phone"
+                            required>
+                        <label for="telepon">No. Telepon / WhatsApp (Aktif)</label>
+                    </div>
+
                     <!-- Fields for Student -->
                     <div id="mhsFields">
-                        <div class="form-floating mb-3">
-                            <select class="form-select" name="prodi" id="prodi">
-                                <option value="">Pilih Program Studi</option>
-                                {% for prodi in daftar_prodi %}
-                                <option value="{{ prodi }}">{{ prodi }}</option>
-                                {% endfor %}
-                            </select>
-                            <label for="prodi">Program Studi</label>
-                        </div>
                         <div class="form-floating mb-3">
                             <select class="form-select" name="fakultas" id="fakultas">
                                 <option value="">Pilih Fakultas</option>
@@ -63,6 +60,12 @@
                                 {% endfor %}
                             </select>
                             <label for="fakultas">Fakultas</label>
+                        </div>
+                        <div class="form-floating mb-3" id="prodiContainer" style="display: none;">
+                            <select class="form-select" name="prodi" id="prodi">
+                                <option value="">Pilih Program Studi</option>
+                            </select>
+                            <label for="prodi">Program Studi</label>
                         </div>
                     </div>
 
@@ -77,10 +80,6 @@
                                 {% endfor %}
                             </select>
                             <label for="matkul_ajar">Mata Kuliah Diampu</label>
-                        </div>
-                        <div class="form-floating mb-3">
-                            <input type="text" class="form-control" name="telepon" id="telepon" placeholder="Phone">
-                            <label for="telepon">No. Telepon</label>
                         </div>
                     </div>
 
@@ -109,12 +108,14 @@
 <script>
     const fakultasSelect = document.getElementById('fakultas');
     const prodiSelect = document.getElementById('prodi');
+    const prodiContainer = document.getElementById('prodiContainer');
     const roleRadios = document.querySelectorAll('input[name="role"]');
 
     // Filter Prodi berdasarkan Fakultas
     fakultasSelect.addEventListener('change', function () {
         const selectedFakultas = this.value;
         if (!selectedFakultas) {
+            prodiContainer.style.display = 'none';
             prodiSelect.innerHTML = '<option value="">Pilih Program Studi</option>';
             return;
         }
@@ -129,6 +130,7 @@
                     option.textContent = prodi;
                     prodiSelect.appendChild(option);
                 });
+                prodiContainer.style.display = 'block';
             });
     });
 
@@ -137,7 +139,7 @@
             if (this.value === 'Mahasiswa') {
                 document.getElementById('mhsFields').style.display = 'block';
                 document.getElementById('dosenFields').style.display = 'none';
-                document.getElementById('nama').placeholder = 'Nama Lengkap';
+                document.getElementById('nama').placeholder = 'Nama Lengkap Mahasiswa';
                 document.querySelector('label[for="nama"]').textContent = 'Nama Lengkap Mahasiswa';
             } else {
                 document.getElementById('mhsFields').style.display = 'none';
