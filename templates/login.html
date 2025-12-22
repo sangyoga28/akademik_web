@@ -7,121 +7,186 @@
 
 {% block content_container %}
 <style>
-    /* Full Screen Login Specific */
+    /* Reset & Base */
+    body {
+        margin: 0;
+        padding: 0;
+        font-family: 'Poppins', sans-serif;
+        /* Example modern font */
+    }
+
+    /* Background Wrapper */
     .login-wrapper {
         min-height: 100vh;
         width: 100%;
-        background: linear-gradient(rgba(44, 62, 80, 0.8), rgba(44, 62, 80, 0.8)),
-        url("{{ url_for('static', filename='images/background.jpg') }}");
-        background-size: cover;
-        background-position: center;
+        background: url("{{ url_for('static', filename='images/background.jpg') }}") no-repeat center center/cover;
         display: flex;
         align-items: center;
         justify-content: center;
-        padding: 1rem;
-        overflow: hidden;
+        position: relative;
     }
 
-    .login-box {
+    /* Dark Overlay for better contrast if needed (optional) */
+    .login-wrapper::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: rgba(0, 0, 0, 0.2);
+        /* Slight darkening for readability */
+        z-index: 1;
+    }
+
+    /* Glass Container */
+    .glass-container {
+        position: relative;
+        z-index: 2;
+        width: 400px;
+        max-width: 90%;
+        padding: 40px;
+        background: rgba(0, 0, 0, 0.5);
+        /* Dark translucent */
+        backdrop-filter: blur(15px);
+        -webkit-backdrop-filter: blur(15px);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        border-radius: 16px;
+        box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+        color: white;
+        animation: fadeInDown 0.8s ease;
+    }
+
+    /* Form Elements */
+    .form-label {
+        color: rgba(255, 255, 255, 0.8);
+        font-size: 0.9rem;
+        margin-bottom: 5px;
+    }
+
+    .form-control {
+        background: transparent !important;
+        border: none;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.4);
+        border-radius: 0;
+        color: white !important;
+        padding: 10px 0;
+        box-shadow: none !important;
+    }
+
+    .form-control:focus {
+        background: transparent !important;
+        border-bottom: 1px solid white;
+        color: white !important;
+    }
+
+    .form-control::placeholder {
+        color: rgba(255, 255, 255, 0.4);
+    }
+
+    /* Button */
+    .btn-login {
+        background: white;
+        color: #333;
+        font-weight: bold;
         width: 100%;
-        max-width: 400px;
-        animation: fadeInUp 0.8s ease-both;
+        padding: 10px;
+        border-radius: 5px;
+        margin-top: 20px;
+        transition: all 0.3s ease;
+        border: none;
     }
 
-    /* Override body padding if any */
-    body {
-        padding: 0 !important;
-        margin: 0 !important;
+    .btn-login:hover {
+        background: rgba(255, 255, 255, 0.9);
+        transform: translateY(-2px);
     }
 
-    @media (max-height: 600px) {
-        .login-wrapper {
-            align-items: flex-start;
-            overflow-y: auto;
-            padding: 2rem 1rem;
+    /* Links */
+    .link-light-custom {
+        color: rgba(255, 255, 255, 0.8);
+        text-decoration: none;
+        font-size: 0.85rem;
+        transition: color 0.2s;
+    }
+
+    .link-light-custom:hover {
+        color: white;
+        text-decoration: underline;
+    }
+
+    /* Flash Messages */
+    .alert-custom {
+        background: rgba(255, 255, 255, 0.2);
+        border: 1px solid rgba(255, 255, 255, 0.3);
+        color: white;
+        backdrop-filter: blur(5px);
+    }
+
+    @keyframes fadeInDown {
+        from {
+            opacity: 0;
+            transform: translateY(-20px);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateY(0);
         }
     }
 </style>
 
 <div class="login-wrapper">
-    <div class="login-box">
-        <!-- Flash Messages inside Login Box -->
+    <div class="glass-container">
+
+        <h2 class="text-center fw-bold mb-4">Login</h2>
+
+        <!-- Flash Messages -->
         {% with messages = get_flashed_messages(with_categories=true) %}
         {% if messages %}
         {% for category, message in messages %}
-        <div class="alert alert-{{ category }} alert-dismissible fade show shadow-sm mb-4" role="alert">
+        <div class="alert alert-custom alert-dismissible fade show mb-4 small" role="alert">
             {{ message }}
-            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="alert" aria-label="Close"></button>
         </div>
         {% endfor %}
         {% endif %}
         {% endwith %}
 
-        <div class="text-center mb-4">
-            <div class="bg-white p-3 d-inline-block rounded-circle shadow-lg mb-3">
-                <i class="bi bi-shield-lock-fill text-primary fs-1"></i>
+        <form method="POST" action="{{ url_for('login') }}">
+            <div class="mb-3">
+                <label for="username" class="form-label">Username / NIM</label>
+                <input type="text" class="form-control" id="username" name="username" placeholder="Masukkan Username"
+                    required autofocus>
             </div>
-            <h2 class="text-white fw-bold mb-0">MASUK SIAKAD</h2>
-            <p class="text-white-50 small">Sistem Informasi Akademik Terpadu</p>
-        </div>
 
-        <div class="card border-0 shadow-lg rounded-4 overflow-hidden">
-            <div class="card-body p-4 p-md-5 bg-white">
-                <form method="POST" action="{{ url_for('login') }}">
-                    <div class="mb-3">
-                        <label for="username" class="form-label small fw-bold text-muted">USERNAME / NIM</label>
-                        <div class="input-group border rounded-3 overflow-hidden">
-                            <span class="input-group-text bg-light border-0"><i
-                                    class="bi bi-person text-muted"></i></span>
-                            <input type="text" class="form-control border-0 bg-light" id="username" name="username"
-                                placeholder="Masukkan username" required autofocus>
-                        </div>
-                    </div>
-
-                    <div class="mb-4">
-                        <label for="password" class="form-label small fw-bold text-muted">KATA SANDI</label>
-                        <div class="input-group border rounded-3 overflow-hidden">
-                            <span class="input-group-text bg-light border-0"><i class="bi bi-key text-muted"></i></span>
-                            <input type="password" class="form-control border-0 bg-light" id="password" name="password"
-                                placeholder="Masukkan password" required>
-                        </div>
-                    </div>
-
-                    <div class="d-grid mt-2">
-                        <button type="submit" class="btn btn-primary btn-lg shadow-sm">
-                            MASUK SEKARANG <i class="bi bi-arrow-right-short fs-4"></i>
-                        </button>
-                    </div>
-                </form>
+            <div class="mb-3">
+                <label for="password" class="form-label">Password</label>
+                <input type="password" class="form-control" id="password" name="password"
+                    placeholder="Masukkan Password" required>
             </div>
-            <div class="card-footer bg-light border-0 px-4 py-4">
-                <div class="row g-2 mb-3">
-                    <div class="col-6">
-                        <a href="{{ url_for('register') }}"
-                            class="btn btn-outline-primary w-100 fw-bold small py-2 shadow-sm">
-                            <i class="bi bi-person-plus me-1"></i> Daftar Sekarang
-                        </a>
-                    </div>
-                    <div class="col-6">
-                        <a href="{{ url_for('pendaftaran_status') }}"
-                            class="btn btn-outline-dark w-100 fw-bold small py-2 shadow-sm">
-                            <i class="bi bi-search me-1"></i> Cek Status
-                        </a>
-                    </div>
+
+            <div class="d-flex justify-content-between align-items-center mt-2 mb-4">
+                <div class="form-check">
+                    <!-- Optional 'Remember me' placeholder if needed, functionality not strictly requested but common in layout -->
+                    <!-- <input class="form-check-input bg-transparent border-light" type="checkbox" id="rememberMe">
+                    <label class="form-check-label small text-white-50" for="rememberMe">Remember me</label> -->
                 </div>
-                <div class="text-center">
-                    <hr class="my-3 opacity-10">
-                    <a href="{{ url_for('reset_password') }}"
-                        class="small text-muted text-decoration-underline hover-primary">
-                        <i class="bi bi-question-circle me-1"></i> Lupa Kata Sandi?
-                    </a>
-                </div>
+                <a href="{{ url_for('reset_password') }}" class="link-light-custom">Lupa Password?</a>
             </div>
-        </div>
 
-        <p class="text-center mt-4 text-white-50 small">
-            &copy; 2025 Sistem Informasi Akademik
-        </p>
+            <button type="submit" class="btn btn-login">Masuk</button>
+
+            <!-- Bottom Links -->
+            <div class="text-center mt-4">
+                <p class="mb-2 text-white-50 small">Belum punya akun?</p>
+                <a href="{{ url_for('register') }}" class="link-light-custom fw-bold">Daftar Sekarang</a>
+            </div>
+
+            <div class="text-center mt-3">
+                <a href="{{ url_for('pendaftaran_status') }}" class="link-light-custom small">Cek Status Pendaftaran</a>
+            </div>
+        </form>
     </div>
 </div>
 {% endblock %}
