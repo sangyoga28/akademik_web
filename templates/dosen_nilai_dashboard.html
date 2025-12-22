@@ -61,35 +61,52 @@
                     <i class="bi bi-search position-absolute top-50 start-0 translate-middle-y ms-3 text-secondary"></i>
                 </div>
 
-                <!-- List Mata Kuliah -->
-                <div class="row" id="matkulList">
-                    {% for matkul in matkul_list %}
-                    <div class="col-md-6 mb-3">
-                        <div class="card h-100 hover-shadow border-primary">
-                            <div class="card-body">
-                                <div class="d-flex justify-content-between align-items-start">
-                                    <div>
-                                        <h5 class="card-title text-primary fw-bold">{{ matkul['nama_matkul'] }}</h5>
-                                        <h6 class="card-subtitle mb-2 text-muted">{{ matkul['kode_matkul'] }} | {{
-                                            matkul['sks'] }} SKS</h6>
-                                    </div>
-                                    <span class="badge bg-primary rounded-pill">Input <i
-                                            class="bi bi-arrow-right"></i></span>
-                                </div>
-                                <p class="card-text mt-2 small text-muted">
-                                    Klik tombol di bawah untuk mengelola nilai mahasiswa di kelas ini.
-                                </p>
-                                <a href="{{ url_for('input_nilai', kode_matkul=matkul['kode_matkul'], semester=semester, tahun_ajaran=tahun_ajaran) }}"
-                                    class="btn btn-outline-primary w-100 stretched-link">
-                                    <i class="bi bi-pencil"></i> Input Nilai
-                                </a>
+                <!-- List Mata Kuliah Berdasarkan Kategori -->
+                <div id="matkulList">
+                    {% for prodi, matkul_list_in_prodi in matkul_per_prodi.items() %}
+                    <div class="prodi-category-section mb-5">
+                        <div class="d-flex align-items-center mb-3">
+                            <div class="flex-grow-1 border-bottom border-primary border-2">
+                                <h4 class="mb-1 text-primary fw-bold">
+                                    <i class="bi bi-mortarboard-fill"></i> {{ prodi }}
+                                </h4>
                             </div>
+                            <span class="badge bg-primary ms-3">{{ matkul_list_in_prodi|length }} Mata Kuliah</span>
+                        </div>
+
+                        <div class="row">
+                            {% for matkul in matkul_list_in_prodi %}
+                            <div class="col-md-6 mb-3 matkul-card">
+                                <div class="card h-100 hover-shadow border-primary">
+                                    <div class="card-body">
+                                        <div class="d-flex justify-content-between align-items-start">
+                                            <div>
+                                                <h5 class="card-title text-primary fw-bold">{{ matkul['nama_matkul'] }}
+                                                </h5>
+                                                <h6 class="card-subtitle mb-2 text-muted">{{ matkul['kode_matkul'] }} |
+                                                    {{
+                                                    matkul['sks'] }} SKS</h6>
+                                            </div>
+                                            <span class="badge bg-primary rounded-pill">Input <i
+                                                    class="bi bi-arrow-right"></i></span>
+                                        </div>
+                                        <p class="card-text mt-2 small text-muted">
+                                            Kelola nilai mahasiswa di kelas ini untuk semester ini.
+                                        </p>
+                                        <a href="{{ url_for('input_nilai', kode_matkul=matkul['kode_matkul'], semester=semester, tahun_ajaran=tahun_ajaran) }}"
+                                            class="btn btn-outline-primary w-100 stretched-link">
+                                            <i class="bi bi-pencil"></i> Input Nilai
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                            {% endfor %}
                         </div>
                     </div>
                     {% else %}
                     <div class="col-12 text-center py-5 text-muted">
                         <i class="bi bi-emoji-frown display-4"></i>
-                        <p class="mt-3">Belum ada mata kuliah yang terdaftar.</p>
+                        <p class="mt-3">Tidak ada mata kuliah yang ditemukan untuk filter ini.</p>
                     </div>
                     {% endfor %}
                 </div>
@@ -101,26 +118,29 @@
 
 <script>
     function filterMatkul() {
-        // Ambil value search
         const input = document.getElementById('searchInput');
         const filter = input.value.toLowerCase();
+        const categories = document.getElementsByClassName('prodi-category-section');
 
-        // Ambil semua card container
-        const container = document.getElementById('matkulList');
-        const cards = container.getElementsByClassName('col-md-6'); // Selector wrapper card
+        for (let i = 0; i < categories.length; i++) {
+            const cards = categories[i].getElementsByClassName('matkul-card');
+            let hasVisibleCard = false;
 
-        // Loop dan sembunyikan yang tidak match
-        for (let i = 0; i < cards.length; i++) {
-            const cardBody = cards[i].getElementsByClassName('card-body')[0];
-            const title = cardBody.getElementsByClassName('card-title')[0].textContent || cardBody.getElementsByClassName('card-title')[0].innerText;
-            const subtitle = cardBody.getElementsByClassName('card-subtitle')[0].textContent || cardBody.getElementsByClassName('card-subtitle')[0].innerText;
+            for (let j = 0; j < cards.length; j++) {
+                const cardBody = cards[j].getElementsByClassName('card-body')[0];
+                const title = cardBody.getElementsByClassName('card-title')[0].textContent || cardBody.getElementsByClassName('card-title')[0].innerText;
+                const subtitle = cardBody.getElementsByClassName('card-subtitle')[0].textContent || cardBody.getElementsByClassName('card-subtitle')[0].innerText;
 
-            // Cek match di Judul (Nama Matkul) atau Subtitle (Kode)
-            if (title.toLowerCase().indexOf(filter) > -1 || subtitle.toLowerCase().indexOf(filter) > -1) {
-                cards[i].style.display = "";
-            } else {
-                cards[i].style.display = "none";
+                if (title.toLowerCase().indexOf(filter) > -1 || subtitle.toLowerCase().indexOf(filter) > -1) {
+                    cards[j].style.display = "";
+                    hasVisibleCard = true;
+                } else {
+                    cards[j].style.display = "none";
+                }
             }
+
+            // Hide the entire category if no cards are visible
+            categories[i].style.display = hasVisibleCard ? "" : "none";
         }
     }
 </script>

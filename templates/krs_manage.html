@@ -89,6 +89,10 @@
                         <select class="form-select" name="kode_matkul" id="kode_matkul" required {% if status_pembayaran
                             and status_pembayaran['status']=='Lunas' %}disabled{% endif %}>
                             <option value="">-- Pilih Mata Kuliah --</option>
+                            {% if semua_matkul %}
+                            <option value="ALL" class="fw-bold text-success">-- AMBIL SEMUA (Sesuai Semester) --
+                            </option>
+                            {% endif %}
                             {% for mk in semua_matkul %}
                             <option value="{{ mk['kode_matkul'] }}">
                                 [{{ mk['semester'] }}] {{ mk['nama_matkul'] }} ({{ mk['sks'] }} SKS)

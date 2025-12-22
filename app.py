@@ -393,9 +393,10 @@ def dosen_nilai_dashboard():
     
     conn = get_db()
     
-    # Filter Default
+    # Filter by prodi and semester
     semester = request.args.get('semester', 1, type=int)
     tahun_ajaran = request.args.get('tahun_ajaran', '2023/2024')
+    prodi_filter = request.args.get('prodi', '')
     
     # Ambil daftar mata kuliah berdasarkan hak akses
     if session.get('role') == 'Dosen':
@@ -404,28 +405,28 @@ def dosen_nilai_dashboard():
         dosen_profile = repo.cari_by_nip(conn, nip_dosen)
         matkul_diampu = dosen_profile['matkul_ajar'] if dosen_profile else None
         
-        # Ambil semua matkul lalu filter
-        semua_mk = repo.daftar_matkul(conn, limit=1000)
+        # Ambil matkul dengan filter
+        semua_mk = repo.daftar_matkul(conn, prodi=prodi_filter, semester=semester, limit=1000)
         # Filter berdasarkan NAMA matkul yang cocok dengan data profile dosen
         daftar_matkul = [mk for mk in semua_mk if mk['nama_matkul'] == matkul_diampu]
     else:
-        # Admin / Lainnya bisa lihat semua
-        daftar_matkul = repo.daftar_matkul(conn, limit=1000)
+        # Admin / Lainnya bisa lihat semua sesuai filter
+        daftar_matkul = repo.daftar_matkul(conn, prodi=prodi_filter, semester=semester, limit=1000)
     
-    # Filter by prodi and semester
-    prodi_filter = request.args.get('prodi', '')
-    semester_filter = request.args.get('semester', '', type=str)
-    
-    # We may need a function to filter matkul_diampu by prodi/sem if Admin
-    # or just show the filtered list.
-    # For simplicity, we just pass the list to template and let it handle or refine repo function.
+    # Kategorikan mata kuliah sesuai prodi
+    matkul_per_prodi = {}
+    for mk in daftar_matkul:
+        p = mk['prodi'] or 'Lainnya'
+        if p not in matkul_per_prodi:
+            matkul_per_prodi[p] = []
+        matkul_per_prodi[p].append(mk)
     
     return render_template('dosen_nilai_dashboard.html', 
                            matkul_list=daftar_matkul,
+                           matkul_per_prodi=matkul_per_prodi,
                            semester=semester,
                            tahun_ajaran=tahun_ajaran,
                            prodi_filter=prodi_filter,
-                           semester_filter=semester_filter,
                            daftar_prodi=repo.ambil_daftar_prodi(conn))
 
 @app.route('/dosen/nilai/input/<kode_matkul>', methods=['GET', 'POST'])
@@ -686,6 +687,14 @@ def manage_krs(nim):
     if request.method == 'POST':
         kode_matkul = request.form.get('kode_matkul')
         
+        if kode_matkul == 'ALL':
+            success, message = repo.tambah_krs_bulk(conn, nim, semester_aktif, tahun_ajaran_aktif)
+            if success:
+                flash(message, 'success')
+            else:
+                flash(message, 'danger')
+            return redirect(url_for('manage_krs', nim=nim, semester=semester_aktif, tahun_ajaran=tahun_ajaran_aktif))
+
         # Check if already taken
         if repo.cek_krs_exist(conn, nim, kode_matkul, semester_aktif, tahun_ajaran_aktif):
              flash('Mata kuliah sudah diambil.', 'warning')
