@@ -59,6 +59,12 @@
                             <i class="bi bi-person-check"></i> Perwalian
                         </a>
                     </li>
+                    <li class="nav-item">
+                        <a class="nav-link px-3 d-flex align-items-center gap-2"
+                            href="{{ url_for('admin_pendaftaran') }}">
+                            <i class="bi bi-person-plus"></i> Pendaftaran
+                        </a>
+                    </li>
                     {% endif %}
 
                     {% if session.get('role') != 'Mahasiswa' %}

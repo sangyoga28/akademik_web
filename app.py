@@ -61,6 +61,50 @@ def logout():
     flash('Anda telah berhasil logout.', 'info')
     return redirect(url_for('login'))
 
+# ----------------- ROUTE PENDAFTARAN (PUBLIK) -----------------
+
+@app.route('/register', methods=['GET', 'POST'])
+def register():
+    if session.get('logged_in'):
+        return redirect(url_for('index'))
+        
+    conn = get_db()
+    if request.method == 'POST':
+        role = request.form.get('role')
+        nama = request.form.get('nama')
+        password = request.form.get('password')
+        alamat = request.form.get('alamat')
+        telepon = request.form.get('telepon')
+        
+        # Mahasiswa specific
+        prodi = request.form.get('prodi')
+        fakultas = request.form.get('fakultas')
+        
+        # Dosen specific
+        matkul_ajar = request.form.get('matkul_ajar')
+        
+        if not nama or not password:
+            flash('Nama dan Password wajib diisi!', 'danger')
+            return redirect(url_for('register'))
+            
+        hashed_pw = generate_password_hash(password, method='pbkdf2:sha256')
+        
+        try:
+            repo.tambah_pendaftaran(conn, nama, role, alamat, prodi, fakultas, telepon, matkul_ajar, hashed_pw)
+            flash('Pendaftaran berhasil! Tunggu persetujuan admin untuk mendapatkan NIM/NIP.', 'success')
+            return redirect(url_for('login'))
+        except Exception as e:
+            flash(f'Gagal mendaftar: {str(e)}', 'danger')
+            
+    daftar_prodi = repo.ambil_daftar_prodi(conn)
+    daftar_fakultas = repo.ambil_daftar_fakultas(conn)
+    matkul_list = repo.ambil_semua_matkul_untuk_dosen(conn)
+    
+    return render_template('register.html', 
+                           daftar_prodi=daftar_prodi,
+                           daftar_fakultas=daftar_fakultas,
+                           matkul_list=matkul_list)
+
 # ----------------- ROUTE UTAMA -----------------
 
 # ----------------- ROUTE UTAMA -----------------
@@ -81,11 +125,13 @@ def index():
         total_mahasiswa = repo.hitung_jumlah_mahasiswa(conn)
         total_dosen = repo.hitung_jumlah_dosen(conn)
         total_matkul = repo.hitung_jumlah_matkul(conn)
+        total_pending = repo.hitung_pendaftaran_pending(conn)
         
         return render_template('home.html',
             total_mahasiswa=total_mahasiswa,
             total_dosen=total_dosen,
-            total_matkul=total_matkul
+            total_matkul=total_matkul,
+            total_pending=total_pending
         )
     
     # Jika Mahasiswa, mungkin redirect ke KRS atau tampilkan info mahasiswa
@@ -941,3 +987,55 @@ def preview_report():
                            title=title, 
                            headers=headers, 
                            data=data)
+
+# ----------------- ROUTE ADMIN: KELOLA PENDAFTARAN -----------------
+
+@app.route('/admin/pendaftaran')
+def admin_pendaftaran():
+    if not session.get('role') == 'Admin Sistem':
+        return redirect(url_for('login'))
+        
+    conn = get_db()
+    data = repo.ambil_pendaftaran_pending(conn)
+    return render_template('admin_pendaftaran.html', data=data)
+
+@app.route('/admin/pendaftaran/approve/<int:id_pendaftaran>')
+def approve_pendaftaran(id_pendaftaran):
+    if not session.get('role') == 'Admin Sistem':
+        return redirect(url_for('login'))
+        
+    conn = get_db()
+    p = repo.ambil_pendaftaran_by_id(conn, id_pendaftaran)
+    
+    if not p:
+        flash('Data pendaftaran tidak ditemukan.', 'danger')
+        return redirect(url_for('admin_pendaftaran'))
+        
+    try:
+        if p['role'] == 'Mahasiswa':
+            new_id = repo.generate_nim_baru(conn)
+            repo.tambah_data_mahasiswa(conn, new_id, p['nama'], p['alamat'], p['prodi'], p['fakultas'])
+            repo.tambah_user(conn, new_id, p['password_hash'], role='Mahasiswa')
+            msg = f"Pendaftaran {p['nama']} disetujui. NIM: {new_id}"
+        else:
+            new_id = repo.generate_nip_baru(conn)
+            repo.tambah_data_dosen(conn, new_id, p['nama'], p['matkul_ajar'], p['telepon'])
+            repo.tambah_user(conn, new_id, p['password_hash'], role='Dosen')
+            msg = f"Pendaftaran {p['nama']} disetujui. NIP: {new_id}"
+            
+        repo.update_status_pendaftaran(conn, id_pendaftaran, 'Approved')
+        flash(msg, 'success')
+    except Exception as e:
+        flash(f'Gagal menyetujui: {str(e)}', 'danger')
+        
+    return redirect(url_for('admin_pendaftaran'))
+
+@app.route('/admin/pendaftaran/reject/<int:id_pendaftaran>')
+def reject_pendaftaran(id_pendaftaran):
+    if not session.get('role') == 'Admin Sistem':
+        return redirect(url_for('login'))
+        
+    conn = get_db()
+    repo.update_status_pendaftaran(conn, id_pendaftaran, 'Rejected')
+    flash('Pendaftaran ditolak.', 'warning')
+    return redirect(url_for('admin_pendaftaran'))

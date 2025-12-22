@@ -59,45 +59,52 @@
 
     <div class="row g-3 g-md-4 mb-5">
         <!-- Mahasiswa Card -->
-        <div class="col-6 col-md-4 animate-fade-in-up delay-100">
+        <div class="col-6 col-md-3 animate-fade-in-up delay-100">
             <a href="{{ url_for('daftar_mahasiswa') }}" class="text-decoration-none h-100 d-block">
                 <div class="card bg-info text-white h-100 shadow-sm border-0">
                     <div class="card-body text-center p-3 p-md-4">
                         <i class="bi bi-people fs-1 fs-md-2 mb-2 mb-md-3"></i>
-                        <h6 class="fw-bold mb-1 small d-none d-sm-block">DATA MAHASISWA</h6>
-                        <h6 class="fw-bold mb-1 x-small d-block d-sm-none">MAHASISWA</h6>
-                        <p class="small text-white-50 mb-2 mb-md-3 d-none d-md-block">PENGELOLAAN BIODATA</p>
-                        <h2 class="display-6 fw-bold mb-0">{{ total_mahasiswa }}</h2>
+                        <h6 class="fw-bold mb-1 small">DATA MAHASISWA</h6>
+                        <h2 class="display-6 fw-bold mb-0 text-white">{{ total_mahasiswa }}</h2>
                     </div>
                 </div>
             </a>
         </div>
 
         <!-- Dosen Card -->
-        <div class="col-6 col-md-4 animate-fade-in-up delay-200">
+        <div class="col-6 col-md-3 animate-fade-in-up delay-200">
             <a href="{{ url_for('daftar_dosen') }}" class="text-decoration-none h-100 d-block">
                 <div class="card bg-success text-white h-100 shadow-sm border-0">
                     <div class="card-body text-center p-3 p-md-4">
                         <i class="bi bi-person-badge fs-1 fs-md-2 mb-2 mb-md-3"></i>
-                        <h6 class="fw-bold mb-1 small d-none d-sm-block">DATA DOSEN</h6>
-                        <h6 class="fw-bold mb-1 x-small d-block d-sm-none">DOSEN</h6>
-                        <p class="small text-white-50 mb-2 mb-md-3 d-none d-md-block">TENAGA PENGAJAR</p>
-                        <h2 class="display-6 fw-bold mb-0">{{ total_dosen }}</h2>
+                        <h6 class="fw-bold mb-1 small">DATA DOSEN</h6>
+                        <h2 class="display-6 fw-bold mb-0 text-white">{{ total_dosen }}</h2>
                     </div>
                 </div>
             </a>
         </div>
 
         <!-- Matkul Card -->
-        <div class="col-12 col-md-4 animate-fade-in-up delay-300">
+        <div class="col-6 col-md-3 animate-fade-in-up delay-300">
             <a href="{{ url_for('daftar_matkul') }}" class="text-decoration-none h-100 d-block">
                 <div class="card bg-danger text-white h-100 shadow-sm border-0">
                     <div class="card-body text-center p-3 p-md-4">
                         <i class="bi bi-book fs-1 fs-md-2 mb-2 mb-md-3"></i>
-                        <h6 class="fw-bold mb-1 small d-none d-sm-block">MATA KULIAH</h6>
-                        <h6 class="fw-bold mb-1 x-small d-block d-sm-none">MATKUL</h6>
-                        <p class="small text-white-50 mb-2 mb-md-3 d-none d-md-block">KURIKULUM & SKS</p>
-                        <h2 class="display-6 fw-bold mb-0">{{ total_matkul }}</h2>
+                        <h6 class="fw-bold mb-1 small">MATA KULIAH</h6>
+                        <h2 class="display-6 fw-bold mb-0 text-white">{{ total_matkul }}</h2>
+                    </div>
+                </div>
+            </a>
+        </div>
+
+        <!-- Pending Registration Card -->
+        <div class="col-6 col-md-3 animate-fade-in-up delay-400">
+            <a href="{{ url_for('admin_pendaftaran') }}" class="text-decoration-none h-100 d-block">
+                <div class="card bg-warning text-dark h-100 shadow-sm border-0">
+                    <div class="card-body text-center p-3 p-md-4">
+                        <i class="bi bi-person-plus fs-1 fs-md-2 mb-2 mb-md-3"></i>
+                        <h6 class="fw-bold mb-1 small">PENDAFTARAN</h6>
+                        <h2 class="display-6 fw-bold mb-0 text-dark">{{ total_pending }}</h2>
                     </div>
                 </div>
             </a>

@@ -1,4 +1,4 @@
-# File: repository.py (MODIFIED FOR REGISTRATION SYSTEM)
+# File: repository.py (VERSI LENGKAP & FINAL)
 
 import sqlite3
 import os
@@ -98,23 +98,6 @@ def buat_tabel(conn):
             status TEXT,    -- 'Belum Lunas', 'Lunas'
             tanggal_bayar TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
             FOREIGN KEY(nim) REFERENCES tbMahasiswa(nim)
-        );
-    """)
-
-    # 7. Tabel Pendaftaran (Pending Approval)
-    cursor.execute("""
-        CREATE TABLE IF NOT EXISTS tbPendaftaran (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
-            nama TEXT NOT NULL,
-            role TEXT NOT NULL, 
-            alamat TEXT,
-            prodi TEXT,         
-            fakultas TEXT,      
-            telepon TEXT,
-            matkul_ajar TEXT,   
-            password_hash TEXT NOT NULL,
-            status TEXT DEFAULT 'Pending',
-            tanggal_daftar TIMESTAMP DEFAULT CURRENT_TIMESTAMP
         );
     """)
     
@@ -583,59 +566,3 @@ def ambil_semua_matkul_untuk_dosen(conn):
         ORDER BY prodi, semester, nama_matkul
     ''')
     return cursor.fetchall()
-
-# ----------------- FUNGSI PENDAFTARAN & APPROVAL -----------------
-
-def tambah_pendaftaran(conn, nama, role, alamat, prodi, fakultas, telepon, matkul_ajar, password_hash):
-    cursor = conn.cursor()
-    cursor.execute("""
-        INSERT INTO tbPendaftaran (nama, role, alamat, prodi, fakultas, telepon, matkul_ajar, password_hash)
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?)
-    """, (nama, role, alamat, prodi, fakultas, telepon, matkul_ajar, password_hash))
-    conn.commit()
-
-def ambil_pendaftaran_pending(conn):
-    cursor = conn.cursor()
-    cursor.execute("SELECT * FROM tbPendaftaran WHERE status='Pending' ORDER BY id DESC")
-    return cursor.fetchall()
-
-def ambil_pendaftaran_by_id(conn, id_pendaftaran):
-    cursor = conn.cursor()
-    cursor.execute("SELECT * FROM tbPendaftaran WHERE id=?", (id_pendaftaran,))
-    return cursor.fetchone()
-
-def update_status_pendaftaran(conn, id_pendaftaran, status):
-    cursor = conn.cursor()
-    cursor.execute("UPDATE tbPendaftaran SET status=? WHERE id=?", (status, id_pendaftaran))
-    conn.commit()
-
-def generate_nim_baru(conn):
-    import datetime
-    tahun = datetime.datetime.now().year
-    prefix = f"{tahun}01"
-    cursor = conn.cursor()
-    cursor.execute("SELECT nim FROM tbMahasiswa WHERE nim LIKE ? ORDER BY nim DESC LIMIT 1", (f"{prefix}%",))
-    last = cursor.fetchone()
-    if last:
-        new_seq = str(int(last[0][6:]) + 1).zfill(4)
-    else:
-        new_seq = "0001"
-    return f"{prefix}{new_seq}"
-
-def generate_nip_baru(conn):
-    import datetime
-    tahun = datetime.datetime.now().year
-    prefix = f"{tahun}02"
-    cursor = conn.cursor()
-    cursor.execute("SELECT nip FROM tbDosen WHERE nip LIKE ? ORDER BY nip DESC LIMIT 1", (f"{prefix}%",))
-    last = cursor.fetchone()
-    if last:
-        new_seq = str(int(last[0][6:]) + 1).zfill(4)
-    else:
-        new_seq = "0001"
-    return f"{prefix}{new_seq}"
-
-def hitung_pendaftaran_pending(conn):
-    cursor = conn.cursor()
-    cursor.execute("SELECT COUNT(*) FROM tbPendaftaran WHERE status='Pending'")
-    return cursor.fetchone()[0]

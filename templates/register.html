@@ -1,0 +1,120 @@
+{% extends "base.html" %}
+
+{% block title %}Pendaftaran Baru - Sistem Akademik{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center align-items-center" style="min-height: 80vh;">
+    <div class="col-md-6 col-lg-5">
+        <div class="card border-0 shadow-lg overflow-hidden" style="border-radius: 20px;">
+            <div class="card-header bg-primary text-white text-center py-4 border-0">
+                <i class="bi bi-person-plus-fill mb-2" style="font-size: 3rem;"></i>
+                <h3 class="fw-bold mb-0">Pendaftaran</h3>
+                <p class="small opacity-75 mb-0">Bergabunglah dengan Sistem Akademik kami</p>
+            </div>
+            <div class="card-body p-4 p-md-5">
+                <form action="{{ url_for('register') }}" method="POST">
+                    <div class="mb-4">
+                        <label class="form-label fw-bold text-muted small text-uppercase">Saya mendaftar sebagai</label>
+                        <div class="row g-2">
+                            <div class="col-6">
+                                <input type="radio" class="btn-check" name="role" id="roleMhs" value="Mahasiswa" checked
+                                    autocomplete="off">
+                                <label class="btn btn-outline-primary w-100 py-3 rounded-3" for="roleMhs">
+                                    <i class="bi bi-mortarboard d-block mb-1 fs-4"></i> Mahasiswa
+                                </label>
+                            </div>
+                            <div class="col-6">
+                                <input type="radio" class="btn-check" name="role" id="roleDosen" value="Dosen"
+                                    autocomplete="off">
+                                <label class="btn btn-outline-primary w-100 py-3 rounded-3" for="roleDosen">
+                                    <i class="bi bi-person-workspace d-block mb-1 fs-4"></i> Dosen
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-floating mb-3">
+                        <input type="text" class="form-control" name="nama" id="nama" placeholder="Full Name" required>
+                        <label for="nama">Nama Lengkap</label>
+                    </div>
+
+                    <div class="form-floating mb-3">
+                        <input type="password" class="form-control" name="password" id="password" placeholder="Password"
+                            required>
+                        <label for="password">Password (untuk login nanti)</label>
+                    </div>
+
+                    <!-- Fields for Student -->
+                    <div id="mhsFields">
+                        <div class="form-floating mb-3">
+                            <select class="form-select" name="prodi" id="prodi">
+                                <option value="">Pilih Program Studi</option>
+                                {% for prodi in daftar_prodi %}
+                                <option value="{{ prodi }}">{{ prodi }}</option>
+                                {% endfor %}
+                            </select>
+                            <label for="prodi">Program Studi</label>
+                        </div>
+                        <div class="form-floating mb-3">
+                            <select class="form-select" name="fakultas" id="fakultas">
+                                <option value="">Pilih Fakultas</option>
+                                {% for fak in daftar_fakultas %}
+                                <option value="{{ fak }}">{{ fak }}</option>
+                                {% endfor %}
+                            </select>
+                            <label for="fakultas">Fakultas</label>
+                        </div>
+                    </div>
+
+                    <!-- Fields for Lecturer -->
+                    <div id="dosenFields" style="display: none;">
+                        <div class="form-floating mb-3">
+                            <select class="form-select" name="matkul_ajar" id="matkul_ajar">
+                                <option value="">Pilih Mata Kuliah Diampu</option>
+                                {% for mk in matkul_list %}
+                                <option value="{{ mk['nama_matkul'] }}">{{ mk['nama_matkul'] }} ({{ mk['prodi'] }})
+                                </option>
+                                {% endfor %}
+                            </select>
+                            <label for="matkul_ajar">Mata Kuliah Diampu</label>
+                        </div>
+                        <div class="form-floating mb-3">
+                            <input type="text" class="form-control" name="telepon" id="telepon" placeholder="Phone">
+                            <label for="telepon">No. Telepon</label>
+                        </div>
+                    </div>
+
+                    <div class="form-floating mb-4">
+                        <textarea class="form-control" name="alamat" id="alamat" placeholder="Address"
+                            style="height: 100px"></textarea>
+                        <label for="alamat">Alamat</label>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary w-100 py-3 rounded-3 fw-bold mb-3 shadow">
+                        Daftar Sekarang <i class="bi bi-arrow-right ms-2"></i>
+                    </button>
+
+                    <div class="text-center">
+                        <p class="mb-0 text-muted small">Sudah punya akun? <a href="{{ url_for('login') }}"
+                                class="text-primary fw-bold text-decoration-none">Login di sini</a></p>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.querySelectorAll('input[name="role"]').forEach(radio => {
+        radio.addEventListener('change', function () {
+            if (this.value === 'Mahasiswa') {
+                document.getElementById('mhsFields').style.display = 'block';
+                document.getElementById('dosenFields').style.display = 'none';
+            } else {
+                document.getElementById('mhsFields').style.display = 'none';
+                document.getElementById('dosenFields').style.display = 'block';
+            }
+        });
+    });
+</script>
+{% endblock %}

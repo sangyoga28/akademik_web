@@ -1,0 +1,86 @@
+{% extends "base.html" %}
+
+{% block title %}Persetujuan Pendaftaran - Admin{% endblock %}
+
+{% block content %}
+<div class="row mb-4 animate__animated animate__fadeIn">
+    <div class="col-12 text-center text-md-start">
+        <h2 class="fw-bold text-primary mb-1">
+            <i class="bi bi-person-check-fill me-2"></i> Persetujuan Pendaftaran
+        </h2>
+        <p class="text-muted">Review dan setujui pendaftaran mahasiswa atau dosen baru.</p>
+    </div>
+</div>
+
+<div class="card border-0 shadow-sm rounded-4 overflow-hidden animate__animated animate__fadeInUp">
+    <div class="card-body p-0">
+        <div class="table-responsive">
+            <table class="table table-hover align-middle mb-0">
+                <thead class="bg-light text-muted small text-uppercase fw-bold">
+                    <tr>
+                        <th class="ps-4 py-3">Pendaftar</th>
+                        <th class="py-3">Role</th>
+                        <th class="py-3">Detail Tambahan</th>
+                        <th class="py-3">Tanggal Daftar</th>
+                        <th class="py-3 text-center">Aksi</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for p in data %}
+                    <tr>
+                        <td class="ps-4">
+                            <div class="fw-bold text-dark">{{ p['nama'] }}</div>
+                            <small class="text-muted"><i class="bi bi-geo-alt me-1"></i>{{ p['alamat'] or '-' }}</small>
+                        </td>
+                        <td>
+                            {% if p['role'] == 'Mahasiswa' %}
+                            <span class="badge bg-info text-dark rounded-pill fw-medium px-3 shadow-sm">
+                                <i class="bi bi-mortarboard me-1"></i> Mahasiswa
+                            </span>
+                            {% else %}
+                            <span class="badge bg-warning text-dark rounded-pill fw-medium px-3 shadow-sm">
+                                <i class="bi bi-person-workspace me-1"></i> Dosen
+                            </span>
+                            {% endif %}
+                        </td>
+                        <td>
+                            {% if p['role'] == 'Mahasiswa' %}
+                            <div class="small"><strong>Prodi:</strong> {{ p['prodi'] }}</div>
+                            <div class="small text-muted"><strong>Fakultas:</strong> {{ p['fakultas'] }}</div>
+                            {% else %}
+                            <div class="small"><strong>Matkul:</strong> {{ p['matkul_ajar'] }}</div>
+                            <div class="small text-muted"><strong>Telp:</strong> {{ p['telepon'] }}</div>
+                            {% endif %}
+                        </td>
+                        <td class="small text-muted">
+                            {{ p['tanggal_daftar'] }}
+                        </td>
+                        <td class="pe-4 text-center">
+                            <div class="d-flex justify-content-center gap-2">
+                                <a href="{{ url_for('approve_pendaftaran', id_pendaftaran=p['id']) }}"
+                                    class="btn btn-success btn-sm rounded-pill px-3 fw-bold"
+                                    onclick="return confirm('Setujui pendaftaran {{ p['nama'] }}?')">
+                                    <i class="bi bi-check-lg me-1"></i> Setujui
+                                </a>
+                                <a href="{{ url_for('reject_pendaftaran', id_pendaftaran=p['id']) }}"
+                                    class="btn btn-danger btn-sm rounded-pill px-3 fw-bold"
+                                    onclick="return confirm('Tolak pendaftaran {{ p['nama'] }}?')">
+                                    <i class="bi bi-x-lg me-1"></i> Tolak
+                                </a>
+                            </div>
+                        </td>
+                    </tr>
+                    {% else %}
+                    <tr>
+                        <td colspan="5" class="py-5 text-center text-muted">
+                            <i class="bi bi-inbox fs-1 d-block mb-3 opacity-25"></i>
+                            Tidak ada pendaftaran pending saat ini.
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}
