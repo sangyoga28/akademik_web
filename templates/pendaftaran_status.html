@@ -2,161 +2,269 @@
 
 {% block title %}Cek Status Pendaftaran - Sistem Akademik{% endblock %}
 
-{% block content %}
-<div class="row justify-content-center align-items-center" style="min-height: 70vh;">
-    <div class="col-md-6 col-lg-5">
-        <div class="card border-0 shadow-lg overflow-hidden animate__animated animate__fadeIn"
-            style="border-radius: 20px;">
-            <div class="card-header bg-dark text-white text-center py-4 border-0">
-                <i class="bi bi-search mb-2" style="font-size: 2.5rem;"></i>
-                <h3 class="fw-bold mb-0">Cek Status</h3>
-                <p class="small opacity-75 mb-0">Gunakan Nama & No. Telepon saat mendaftar</p>
-            </div>
-            <div class="card-body p-4 p-md-5">
-                {% if not status_data %}
-                <form action="{{ url_for('pendaftaran_status') }}" method="POST">
-                    <div class="form-floating mb-3">
-                        <input type="text" class="form-control" name="nama" id="nama" placeholder="Nama Lengkap"
-                            required>
-                        <label for="nama">Nama Lengkap</label>
-                    </div>
-                    <div class="form-floating mb-4">
-                        <input type="text" class="form-control" name="telepon" id="telepon" placeholder="No. Telepon"
-                            required>
-                        <label for="telepon">No. Telepon</label>
-                    </div>
-                    <button type="submit" class="btn btn-primary w-100 py-3 rounded-3 fw-bold shadow">
-                        Cek Sekarang <i class="bi bi-arrow-right ms-2"></i>
-                    </button>
-                </form>
-                {% else %}
+{% block navbar %}{% endblock %}
+{% block footer %}{% endblock %}
 
-                <div class="text-center mb-0 mt-2">
-                    <h6 class="text-primary fw-bold text-uppercase mb-4" style="letter-spacing: 2px;">Hasil Penelusuran
-                    </h6>
-
-                    {% if status_data['status'] == 'Approved' %}
-                    <div class="result-card approved animate__animated animate__zoomIn">
-                        <div class="status-icon-wrapper mb-3">
-                            <i class="bi bi-check-circle-fill text-success"></i>
-                        </div>
-                        <h4 class="fw-bold text-success mb-1">Pendaftaran Disetujui</h4>
-                        <p class="text-muted small mb-4">Selamat! Akun Anda telah diaktifkan oleh Admin.</p>
-
-                        <div class="info-glass p-3 text-start mb-4">
-                            <div
-                                class="d-flex justify-content-between mb-2 pb-2 border-bottom border-white border-opacity-25">
-                                <span class="text-muted small">Username / NIM</span>
-                                <span class="fw-bold font-monospace text-primary">{{ status_data['nim_nip'] }}</span>
-                            </div>
-                            <div class="d-flex justify-content-between mb-2">
-                                <span class="text-muted small">Jenis Akun</span>
-                                <span class="fw-bold">{{ status_data['role'] }}</span>
-                            </div>
-                            <div class="d-flex justify-content-between">
-                                <span class="text-muted small">Password</span>
-                                <span class="small italic text-muted">Sesuai pendaftaran</span>
-                            </div>
-                        </div>
-
-                        <a href="{{ url_for('login') }}" class="btn btn-success w-100 rounded-3 py-2 fw-bold shadow-sm">
-                            Masuk Sekarang <i class="bi bi-box-arrow-in-right ms-2"></i>
-                        </a>
-                    </div>
-
-                    {% elif status_data['status'] == 'Rejected' %}
-                    <div class="result-card rejected animate__animated animate__shakeX">
-                        <div class="status-icon-wrapper mb-3 border-danger">
-                            <i class="bi bi-x-circle-fill text-danger"></i>
-                        </div>
-                        <h4 class="fw-bold text-danger mb-2">Pendaftaran Ditolak</h4>
-                        <p class="text-muted small">Mohon maaf, berkas pendaftaran Anda belum memenuhi kriteria
-                            kualifikasi kami saat ini.</p>
-                        <hr class="my-4 opacity-5">
-                        <a href="{{ url_for('register') }}" class="btn btn-outline-danger btn-sm rounded-pill px-4">
-                            Daftar Ulang
-                        </a>
-                    </div>
-
-                    {% else %}
-                    <div class="result-card pending animate__animated animate__fadeIn">
-                        <div class="status-icon-wrapper mb-3 border-warning">
-                            <div class="spinner-border text-warning" role="status"
-                                style="width: 2rem; height: 2rem; border-width: 0.2em;"></div>
-                        </div>
-                        <h4 class="fw-bold text-warning mb-2">Sedang Diproses</h4>
-                        <p class="text-muted small">Sabar ya! Admin sedang meninjau dokumen pendaftaran Anda. Silakan
-                            cek kembali dalam 24 jam.</p>
-                    </div>
-                    {% endif %}
-                </div>
-
-                <div class="text-center mt-4 pt-3 border-top border-light">
-                    <a href="{{ url_for('pendaftaran_status') }}"
-                        class="text-decoration-none small text-muted hover-primary">
-                        <i class="bi bi-arrow-left me-1"></i> Cek Nama Lain
-                    </a>
-                </div>
-                {% endif %}
-            </div>
-            <div class="card-footer bg-light border-0 text-center py-3">
-                <a href="{{ url_for('login') }}" class="text-decoration-none small text-muted">
-                    <i class="bi bi-box-arrow-left me-1"></i> Kembali ke Login
-                </a>
-            </div>
-        </div>
-    </div>
-</div>
-
+{% block content_container %}
 <style>
-    .result-card {
-        padding: 2rem 1.5rem;
-        border-radius: 1.5rem;
-        background: #fff;
-        transition: all 0.3s ease;
+    /* Reset & Base from Login */
+    body {
+        margin: 0;
+        padding: 0;
+        font-family: 'Poppins', sans-serif;
     }
 
-    .result-card.approved {
-        border: 2px solid #198754;
-        background: linear-gradient(to bottom, #f8fffb, #fff);
-    }
-
-    .result-card.rejected {
-        border: 2px solid #dc3545;
-        background: linear-gradient(to bottom, #fff8f8, #fff);
-    }
-
-    .result-card.pending {
-        border: 2px solid #ffc107;
-        background: linear-gradient(to bottom, #fffdf8, #fff);
-    }
-
-    .status-icon-wrapper {
-        width: 70px;
-        height: 70px;
-        background: white;
-        border-radius: 50%;
+    /* Background Wrapper */
+    .status-wrapper {
+        min-height: 100vh;
+        width: 100%;
+        background: url("{{ url_for('static', filename='images/background.jpg') }}") no-repeat center center/cover;
         display: flex;
         align-items: center;
         justify-content: center;
-        margin: 0 auto;
-        font-size: 2.5rem;
-        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.05);
-        border: 2px solid #eee;
+        position: relative;
+        padding: 2rem 0;
     }
 
-    .approved .status-icon-wrapper {
-        border-color: #198754;
+    .status-wrapper::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: rgba(0, 0, 0, 0.2);
+        z-index: 1;
     }
 
-    .info-glass {
-        background: rgba(0, 0, 0, 0.02);
-        border-radius: 12px;
-        border: 1px solid rgba(0, 0, 0, 0.05);
+    /* Glass Container */
+    .glass-container {
+        position: relative;
+        z-index: 2;
+        width: 450px;
+        max-width: 90%;
+        padding: 40px;
+        background: rgba(0, 0, 0, 0.5);
+        backdrop-filter: blur(15px);
+        -webkit-backdrop-filter: blur(15px);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        border-radius: 16px;
+        box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+        color: white;
+        animation: fadeIn 0.8s ease;
     }
 
-    .hover-primary:hover {
-        color: var(--bs-primary) !important;
+    /* Form Elements */
+    .form-label {
+        color: rgba(255, 255, 255, 0.9);
+        font-size: 0.9rem;
+        margin-bottom: 5px;
+    }
+
+    .form-control {
+        background: transparent !important;
+        border: none;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.4);
+        border-radius: 0;
+        color: white !important;
+        padding: 10px 0;
+        box-shadow: none !important;
+    }
+
+    .form-control:focus {
+        background: transparent !important;
+        border-bottom: 1px solid white;
+        color: white !important;
+    }
+
+    .form-control::placeholder {
+        color: rgba(255, 255, 255, 0.4);
+    }
+
+    /* Button */
+    .btn-check-status {
+        background: white;
+        color: #333;
+        font-weight: bold;
+        width: 100%;
+        padding: 12px;
+        border-radius: 8px;
+        margin-top: 25px;
+        border: none;
+        transition: all 0.3s ease;
+    }
+
+    .btn-check-status:hover {
+        background: rgba(255, 255, 255, 0.9);
+        transform: translateY(-2px);
+    }
+
+    .link-light-custom {
+        color: rgba(255, 255, 255, 0.8);
+        text-decoration: none;
+        font-size: 0.85rem;
+        transition: color 0.2s;
+    }
+
+    .link-light-custom:hover {
+        color: white;
+        text-decoration: underline;
+    }
+
+    /* Status Result Cards - Custom Style for Glass Background */
+    .result-card {
+        padding: 2rem;
+        border-radius: 16px;
+        background: rgba(255, 255, 255, 0.9);
+        /* Slightly opaque white for contrast */
+        color: #333;
+        /* Dark text on white card */
+        text-align: center;
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+        animation: zoomIn 0.5s ease;
+    }
+
+    .result-card.approved {
+        border-top: 5px solid #198754;
+    }
+
+    .result-card.rejected {
+        border-top: 5px solid #dc3545;
+    }
+
+    .result-card.pending {
+        border-top: 5px solid #ffc107;
+    }
+
+    .status-icon {
+        font-size: 3rem;
+        margin-bottom: 1rem;
+    }
+
+    .info-list {
+        text-align: left;
+        background: #f8f9fa;
+        padding: 15px;
+        border-radius: 10px;
+        margin: 20px 0;
+    }
+
+    @keyframes fadeIn {
+        from {
+            opacity: 0;
+        }
+
+        to {
+            opacity: 1;
+        }
+    }
+
+    @keyframes zoomIn {
+        from {
+            transform: scale(0.9);
+            opacity: 0;
+        }
+
+        to {
+            transform: scale(1);
+            opacity: 1;
+        }
     }
 </style>
+
+<div class="status-wrapper">
+    <div class="glass-container">
+
+        <div class="text-center mb-4">
+            <h2 class="fw-bold">Cek Status</h2>
+            <p class="text-white-50 small">Pantau status pendaftaran akun Anda</p>
+        </div>
+
+        {% if not status_data %}
+        <form action="{{ url_for('pendaftaran_status') }}" method="POST">
+            <div class="mb-3">
+                <label for="nama" class="form-label">Nama Lengkap</label>
+                <input type="text" class="form-control" name="nama" id="nama" placeholder="Masukkan Nama Lengkap"
+                    required>
+            </div>
+            <div class="mb-4">
+                <label for="telepon" class="form-label">No. Telepon / WhatsApp</label>
+                <input type="text" class="form-control" name="telepon" id="telepon" placeholder="Masukkan No. Telepon"
+                    required>
+            </div>
+
+            <button type="submit" class="btn btn-check-status shadow-lg">CEK SEKARANG</button>
+
+            <!-- Bottom Links -->
+            <div class="text-center mt-4">
+                <a href="{{ url_for('login') }}" class="link-light-custom small fw-bold">
+                    <i class="bi bi-arrow-left"></i> Kembali ke Login
+                </a>
+            </div>
+        </form>
+        {% else %}
+
+        <!-- Status Result Section -->
+        <div class="mt-2">
+            {% if status_data['status'] == 'Approved' %}
+            <div class="result-card approved">
+                <i class="bi bi-check-circle-fill text-success status-icon"></i>
+                <h4 class="fw-bold text-success">Disetujui!</h4>
+                <p class="text-muted small">Akun Anda telah aktif.</p>
+
+                <div class="info-list">
+                    <div class="d-flex justify-content-between mb-2 border-bottom pb-2">
+                        <small class="text-muted">Username / NIM</small>
+                        <strong class="text-primary font-monospace">{{ status_data['nim_nip'] }}</strong>
+                    </div>
+                    <div class="d-flex justify-content-between mb-2">
+                        <small class="text-muted">Role</small>
+                        <strong>{{ status_data['role'] }}</strong>
+                    </div>
+                    <div class="d-flex justify-content-between">
+                        <small class="text-muted">Pass</small>
+                        <small class="text-muted">Sesuai Pendaftaran</small>
+                    </div>
+                </div>
+
+                <a href="{{ url_for('login') }}" class="btn btn-success w-100 fw-bold shadow-sm">
+                    LOGIN SEKARANG
+                </a>
+            </div>
+
+            {% elif status_data['status'] == 'Rejected' %}
+            <div class="result-card rejected">
+                <i class="bi bi-x-circle-fill text-danger status-icon"></i>
+                <h4 class="fw-bold text-danger">Ditolak</h4>
+                <p class="text-muted small mb-4">Maaf, pendaftaran Anda belum disetujui.</p>
+                <a href="{{ url_for('register') }}" class="btn btn-outline-danger btn-sm rounded-pill px-4">
+                    Link Daftar Ulang
+                </a>
+            </div>
+
+            {% else %}
+            <div class="result-card pending">
+                <div class="spinner-border text-warning mb-3" role="status"></div>
+                <h4 class="fw-bold text-warning">Sedang Diproses</h4>
+                <p class="text-muted small">Admin sedang meninjau pendaftaran Anda.<br>Mohon cek berkala.</p>
+            </div>
+            {% endif %}
+
+            <div class="text-center mt-4">
+                <a href="{{ url_for('pendaftaran_status') }}" class="link-light-custom small">
+                    <i class="bi bi-search"></i> Cek Nama Lain
+                </a>
+            </div>
+        </div>
+        {% endif %}
+
+    </div>
+
+    <!-- Transparent Footer -->
+    <div class="position-absolute bottom-0 w-100 text-center pb-3">
+        <p class="text-white-50 small mb-0">
+            &copy; 2025 Sistem Informasi Akademik
+        </p>
+    </div>
+</div>
 {% endblock %}
