@@ -83,7 +83,7 @@
                     {% if session.get('role') == 'Mahasiswa' %}
                     <li class="nav-item">
                         <a class="nav-link px-3 d-flex align-items-center gap-2"
-                            href="{{ url_for('manage_krs', nim=session.get('username')) }}">
+                            href="{{ url_for('mahasiswa.manage_krs', nim=session.get('username')) }}">
                             <i class="bi bi-calendar-check"></i> KRS Saya
                         </a>
                     </li>

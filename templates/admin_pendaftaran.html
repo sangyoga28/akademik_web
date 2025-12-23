@@ -92,12 +92,12 @@
                         </td>
                         <td class="pe-4 text-center">
                             <div class="d-flex justify-content-center gap-2">
-                                <a href="{{ url_for('approve_pendaftaran', id_pendaftaran=p['id']) }}"
+                                <a href="{{ url_for('admin.approve_pendaftaran', id_pendaftaran=p['id']) }}"
                                     class="btn btn-success btn-sm rounded-pill px-3 fw-bold" data-nama="{{ p['nama'] }}"
                                     onclick="return confirm('Setujui pendaftaran ' + this.getAttribute('data-nama') + '?')">
                                     <i class="bi bi-check-lg me-1"></i> Setujui
                                 </a>
-                                <a href="{{ url_for('reject_pendaftaran', id_pendaftaran=p['id']) }}"
+                                <a href="{{ url_for('admin.reject_pendaftaran', id_pendaftaran=p['id']) }}"
                                     class="btn btn-danger btn-sm rounded-pill px-3 fw-bold" data-nama="{{ p['nama'] }}"
                                     onclick="return confirm('Tolak pendaftaran ' + this.getAttribute('data-nama') + '?')">
                                     <i class="bi bi-x-lg me-1"></i> Tolak

@@ -6,7 +6,7 @@
         <div class="d-flex justify-content-between align-items-center mb-3">
             <a href="{{ url_for('mahasiswa.daftar_krs_mahasiswa') }}" class="btn btn-secondary">&laquo; Kembali</a>
             <div class="btn-group">
-                <a href="{{ url_for('lihat_khs', nim=mahasiswa['nim'], semester=semester_aktif, tahun=tahun_ajaran_aktif) }}"
+                <a href="{{ url_for('mahasiswa.lihat_khs', nim=mahasiswa['nim'], semester=semester_aktif, tahun=tahun_ajaran_aktif) }}"
                     class="btn btn-info text-white">
                     <i class="bi bi-file-earmark-text"></i> Lihat KHS Semester Ini
                 </a>
@@ -145,12 +145,12 @@
                 {% if status_pembayaran and status_pembayaran['status'] == 'Lunas' %}
                 <div class="alert alert-success py-2"><small>Pembayaran Lunas pada {{ status_pembayaran['tanggal_bayar']
                         }} via {{ status_pembayaran['metode_pembayaran'] }}</small></div>
-                <a href="{{ url_for('invoice_krs', id_pembayaran=status_pembayaran['id']) }}" target="_blank"
+                <a href="{{ url_for('mahasiswa.invoice_krs', id_pembayaran=status_pembayaran['id']) }}" target="_blank"
                     class="btn btn-outline-primary w-100">
                     <i class="bi bi-printer"></i> Cetak Invoice / Bukti Bayar
                 </a>
                 {% else %}
-                <form action="{{ url_for('bayar_krs', nim=mahasiswa['nim']) }}" method="post">
+                <form action="{{ url_for('mahasiswa.bayar_krs', nim=mahasiswa['nim']) }}" method="post">
                     <input type="hidden" name="semester" value="{{ semester_aktif }}">
                     <input type="hidden" name="tahun_ajaran" value="{{ tahun_ajaran_aktif }}">
 
@@ -202,7 +202,7 @@
                                 {% if status_pembayaran and status_pembayaran['status'] == 'Lunas' %}
                                 <button class="btn btn-sm btn-secondary" disabled>Terkunci</button>
                                 {% else %}
-                                <form action="{{ url_for('hapus_krs_item', id_krs=krs['id']) }}" method="post"
+                                <form action="{{ url_for('mahasiswa.hapus_krs_item', id_krs=krs['id']) }}" method="post"
                                     onsubmit="return confirm('Yakin hapus matkul ini?');">
                                     <button type="submit" class="btn btn-sm btn-danger">Hapus</button>
                                 </form>

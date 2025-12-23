@@ -90,9 +90,9 @@
                     </td>
                     <td>
                         <div class="d-flex gap-2">
-                            <a href="{{ url_for('edit_matkul', kode=mk['kode_matkul']) }}"
+                            <a href="{{ url_for('admin.edit_matkul', kode=mk['kode_matkul']) }}"
                                 class="btn btn-sm btn-warning">Edit</a>
-                            <form action="{{ url_for('hapus_matkul', kode=mk['kode_matkul']) }}" method="post"
+                            <form action="{{ url_for('admin.hapus_matkul', kode=mk['kode_matkul']) }}" method="post"
                                 onsubmit="return confirm('Yakin hapus data ini?')">
                                 <button type="submit" class="btn btn-sm btn-danger">Hapus</button>
                             </form>
@@ -220,7 +220,7 @@
         <ul class="pagination justify-content-center pagination-sm">
             <li class="page-item {% if page == 1 %}disabled{% endif %}">
                 <a class="page-link"
-                    href="{{ url_for('daftar_matkul', page=page-1, q=q, prodi=prodi, semester=semester) }}">Sebelumnya</a>
+                    href="{{ url_for('admin.daftar_matkul', page=page-1, q=q, prodi=prodi, semester=semester) }}">Sebelumnya</a>
             </li>
 
             {% set start = [1, page - 2]|max %}
@@ -228,14 +228,14 @@
 
             {% if start > 1 %}
             <li class="page-item"><a class="page-link"
-                    href="{{ url_for('daftar_matkul', page=1, q=q, prodi=prodi, semester=semester) }}">1</a></li>
+                    href="{{ url_for('admin.daftar_matkul', page=1, q=q, prodi=prodi, semester=semester) }}">1</a></li>
             {% if start > 2 %}<li class="page-item disabled"><span class="page-link">...</span></li>{% endif %}
             {% endif %}
 
             {% for p in range(start, end + 1) %}
             <li class="page-item {% if p == page %}active{% endif %}">
                 <a class="page-link"
-                    href="{{ url_for('daftar_matkul', page=p, q=q, prodi=prodi, semester=semester) }}">{{ p }}</a>
+                    href="{{ url_for('admin.daftar_matkul', page=p, q=q, prodi=prodi, semester=semester) }}">{{ p }}</a>
             </li>
             {% endfor %}
 
@@ -243,13 +243,13 @@
                     class="page-link">...</span></li>
                 {% endif %}
                 <li class="page-item"><a class="page-link"
-                        href="{{ url_for('daftar_matkul', page=total_pages, q=q, prodi=prodi, semester=semester) }}">{{
+                        href="{{ url_for('admin.daftar_matkul', page=total_pages, q=q, prodi=prodi, semester=semester) }}">{{
                         total_pages }}</a></li>
                 {% endif %}
 
                 <li class="page-item {% if page == total_pages %}disabled{% endif %}">
                     <a class="page-link"
-                        href="{{ url_for('daftar_matkul', page=page+1, q=q, prodi=prodi, semester=semester) }}">Berikutnya</a>
+                        href="{{ url_for('admin.daftar_matkul', page=page+1, q=q, prodi=prodi, semester=semester) }}">Berikutnya</a>
                 </li>
         </ul>
     </nav>

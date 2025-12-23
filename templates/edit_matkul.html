@@ -13,7 +13,7 @@
         <h5 class="card-title mb-0">Form Ubah Data Mata Kuliah</h5>
     </div>
     <div class="card-body">
-        <form method="POST" action="{{ url_for('edit_matkul', kode=matkul['kode_matkul']) }}">
+        <form method="POST" action="{{ url_for('admin.edit_matkul', kode=matkul['kode_matkul']) }}">
 
             <div class="mb-3">
                 <label for="kode_matkul" class="form-label">Kode Mata Kuliah</label>

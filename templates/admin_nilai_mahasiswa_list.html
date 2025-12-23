@@ -64,7 +64,7 @@
                     <td>{{ m['nama'] }}</td>
                     <td>{{ m['prodi'] }}</td>
                     <td class="text-center">
-                        <a href="{{ url_for('input_nilai_mahasiswa', nim=m['nim'], semester=semester, tahun_ajaran=tahun_ajaran) }}"
+                        <a href="{{ url_for('admin.input_nilai_mahasiswa', nim=m['nim'], semester=semester, tahun_ajaran=tahun_ajaran) }}"
                             class="btn btn-sm btn-outline-primary rounded-pill px-4 fw-bold">
                             Input Nilai <i class="bi bi-arrow-right ms-1"></i>
                         </a>
