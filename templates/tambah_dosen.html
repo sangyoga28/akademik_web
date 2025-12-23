@@ -4,7 +4,7 @@
 
 {% block content %}
 <h1 class="mb-4">Tambah Data Dosen</h1>
-<a href="{{ url_for('daftar_dosen') }}" class="btn btn-sm btn-outline-secondary mb-3"><i class="bi bi-arrow-left"></i>
+<a href="{{ url_for('dosen.daftar_dosen') }}" class="btn btn-sm btn-outline-secondary mb-3"><i class="bi bi-arrow-left"></i>
     Kembali ke Daftar</a>
 
 <div class="card shadow">
@@ -12,7 +12,7 @@
         <h5 class="card-title mb-0">Form Input Data Dosen Baru</h5>
     </div>
     <div class="card-body">
-        <form method="POST" action="{{ url_for('tambah_dosen') }}">
+        <form method="POST" action="{{ url_for('admin.tambah_dosen') }}">
 
             <div class="mb-3">
                 <label for="nip" class="form-label">NIP <span class="text-danger">*</span></label>
@@ -38,7 +38,7 @@
                         </option>
                         {% endfor %}
                     </select>
-                    <a href="{{ url_for('daftar_matkul') }}" class="btn btn-outline-primary" target="_blank"
+                    <a href="{{ url_for('admin.daftar_matkul') }}" class="btn btn-outline-primary" target="_blank"
                         title="Tambah Matkul Baru"><i class="bi bi-plus-lg"></i></a>
                 </div>
                 <div class="form-text">Pilih mata kuliah yang akan diampu. Jika belum ada, tambah dulu di menu Mata
@@ -56,7 +56,7 @@
             <hr>
 
             <button type="submit" class="btn btn-success me-2"><i class="bi bi-save"></i> Simpan Data</button>
-            <a href="{{ url_for('daftar_dosen') }}" class="btn btn-secondary"><i class="bi bi-x-circle"></i> Batal</a>
+            <a href="{{ url_for('dosen.daftar_dosen') }}" class="btn btn-secondary"><i class="bi bi-x-circle"></i> Batal</a>
         </form>
     </div>
 </div>

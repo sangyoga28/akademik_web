@@ -6,7 +6,7 @@
 <div class="container">
     <h1 class="mb-4">Kelola Data Dosen</h1>
 
-    <form method="GET" action="{{ url_for('daftar_dosen') }}"
+    <form method="GET" action="{{ url_for('dosen.daftar_dosen') }}"
         class="row g-3 mb-4 align-items-center bg-white p-3 rounded shadow-sm">
         <div class="col-md-3 position-relative">
             <input type="text" name="q" class="form-control search-input pe-5"
@@ -35,17 +35,17 @@
         </div>
         {% if q or prodi or fakultas %}
         <div class="col-auto">
-            <a href="{{ url_for('daftar_dosen') }}" class="btn btn-outline-secondary">Reset</a>
+            <a href="{{ url_for('dosen.daftar_dosen') }}" class="btn btn-outline-secondary">Reset</a>
         </div>
         {% endif %}
         <div class="col-md-auto ms-auto text-md-end">
-            <a href="{{ url_for('tambah_dosen') }}" class="btn btn-success">
+            <a href="{{ url_for('admin.tambah_dosen') }}" class="btn btn-success">
                 <i class="bi bi-plus-circle"></i> Tambah Dosen
             </a>
         </div>
     </form>
 
-    <form id="reportForm" action="{{ url_for('preview_report') }}" method="post" target="_blank">
+    <form id="reportForm" action="{{ url_for('admin.preview_report') }}" method="post" target="_blank">
         <input type="hidden" name="type" value="dosen">
         <div class="mb-3 d-flex justify-content-end">
             <button type="submit" class="btn btn-success">

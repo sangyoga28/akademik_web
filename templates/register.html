@@ -198,7 +198,7 @@
             <p class="text-white-50 small mb-0">Bergabunglah dengan Sistem Akademik kami</p>
         </div>
 
-        <form action="{{ url_for('register') }}" method="POST">
+        <form action="{{ url_for('auth.register') }}" method="POST">
 
             <!-- Role Selection (Full Width) -->
             <div class="mb-3">
@@ -290,8 +290,8 @@
             <button type="submit" class="btn btn-register shadow-lg">DAFTAR SEKARANG</button>
 
             <div class="d-flex justify-content-between align-items-center mt-3 px-2">
-                <a href="{{ url_for('login') }}" class="link-light-custom small fw-bold">Login</a>
-                <a href="{{ url_for('pendaftaran_status') }}" class="link-light-custom small">Cek Status</a>
+                <a href="{{ url_for('auth.login') }}" class="link-light-custom small fw-bold">Login</a>
+                <a href="{{ url_for('auth.pendaftaran_status') }}" class="link-light-custom small">Cek Status</a>
             </div>
 
         </form>

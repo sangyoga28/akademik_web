@@ -160,7 +160,7 @@
         {% endif %}
         {% endwith %}
 
-        <form method="POST" action="{{ url_for('login') }}">
+        <form method="POST" action="{{ url_for('auth.login') }}">
             <div class="mb-3">
                 <label for="username" class="form-label">Username / NIM</label>
                 <input type="text" class="form-control" id="username" name="username" placeholder="Masukkan Username"
@@ -179,7 +179,7 @@
                     <!-- <input class="form-check-input bg-transparent border-light" type="checkbox" id="rememberMe">
                     <label class="form-check-label small text-white-50" for="rememberMe">Remember me</label> -->
                 </div>
-                <a href="{{ url_for('reset_password') }}" class="link-light-custom">Lupa Password?</a>
+                <a href="{{ url_for('auth.reset_password') }}" class="link-light-custom">Lupa Password?</a>
             </div>
 
             <button type="submit" class="btn btn-login">Masuk</button>
@@ -187,11 +187,11 @@
             <!-- Bottom Links -->
             <div class="text-center mt-4">
                 <p class="mb-2 text-white-50 small">Belum punya akun?</p>
-                <a href="{{ url_for('register') }}" class="link-light-custom fw-bold">Daftar Sekarang</a>
+                <a href="{{ url_for('auth.register') }}" class="link-light-custom fw-bold">Daftar Sekarang</a>
             </div>
 
             <div class="text-center mt-3">
-                <a href="{{ url_for('pendaftaran_status') }}" class="link-light-custom small">Cek Status Pendaftaran</a>
+                <a href="{{ url_for('auth.pendaftaran_status') }}" class="link-light-custom small">Cek Status Pendaftaran</a>
             </div>
         </form>
     </div>

@@ -4,7 +4,8 @@
 
 {% block content %}
 <h1 class="mb-4">Tambah Data Mata Kuliah</h1>
-<a href="{{ url_for('daftar_matkul') }}" class="btn btn-sm btn-outline-secondary mb-3"><i class="bi bi-arrow-left"></i>
+<a href="{{ url_for('admin.daftar_matkul') }}" class="btn btn-sm btn-outline-secondary mb-3"><i
+        class="bi bi-arrow-left"></i>
     Kembali ke Daftar</a>
 
 <div class="card shadow">
@@ -12,7 +13,7 @@
         <h5 class="card-title mb-0">Form Input Mata Kuliah Baru</h5>
     </div>
     <div class="card-body">
-        <form method="POST" action="{{ url_for('tambah_matkul') }}">
+        <form method="POST" action="{{ url_for('admin.tambah_matkul') }}">
 
             <div class="mb-3">
                 <label for="kode_matkul" class="form-label">Kode Mata Kuliah <span class="text-danger">*</span></label>
@@ -27,24 +28,24 @@
             </div>
 
             <div class="row">
-                <div class="col-md-4 mb-3">
+                <div class="col-md-3 mb-3">
                     <label for="sks" class="form-label">SKS</label>
                     <input type="number" class="form-control" id="sks" name="sks" placeholder="Contoh: 3" min="1"
                         required>
                 </div>
-                <div class="col-md-4 mb-3">
+                <div class="col-md-3 mb-3">
                     <label for="semester" class="form-label">Semester</label>
                     <input type="number" class="form-control" id="semester" name="semester" placeholder="Contoh: 3"
                         min="1" required>
                 </div>
-                <div class="col-md-4 mb-3">
+                <div class="col-md-6 mb-3">
                     <label for="prodi" class="form-label">Program Studi</label>
                     <select class="form-select" id="prodi" name="prodi" required>
                         <option value="Umum">Umum (Semua Prodi)</option>
-                        <option value="Teknik Informatika">Teknik Informatika</option>
+                        <option value="Informatika">Informatika</option>
                         <option value="Sistem Informasi">Sistem Informasi</option>
                         <option value="Teknik Elektro">Teknik Elektro</option>
-                        <option value="Teknik Industri">Teknik Industri</option>
+                        <option value="Teknik Sipil">Teknik Sipil</option>
                         <option value="Manajemen">Manajemen</option>
                         <option value="Akuntansi">Akuntansi</option>
                         <option value="Sastra Inggris">Sastra Inggris</option>
@@ -54,10 +55,41 @@
                 </div>
             </div>
 
+            <div class="row bg-light p-2 rounded mb-3">
+                <div class="col-12">
+                    <h6 class="text-primary"><i class="bi bi-clock"></i> Jadwal Kuliah</h6>
+                </div>
+                <div class="col-md-3 mb-2">
+                    <label for="hari" class="form-label">Hari</label>
+                    <select class="form-select" id="hari" name="hari">
+                        <option value="">- Pilih Hari -</option>
+                        <option value="Senin">Senin</option>
+                        <option value="Selasa">Selasa</option>
+                        <option value="Rabu">Rabu</option>
+                        <option value="Kamis">Kamis</option>
+                        <option value="Jumat">Jumat</option>
+                        <option value="Sabtu">Sabtu</option>
+                    </select>
+                </div>
+                <div class="col-md-3 mb-2">
+                    <label for="jam_mulai" class="form-label">Jam Mulai</label>
+                    <input type="time" class="form-control" id="jam_mulai" name="jam_mulai">
+                </div>
+                <div class="col-md-3 mb-2">
+                    <label for="jam_selesai" class="form-label">Jam Selesai</label>
+                    <input type="time" class="form-control" id="jam_selesai" name="jam_selesai">
+                </div>
+                <div class="col-md-3 mb-2">
+                    <label for="ruang" class="form-label">Ruang Kelas</label>
+                    <input type="text" class="form-control" id="ruang" name="ruang" placeholder="Cth: R.301">
+                </div>
+            </div>
+
             <hr>
 
             <button type="submit" class="btn btn-success me-2"><i class="bi bi-save"></i> Simpan Data</button>
-            <a href="{{ url_for('daftar_matkul') }}" class="btn btn-secondary"><i class="bi bi-x-circle"></i> Batal</a>
+            <a href="{{ url_for('admin.daftar_matkul') }}" class="btn btn-secondary"><i class="bi bi-x-circle"></i>
+                Batal</a>
         </form>
     </div>
 </div>

@@ -188,7 +188,7 @@
         </div>
 
         {% if not status_data %}
-        <form action="{{ url_for('pendaftaran_status') }}" method="POST">
+        <form action="{{ url_for('auth.pendaftaran_status') }}" method="POST">
             <div class="mb-3">
                 <label for="nama" class="form-label">Nama Lengkap</label>
                 <input type="text" class="form-control" name="nama" id="nama" placeholder="Masukkan Nama Lengkap"
@@ -204,7 +204,7 @@
 
             <!-- Bottom Links -->
             <div class="text-center mt-4">
-                <a href="{{ url_for('login') }}" class="link-light-custom small fw-bold">
+                <a href="{{ url_for('auth.login') }}" class="link-light-custom small fw-bold">
                     <i class="bi bi-arrow-left"></i> Kembali ke Login
                 </a>
             </div>
@@ -234,7 +234,7 @@
                     </div>
                 </div>
 
-                <a href="{{ url_for('login') }}" class="btn btn-success w-100 fw-bold shadow-sm">
+                <a href="{{ url_for('auth.login') }}" class="btn btn-success w-100 fw-bold shadow-sm">
                     LOGIN SEKARANG
                 </a>
             </div>
@@ -244,7 +244,7 @@
                 <i class="bi bi-x-circle-fill text-danger status-icon"></i>
                 <h4 class="fw-bold text-danger">Ditolak</h4>
                 <p class="text-muted small mb-4">Maaf, pendaftaran Anda belum disetujui.</p>
-                <a href="{{ url_for('register') }}" class="btn btn-outline-danger btn-sm rounded-pill px-4">
+                <a href="{{ url_for('auth.register') }}" class="btn btn-outline-danger btn-sm rounded-pill px-4">
                     Link Daftar Ulang
                 </a>
             </div>
@@ -258,7 +258,7 @@
             {% endif %}
 
             <div class="text-center mt-4">
-                <a href="{{ url_for('pendaftaran_status') }}" class="link-light-custom small">
+                <a href="{{ url_for('auth.pendaftaran_status') }}" class="link-light-custom small">
                     <i class="bi bi-search"></i> Cek Nama Lain
                 </a>
             </div>
