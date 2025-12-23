@@ -13,7 +13,8 @@
     @media print {
         @page {
             size: A4;
-            margin: 20mm 15mm;
+            margin: 15mm 15mm 20mm 15mm;
+            /* Balanced margins */
         }
 
         body,
@@ -23,6 +24,8 @@
             padding: 0 !important;
             font-family: 'FormalSerif', serif !important;
             color: black !important;
+            font-size: 10pt;
+            /* Slightly smaller base font for print */
         }
 
         .no-print,
@@ -44,42 +47,55 @@
 
         .table {
             border-color: black !important;
+            margin-bottom: 10px !important;
+        }
+
+        .transcript-table th,
+        .transcript-table td {
+            padding: 4px 6px !important;
+            /* More compact cells */
+            border: 1px solid black !important;
         }
 
         .semester-header {
             background-color: transparent !important;
             border: none !important;
-            border-bottom: 2px solid black !important;
-            padding: 5px 0 !important;
-            margin-top: 20px !important;
+            border-bottom: 1.5pt solid black !important;
+            padding: 3px 0 !important;
+            margin-top: 15px !important;
             box-shadow: none !important;
+            page-break-after: avoid;
+            /* Don't leave header alone at bottom */
         }
 
-        .semester-header h5 {
-            color: black !important;
-            font-weight: bold !important;
+        .semester-section {
+            page-break-inside: auto;
+            /* Allow break inside if very long */
+            margin-bottom: 10px;
         }
 
-        .transcript-table thead th {
-            background-color: #eee !important;
-            color: black !important;
-            border-bottom: 2px solid black !important;
-            -webkit-print-color-adjust: exact;
-            print-color-adjust: exact;
+        .semester-section tr {
+            page-break-inside: avoid;
+            /* Don't split a single row */
         }
 
-        .card {
-            border: none !important;
+        .transcript-table thead {
+            display: table-header-group;
+            /* Repeat header on new pages if split */
         }
 
-        .bg-primary {
-            background-color: transparent !important;
-            color: black !important;
-            border: 1px solid black !important;
+        .formal-header {
+            margin-bottom: 20px !important;
+        }
+
+        .signature-section {
+            margin-top: 30px !important;
+            page-break-inside: avoid;
+            /* Keep signature block together */
         }
     }
 
-    /* Professional Serif Styling */
+    /* Professional Serif Styling (Web & Print Basics) */
     .transcript-container {
         font-family: 'FormalSerif', serif;
         color: #333;
@@ -98,31 +114,24 @@
     }
 
     .formal-header h1 {
-        font-size: 1.8rem;
+        font-size: 1.6rem;
         font-weight: bold;
-        margin-bottom: 5px;
+        margin-bottom: 3px;
         text-transform: uppercase;
     }
 
+    .formal-header h2 {
+        font-size: 1.3rem;
+        margin-bottom: 5px;
+    }
+
     .formal-header p {
-        margin-bottom: 2px;
-        font-size: 0.9rem;
+        margin-bottom: 1px;
+        font-size: 0.85rem;
     }
 
     .info-table td {
-        padding: 3px 0;
-    }
-
-    .transcript-table {
-        border-collapse: collapse;
-        width: 100%;
-        margin-top: 10px;
-    }
-
-    .transcript-table th,
-    .transcript-table td {
-        border: 1px solid #333;
-        padding: 8px;
+        padding: 2px 0;
         font-size: 0.95rem;
     }
 
@@ -136,9 +145,21 @@
         justify-content: space-between;
     }
 
+    .transcript-table {
+        border-collapse: collapse;
+        width: 100%;
+        margin-top: 5px;
+    }
+
+    .transcript-table th,
+    .transcript-table td {
+        border: 1px solid #333;
+        padding: 6px;
+        font-size: 0.9rem;
+    }
+
     .signature-section {
-        margin-top: 50px;
-        page-break-inside: avoid;
+        margin-top: 40px;
     }
 </style>
 
