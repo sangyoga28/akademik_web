@@ -420,8 +420,12 @@ def transkrip_nilai():
     if total_sks_kumulatif > 0:
         ipk = round(total_bobot_kumulatif / total_sks_kumulatif, 2)
         
+    from datetime import datetime
+    current_date = datetime.now().strftime('%d %B %Y')
+    
     return render_template('transkrip.html',
                            mahasiswa=mahasiswa,
                            transkrip_per_semester=transkrip,
                            total_sks=total_sks_kumulatif,
-                           ipk=ipk)
+                           ipk=ipk,
+                           current_date=current_date)
