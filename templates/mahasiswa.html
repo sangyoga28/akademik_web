@@ -219,8 +219,9 @@
         });
 
         // Initial Load
-        updateUI();
-    </script> {% if total_pages > 1 %}
+    </script>
+
+    {% if total_pages > 1 %}
     <p class="text-center mt-3 text-secondary">
         Halaman {{ page }} / {{ total_pages }}
     </p>
@@ -265,13 +266,10 @@
         </ul>
     </nav>
     {% endif %}
+    {% if not data and not request.args.get('q') %}
+    <div class="alert alert-danger text-center mt-4" role="alert">
+        Tabel Mahasiswa masih kosong.
+    </div>
+    {% endif %}
 </div>
-
-{% if not data and not request.args.get('q') %}
-<div class="alert alert-danger text-center mt-4" role="alert">
-    Tabel Mahasiswa masih kosong.
-</div>
-{% endif %}
-</div>
-
 {% endblock %}

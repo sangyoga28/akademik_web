@@ -52,7 +52,7 @@
     </div>
 </form>
 
-<form action="{{ url_for('admin.preview_report') }}" method="post" target="_blank">
+<form id="reportForm" action="{{ url_for('admin.preview_report') }}" method="post" target="_blank">
     <input type="hidden" name="type" value="krs">
     <div class="mb-3 d-flex justify-content-end">
         <button type="submit" class="btn btn-success">
@@ -125,11 +125,14 @@
         </li>
         {% endfor %}
 
-        {% if end < total_pages %} {% if end < total_pages - 1 %}<li class="page-item disabled"><span
-                class="page-link">...</span></li>{% endif %}
-            <li class="page-item"><a class="page-link"
+        {% if end < total_pages %} {% if end < total_pages - 1 %} <li class="page-item disabled"><span
+                class="page-link">...</span></li>
+            {% endif %}
+            <li class="page-item">
+                <a class="page-link"
                     href="{{ url_for('mahasiswa.daftar_krs_mahasiswa', page=total_pages, q=q, fakultas=fakultas, prodi=prodi) }}">{{
-                    total_pages }}</a></li>
+                    total_pages }}</a>
+            </li>
             {% endif %}
 
             <li class="page-item {% if page == total_pages %}disabled{% endif %}">
@@ -139,8 +142,6 @@
     </ul>
 </nav>
 {% endif %}
-
-</form>
 
 <!-- Floating Counter & Clear Button -->
 <div id="selection-controls" class="position-fixed bottom-0 end-0 p-3 mb-5 me-5 bg-white shadow rounded border"
@@ -152,7 +153,7 @@
 <script>
     const reportType = 'krs';
     const storageKey = 'selected_ids_' + reportType;
-    const form = document.querySelector('form[action="{{ url_for('admin.preview_report') }}"]');
+    const form = document.getElementById('reportForm');
 
     function getSelection() {
         const stored = sessionStorage.getItem(storageKey);
