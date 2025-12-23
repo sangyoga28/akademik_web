@@ -203,7 +203,7 @@ body {
 }
 
 .search-input-group .form-control {
-    border-radius: 50px;
+    border-radius: 0.5rem;
     padding-left: 2.75rem;
     padding-right: 2.75rem;
     border: 1px solid #dee2e6;
@@ -243,7 +243,7 @@ body {
 }
 
 .filter-select {
-    border-radius: 50px !important;
+    border-radius: 0.5rem !important;
     padding-left: 1.25rem;
     border: 1px solid #dee2e6;
     height: 45px;
@@ -256,7 +256,7 @@ body {
 }
 
 .btn-filter-apply {
-    border-radius: 50px !important;
+    border-radius: 0.5rem !important;
     padding-left: 1.5rem;
     padding-right: 1.5rem;
     height: 45px;
@@ -268,7 +268,7 @@ body {
 }
 
 .btn-filter-reset {
-    border-radius: 50px !important;
+    border-radius: 0.5rem !important;
     height: 45px;
     padding-left: 1.25rem;
     padding-right: 1.25rem;
