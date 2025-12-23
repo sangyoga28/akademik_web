@@ -6,42 +6,56 @@
 <div class="container">
     <h1 class="mb-4">Kelola Data Dosen</h1>
 
-    <form method="GET" action="{{ url_for('dosen.daftar_dosen') }}"
-        class="row g-3 mb-4 align-items-center bg-white p-3 rounded shadow-sm">
-        <div class="col-md-3 position-relative">
-            <input type="text" name="q" class="form-control search-input pe-5"
-                placeholder="Cari berdasarkan NIP atau Nama" value="{{ q }}" oninput="toggleClear(this)">
-            <i class="bi bi-x-circle-fill position-absolute top-50 end-0 translate-middle-y me-3 text-secondary clear-icon {{ 'd-none' if not q else '' }}"
-                style="cursor: pointer;" onclick="clearSearch(this)"></i>
-        </div>
-        <div class="col-md-3">
-            <select name="fakultas" class="form-select" onchange="this.form.submit()">
-                <option value="">-- Semua Fakultas --</option>
-                {% for f in daftar_fakultas %}
-                <option value="{{ f }}" {% if f==fakultas %}selected{% endif %}>{{ f }}</option>
-                {% endfor %}
-            </select>
-        </div>
-        <div class="col-md-3">
-            <select name="prodi" class="form-select" onchange="this.form.submit()">
-                <option value="">-- Semua Prodi --</option>
-                {% for p in daftar_prodi %}
-                <option value="{{ p }}" {% if p==prodi %}selected{% endif %}>{{ p }}</option>
-                {% endfor %}
-            </select>
-        </div>
-        <div class="col-auto">
-            <button type="submit" class="btn btn-primary"><i class="bi bi-search"></i> Cari</button>
-        </div>
-        {% if q or prodi or fakultas %}
-        <div class="col-auto">
-            <a href="{{ url_for('dosen.daftar_dosen') }}" class="btn btn-outline-secondary">Reset</a>
-        </div>
-        {% endif %}
-        <div class="col-md-auto ms-auto text-md-end">
-            <a href="{{ url_for('admin.tambah_dosen') }}" class="btn btn-success">
-                <i class="bi bi-plus-circle"></i> Tambah Dosen
-            </a>
+    <!-- Filter Section -->
+    <form method="GET" action="{{ url_for('dosen.daftar_dosen') }}" class="filter-card">
+        <div class="row g-3 align-items-center">
+            <div class="col-md-4">
+                <div class="search-input-group">
+                    <i class="bi bi-search search-icon"></i>
+                    <input type="text" name="q" class="form-control" placeholder="Cari Nama / NIP..." value="{{ q }}"
+                        oninput="toggleClear(this)">
+                    <i class="bi bi-x-circle-fill clear-icon {{ 'd-none' if not q else '' }}"
+                        onclick="clearSearch(this)"></i>
+                </div>
+            </div>
+
+            <div class="col-md-2">
+                <select name="fakultas" class="form-select filter-select" onchange="this.form.submit()">
+                    <option value="">-- Fakultas --</option>
+                    {% for f in daftar_fakultas %}
+                    <option value="{{ f }}" {% if f==fakultas %}selected{% endif %}>{{ f }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <div class="col-md-2">
+                <select name="prodi" class="form-select filter-select" onchange="this.form.submit()">
+                    <option value="">-- Prodi --</option>
+                    {% for p in daftar_prodi %}
+                    <option value="{{ p }}" {% if p==prodi %}selected{% endif %}>{{ p }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <div class="col-auto">
+                <button type="submit" class="btn btn-primary btn-filter-apply">
+                    <i class="bi bi-funnel"></i> Filter
+                </button>
+            </div>
+
+            {% if q or fakultas or prodi %}
+            <div class="col-auto">
+                <a href="{{ url_for('dosen.daftar_dosen') }}" class="btn btn-outline-secondary btn-filter-reset">
+                    <i class="bi bi-arrow-counterclockwise"></i>
+                </a>
+            </div>
+            {% endif %}
+
+            <div class="col-md-auto ms-auto text-md-end">
+                <a href="{{ url_for('admin.tambah_dosen') }}" class="btn btn-success btn-filter-apply">
+                    <i class="bi bi-plus-circle"></i> Tambah Dosen
+                </a>
+            </div>
         </div>
     </form>
 

@@ -6,47 +6,57 @@
 <div class="container">
     <h1 class="mt-4 mb-4">Kelola Data Mahasiswa</h1>
 
-    <form method="GET" action="{{ url_for('mahasiswa.daftar_mahasiswa') }}"
-        class="row g-3 mb-4 align-items-center bg-white p-3 rounded shadow-sm">
-        <div class="col-md-3 col-lg-3 position-relative">
-            <input type="text" name="q" class="form-control search-input pe-5" placeholder="Cari Nama / NIM..."
-                value="{{ q }}" oninput="toggleClear(this)">
-            <i class="bi bi-x-circle-fill position-absolute top-50 end-0 translate-middle-y me-3 text-secondary clear-icon {{ 'd-none' if not q else '' }}"
-                style="cursor: pointer;" onclick="clearSearch(this)"></i>
-        </div>
+    <!-- Filter Section -->
+    <form method="GET" action="{{ url_for('mahasiswa.daftar_mahasiswa') }}" class="filter-card">
+        <div class="row g-3 align-items-center">
+            <div class="col-md-4">
+                <div class="search-input-group">
+                    <i class="bi bi-search search-icon"></i>
+                    <input type="text" name="q" class="form-control" placeholder="Cari Nama / NIM..." value="{{ q }}"
+                        oninput="toggleClear(this)">
+                    <i class="bi bi-x-circle-fill clear-icon {{ 'd-none' if not q else '' }}"
+                        onclick="clearSearch(this)"></i>
+                </div>
+            </div>
 
-        <div class="col-md-3">
-            <select name="fakultas" class="form-select" onchange="this.form.submit()">
-                <option value="">-- Semua Fakultas --</option>
-                {% for f in daftar_fakultas %}
-                <option value="{{ f }}" {% if f==fakultas %}selected{% endif %}>{{ f }}</option>
-                {% endfor %}
-            </select>
-        </div>
+            <div class="col-md-2">
+                <select name="fakultas" class="form-select filter-select" onchange="this.form.submit()">
+                    <option value="">-- Fakultas --</option>
+                    {% for f in daftar_fakultas %}
+                    <option value="{{ f }}" {% if f==fakultas %}selected{% endif %}>{{ f }}</option>
+                    {% endfor %}
+                </select>
+            </div>
 
-        <div class="col-md-3">
-            <select name="prodi" class="form-select" onchange="this.form.submit()">
-                <option value="">-- Semua Prodi --</option>
-                {% for p in daftar_prodi %}
-                <option value="{{ p }}" {% if p==prodi %}selected{% endif %}>{{ p }}</option>
-                {% endfor %}
-            </select>
-        </div>
+            <div class="col-md-2">
+                <select name="prodi" class="form-select filter-select" onchange="this.form.submit()">
+                    <option value="">-- Prodi --</option>
+                    {% for p in daftar_prodi %}
+                    <option value="{{ p }}" {% if p==prodi %}selected{% endif %}>{{ p }}</option>
+                    {% endfor %}
+                </select>
+            </div>
 
-        <div class="col-auto">
-            <button type="submit" class="btn btn-primary"><i class="bi bi-search"></i> Cari</button>
-        </div>
+            <div class="col-auto">
+                <button type="submit" class="btn btn-primary btn-filter-apply">
+                    <i class="bi bi-funnel"></i> Filter
+                </button>
+            </div>
 
-        {% if q or fakultas or prodi %}
-        <div class="col-auto">
-            <a href="{{ url_for('mahasiswa.daftar_mahasiswa') }}" class="btn btn-outline-secondary">Reset</a>
-        </div>
-        {% endif %}
+            {% if q or fakultas or prodi %}
+            <div class="col-auto">
+                <a href="{{ url_for('mahasiswa.daftar_mahasiswa') }}"
+                    class="btn btn-outline-secondary btn-filter-reset">
+                    <i class="bi bi-arrow-counterclockwise"></i>
+                </a>
+            </div>
+            {% endif %}
 
-        <div class="col-md-auto ms-auto text-md-end">
-            <a href="{{ url_for('admin.tambah_mahasiswa') }}" class="btn btn-success">
-                <i class="bi bi-plus-circle"></i> Tambah Mahasiswa
-            </a>
+            <div class="col-md-auto ms-auto text-md-end">
+                <a href="{{ url_for('admin.tambah_mahasiswa') }}" class="btn btn-success btn-filter-apply">
+                    <i class="bi bi-plus-circle"></i> Tambah Mahasiswa
+                </a>
+            </div>
         </div>
     </form>
 
@@ -227,14 +237,16 @@
 
             {% if start > 1 %}
             <li class="page-item"><a class="page-link"
-                    href="{{ url_for('mahasiswa.daftar_mahasiswa', page=1, q=q, fakultas=fakultas, prodi=prodi) }}">1</a></li>
+                    href="{{ url_for('mahasiswa.daftar_mahasiswa', page=1, q=q, fakultas=fakultas, prodi=prodi) }}">1</a>
+            </li>
             {% if start > 2 %}<li class="page-item disabled"><span class="page-link">...</span></li>{% endif %}
             {% endif %}
 
             {% for p in range(start, end + 1) %}
             <li class="page-item {% if p == page %}active{% endif %}">
                 <a class="page-link"
-                    href="{{ url_for('mahasiswa.daftar_mahasiswa', page=p, q=q, fakultas=fakultas, prodi=prodi) }}">{{ p }}</a>
+                    href="{{ url_for('mahasiswa.daftar_mahasiswa', page=p, q=q, fakultas=fakultas, prodi=prodi) }}">{{ p
+                    }}</a>
             </li>
             {% endfor %}
 
