@@ -188,4 +188,4 @@ Untuk pertanyaan atau saran, silakan buat issue di repository ini.
 
 ---
 
-**Dibuat dengan ❤️ menggunakan Flask**
+**Dibuat Oleh Sangyoga**
