@@ -9,7 +9,7 @@
     <!-- Filter Section -->
     <form method="GET" action="{{ url_for('admin.daftar_matkul') }}" class="filter-card">
         <div class="row g-3 align-items-center">
-            <div class="col-md-4">
+            <div class="col-md-3">
                 <div class="search-input-group">
                     <i class="bi bi-search search-icon"></i>
                     <input type="text" name="q" class="form-control" placeholder="Cari Kode / Nama..." value="{{ q }}"
@@ -37,21 +37,15 @@
                 </select>
             </div>
 
-            <div class="col-auto">
+            <div class="col-md-auto ms-auto d-flex gap-2">
                 <button type="submit" class="btn btn-primary btn-filter-apply">
                     <i class="bi bi-search"></i> Cari
                 </button>
-            </div>
-
-            {% if q or prodi or semester %}
-            <div class="col-auto">
+                {% if q or prodi or semester %}
                 <a href="{{ url_for('admin.daftar_matkul') }}" class="btn btn-outline-secondary btn-filter-reset">
                     <i class="bi bi-arrow-counterclockwise"></i>
                 </a>
-            </div>
-            {% endif %}
-
-            <div class="col-md-auto ms-auto text-md-end">
+                {% endif %}
                 <a href="{{ url_for('admin.tambah_matkul') }}" class="btn btn-success btn-filter-apply">
                     <i class="bi bi-plus-circle"></i> Tambah Matkul
                 </a>
